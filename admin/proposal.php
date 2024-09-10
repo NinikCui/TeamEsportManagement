@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Proposal</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -146,10 +146,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         <ul class="nav-section">
             <li><a href="proposal.php"><u>Proposal</u></a></li>
-            <li><a href="#">Team</a></li>
-            <li><a href="#">Game</a></li>
-            <li><a href="#">Event</a></li>
-            <li><a href="#">Achivement</a></li>
+            <li><a href="team.php">Team</a></li>
+            <li><a href="game.php">Game</a></li>
+            <li><a href="event.php">Event</a></li>
+            <li><a href="achievement.php">Achivement</a></li>
         </ul>
         <div class="photo-profile">
             <img src="../resource/fotoProfile.png" alt="Foto Profil">
