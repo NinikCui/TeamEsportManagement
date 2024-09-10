@@ -4,6 +4,23 @@ if (!isset($_SESSION['username'])) {
     header('Location: login.php');
     exit;
 }
+
+$conn = new mysqli('localhost', 'root', '', 'esport');
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $idProposal = $_POST['id_proposal'];
+    $action = $_POST['action'];
+
+    if ($action == 'approve') {
+        $status = 'approved';
+    } elseif ($action == 'rejected') {
+        $status = 'rejected';
+    }
+    $sql = "UPDATE join_proposal SET status = ? WHERE idjoin_proposal = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('si', $status, $idProposal);
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -157,19 +174,24 @@ if (!isset($_SESSION['username'])) {
                     $stmt = $conn->prepare("SELECT jp.idjoin_proposal, m.username, t.name as team, g.name as game FROM join_proposal jp
                                             inner join member m on m.idmember = jp.idmember 
                                             inner join team t on t.idteam = jp.idteam
-                                            inner join  game g on g.idgame = t.idgame;");
+                                            inner join  game g on g.idgame = t.idgame 
+                                            where status ='waiting'");
                     $stmt->execute();
                     $res = $stmt->get_result();
                     while($categori = $res->fetch_array()){
                         echo "<tr>";
-                        echo "<td>". $categori["idjoin_proposal"]."</td>"; 
-                        echo "<td>". $categori["username"]."</td>"; 
-                        echo "<td>". $categori["team"]."</td>"; 
-                        echo "<td>". $categori["game"]."</td>";
-                        echo "<td><div class=\"actions\">
-                            <span class=\"approve\">✔ Approve</span>
-                            <span class=\"decline\">✖ Decline</span>
-                            </div></td>";  
+                        echo "<td>" . $categori["idjoin_proposal"] . "</td>";
+                        echo "<td>" . $categori["username"] . "</td>";
+                        echo "<td>" . $categori["team"] . "</td>";
+                        echo "<td>" . $categori["game"] . "</td>";
+                        echo "<td>
+                                <form method='POST' action=''>
+                                    <input type='hidden' name='id_proposal' value='" . $categori["idjoin_proposal"] . "'>
+                                    <button type='submit' name='action' value='approve' style='color: green; border: none; background: none; cursor: pointer;'>✔ Approve</button>
+                                    <button type='submit' name='action' value='rejected' style='color: red; border: none; background: none; cursor: pointer;'>✖ Decline</button>
+                                </form>
+                              </td>";
+                        echo "</tr>"; 
                     }
                 ?>
             </tbody>
