@@ -29,66 +29,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proposal</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link href="nav.css" rel="stylesheet">
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
-            color: white;
-            text-align: center;
-            background-image: url("../resource/BG.png");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            min-height: 100vh;  
-        }
-
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .logo img {
-
-            width: 50px;
-            height: auto;
-            margin-right: 10px;
-            margin-left: 20px;
-        }
-        .photo-profile{
-            display: flex;
-            align-items: center;
-            font-size: 24px;
-            font-weight: bold;
-            margin-right: 30px;
-        }
-        .photo-profile img {
-            width: 40px;
-            height: auto;
-            margin-right: 10px;
-        }
-        .nav-section{
-            list-style: none;
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-        .nav-section li a {
-            text-decoration: none;
-            color: white;
-            font-size: 18px;
-            margin-right: 20px;
-            margin-left:20px
-        }
+        
         .container {
             width: 80%;
             max-width: 1200px;
@@ -99,6 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             width: 100%;
             margin-bottom: 20px;
             border-collapse: collapse;
+            font-size: 18px;
         }
 
         .table th, .table td {
@@ -106,6 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             background-color: rgba(255, 255, 255, 0.2);
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            
         }
 
         .table th {
