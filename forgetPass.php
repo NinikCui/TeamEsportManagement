@@ -160,13 +160,6 @@
             passwordConf.setAttribute("type", typeConf);
         });
 
-        resetForm.addEventListener("submit", function(event) {
-        if (password.value !== passwordConf.value) {
-            event.preventDefault(); 
-            alert("Password tidak memiliki kesamaan");  
-        } 
-    });
-
 
     </script>
 </body>

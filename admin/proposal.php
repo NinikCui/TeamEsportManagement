@@ -34,9 +34,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             margin: 0;
             padding: 0;
             font-family: 'Poppins', sans-serif;
-            background-color: #2a0136;
             color: white;
             text-align: center;
+            background-image: url("../resource/BG.png");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;  
         }
 
         .navbar {
@@ -44,7 +49,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             justify-content: space-between;
             align-items: center;
             padding: 10px;
-            background-color: #250129;
         }
         .logo {
             display: flex;
@@ -54,15 +58,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         .logo img {
+
             width: 50px;
             height: auto;
             margin-right: 10px;
+            margin-left: 20px;
         }
         .photo-profile{
             display: flex;
             align-items: center;
             font-size: 24px;
             font-weight: bold;
+            margin-right: 30px;
         }
         .photo-profile img {
             width: 40px;
@@ -135,6 +142,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             border-radius: 5px;
             cursor: pointer;
             margin-right: 20px;
+            
         }
     </style>
 </head>
@@ -188,8 +196,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             echo "<td>
                                     <form method='POST' action=''>
                                         <input type='hidden' name='id_proposal' value='" . $categori["idjoin_proposal"] . "'>
-                                        <button type='submit' name='action' value='approve' style='color: green; border: none; background: none; cursor: pointer;'>✔ Approve</button>
-                                        <button type='submit' name='action' value='rejected' style='color: red; border: none; background: none; cursor: pointer;'>✖ Decline</button>
+                                        <button type='submit' name='action' value='approve' style='color: green; border: none; background: none; cursor: pointer; font-size: 16px;'>✔ Approve</button>
+                                        <button type='submit' name='action' value='rejected' style='color: red; border: none; background: none; cursor: pointer; font-size: 16px;'>✖ Decline</button>
                                     </form>
                                 </td>";
                             echo "</tr>"; 
