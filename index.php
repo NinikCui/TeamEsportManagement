@@ -1,3 +1,14 @@
+<?php
+session_start();
+if (isset($_SESSION['username'])) {
+    if($_SESSION['profile'] == "admin"){
+        header('Location: admin/proposal.php');
+    }else{
+        header('Location: user/welcome.php');
+    }
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -71,7 +82,6 @@
 </head>
 <body>
     <?php
-    session_start();
     $is_logged_in = isset($_SESSION['fname']); 
     ?>
     <script>
