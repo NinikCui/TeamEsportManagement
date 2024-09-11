@@ -10,7 +10,6 @@ $conn = new mysqli('localhost', 'root', '', 'esport');
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $idProposal = $_POST['id_proposal'];
     $action = $_POST['action'];
-
     if ($action == 'approve') {
         $status = 'approved';
     } elseif ($action == 'rejected') {
@@ -19,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sql = "UPDATE join_proposal SET status = ? WHERE idjoin_proposal = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('si', $status, $idProposal);
+    $stmt->execute();
 }
 
 ?>
