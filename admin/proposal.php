@@ -178,21 +178,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             where status ='waiting'");
                     $stmt->execute();
                     $res = $stmt->get_result();
-                    while($categori = $res->fetch_array()){
+                    if($res->num_rows > 0 ){
+                        while($categori = $res->fetch_array()){
+                            echo "<tr>";
+                            echo "<td>" . $categori["idjoin_proposal"] . "</td>";
+                            echo "<td>" . $categori["username"] . "</td>";
+                            echo "<td>" . $categori["team"] . "</td>";
+                            echo "<td>" . $categori["game"] . "</td>";
+                            echo "<td>
+                                    <form method='POST' action=''>
+                                        <input type='hidden' name='id_proposal' value='" . $categori["idjoin_proposal"] . "'>
+                                        <button type='submit' name='action' value='approve' style='color: green; border: none; background: none; cursor: pointer;'>✔ Approve</button>
+                                        <button type='submit' name='action' value='rejected' style='color: red; border: none; background: none; cursor: pointer;'>✖ Decline</button>
+                                    </form>
+                                </td>";
+                            echo "</tr>"; 
+                        }
+                    }else{
                         echo "<tr>";
-                        echo "<td>" . $categori["idjoin_proposal"] . "</td>";
-                        echo "<td>" . $categori["username"] . "</td>";
-                        echo "<td>" . $categori["team"] . "</td>";
-                        echo "<td>" . $categori["game"] . "</td>";
-                        echo "<td>
-                                <form method='POST' action=''>
-                                    <input type='hidden' name='id_proposal' value='" . $categori["idjoin_proposal"] . "'>
-                                    <button type='submit' name='action' value='approve' style='color: green; border: none; background: none; cursor: pointer;'>✔ Approve</button>
-                                    <button type='submit' name='action' value='rejected' style='color: red; border: none; background: none; cursor: pointer;'>✖ Decline</button>
-                                </form>
-                              </td>";
-                        echo "</tr>"; 
+                        echo "<td colspan='5' style='text-align: center;'>None</td>";
+                        echo "</tr>";
                     }
+                        
                 ?>
             </tbody>
         </table>
