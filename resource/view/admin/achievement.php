@@ -10,10 +10,7 @@ $conn = new mysqli('localhost', 'root', '', 'esport');
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $idAchi = $_POST['idachievement'];
     $action = $_POST['action'];
-
-    if ($action == 'update') {
-        $status = 'update';
-    } elseif ($action == 'delete') {
+    if ($action == 'delete') {
         
             $conn = new mysqli('localhost', 'root', '', 'esport');
             $stmt = $conn->prepare("delete from achievement where idachievement =". $idAchi);
@@ -100,6 +97,78 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         .desc{
             cursor: pointer;
         }
+        /* Modal Style */
+        .frmNew {
+            display: none; 
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .frm-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 40%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .formNew-Group{
+            margin-bottom: 15px;
+            padding-bottom: 30px;
+            color: black;
+        }
+
+        .formNew-Group label {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: black;
+            padding-bottom: 20px;
+        }
+
+        .formNew-Group input, .formNew-Group textarea {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        textarea {
+            resize: vertical;
+        }
+        .formNew-btnAdd {
+            padding: 10px 20px;
+            background-color: #3c0036;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            float: right;
+            margin-bottom: 20px;
+        }
+
+        .formNew-btnAdd:hover {
+            background-color: #55004d;
+        }
     </style>
 </head>
 <body>
@@ -120,6 +189,59 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <h5>Hello, <?php  echo $_SESSION['fname']?></h5>
         </div>
     </nav>
+    <div > 
+
+    </div>
+
+    <!-- MODAL  -->
+    <div class="container">
+        <script>
+        function openFrmNew() {
+            document.getElementById('formNew').style.display = "block";
+        }
+
+        function closeFrmNew() {
+            document.getElementById('formNew').style.display = "none";
+        }
+        window.onclick = function(event) {
+            var frmNew = document.getElementById('formNew');
+            if (event.target == frmNew) {
+                frmNew.style.display = "none";
+            }
+        }
+
+        </script>
+        <form method="POST" action="">
+        <a  onclick="openFrmNew()" style="padding: 10px 20px; background-color: #fff; color: #3c0036; text-decoration: none; border-radius: 5px; border: none; cursor: pointer; float: right;">+ New</a>
+
+        <div id="formNew" class="frmNew">
+            <div class="frm-content">
+                <span class="close" onclick="closeFrmNew()">&times;</span>
+                <form method="POST" action="add_achievement.php">
+                    <h2>Add a new Achievement</h2>
+                    <div class="formNew-Group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" placeholder="Enter achievement name" required>
+                    </div>
+
+                    <div class="formNew-Group">
+                        <label for="date">Date</label>
+                        <input type="date" id="date" name="date" required>
+                    </div>
+
+                    <div class="formNew-Group">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" placeholder="Enter achievement description" rows="4" required></textarea>
+                    </div>
+
+                    <button type="submit" class="formNew-btnAdd">Add new</button>
+                </form>
+            </div>
+        </div>
+        </form>
+    
+    
+    </div>
     <div class="container">
         
         <table class="table">
@@ -151,7 +273,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             echo "<td>
                                     <form method='POST' action=''>
                                         <input type='hidden' name='idachievement' value='" . $categori["idachievement"] . "'>
-                                        <button type='submit' name='action' value='update' style='color: green; border: none; background: none; cursor: pointer; font-size: 18px;'><span>&#x21BB;</span> Update</button>
                                         <button type='submit' name='action' value='delete' style='color: red; border: none; background: none; cursor: pointer; font-size: 18px;'><span>&#x1F5D1;</span> Delete</button>
                                     </form>
                                 </td>";
