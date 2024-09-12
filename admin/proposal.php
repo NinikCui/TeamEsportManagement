@@ -19,6 +19,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('si', $status, $idProposal);
     $stmt->execute();
+    $stmt->close();
+    $conn->close();
 }
 
 ?>
@@ -30,6 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Proposal</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <link href="nav.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <style>
         
         .container {
@@ -141,8 +144,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             echo "<td>
                                     <form method='POST' action=''>
                                         <input type='hidden' name='id_proposal' value='" . $categori["idjoin_proposal"] . "'>
-                                        <button type='submit' name='action' value='approve' style='color: green; border: none; background: none; cursor: pointer; font-size: 16px;'>✔ Approve</button>
-                                        <button type='submit' name='action' value='rejected' style='color: red; border: none; background: none; cursor: pointer; font-size: 16px;'>✖ Decline</button>
+                                        <button type='submit' name='action' value='approve' style='color: green; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Approve</button>
+                                        <button type='submit' name='action' value='rejected' style='color: red; border: none; background: none; cursor: pointer; font-size: 18px;'>✖ Decline</button>
                                     </form>
                                 </td>";
                             echo "</tr>"; 
@@ -152,7 +155,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         echo "<td colspan='5' style='text-align: center;'>None</td>";
                         echo "</tr>";
                     }
-                        
+                    $stmt->close();
+                    $conn->close();
                 ?>
             </tbody>
         </table>
