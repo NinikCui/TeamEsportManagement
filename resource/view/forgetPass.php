@@ -108,7 +108,7 @@
 
     .image-container {
         width: 50%;
-        background-image: url('resource/login.jpg');
+        background-image: url('../img/login.jpg');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -131,17 +131,17 @@
                 <input type="text" name="username" placeholder="Username" required>
                 <div class="password-container">
                     <input type="password" id="password" name="password" placeholder=" New Password" required>
-                    <span class="see-password" id="passEye"><img src="resource/passwordMata.png"></span>
+                    <span class="see-password" id="passEye"><img src="../img/passwordMata.png"></span>
                 </div>
                 <div class="password-container">
                     <input type="password" id="confPassword" name="confPassword" placeholder="Confirm Password" required>
-                    <span class="see-password" id="passEyeConfirm"><img src="resource/passwordMata.png"></span>
+                    <span class="see-password" id="passEyeConfirm"><img src="../img/passwordMata.png"></span>
                 </div>
                 <button type="submit">Reset</button>
             </form>
         </div>
         <div class="image-container">
-           <img src="resource/frgtPass.jpg">
+           <img src="../img/frgtPass.jpg">
         </div>
     </div>
     <script>

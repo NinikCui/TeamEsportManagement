@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['username'])) {
-    header('Location: login.php');
+    header('Location: ../index.php');
     exit;
 }
 
@@ -27,29 +27,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game</title>
+    <title>Event</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-    <link href="nav.css" rel="stylesheet">
+    <link href="../../css/nav.css" rel="stylesheet">
     <style>
-        
+        body {
+            background-image: url("../../img/BG.png");
+        }
         
     </style>
 </head>
 <body>
     <nav class="navbar">
         <div class="logo">
-            <img src="../resource/hiksrotIcon.png" alt="Hiksrot Logo">
+            <img src="../../img/hiksrotIcon.png" alt="Hiksrot Logo">
             HIKSROT
         </div>
         <ul class="nav-section">
             <li><a href="proposal.php">Proposal</a></li>
             <li><a href="team.php">Team</a></li>
-            <li><a href="game.php"><u>Game</u></a></li>
-            <li><a href="event.php">Event</a></li>
+            <li><a href="game.php">Game</a></li>
+            <li><a href="event.php"><u>Event</u></a></li>
             <li><a href="achievement.php">Achivement</a></li>
         </ul>
         <div class="photo-profile">
-            <img src="../resource/fotoProfile.png" alt="Foto Profil">
+            <img src="../../img/fotoProfile.png" alt="Foto Profil">
             <h5>Hello, <?php  echo $_SESSION['fname']?></h5>
         </div>
     </nav>

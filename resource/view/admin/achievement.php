@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['username'])) {
-    header('Location: login.php');
+    header('Location: ../index.php');
     exit;
 }
 
@@ -35,9 +35,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Achivement</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <link href="nav.css" rel="stylesheet">
+    <link href="../../css/nav.css" rel="stylesheet">
     <style>
-        
+        body {
+            background-image: url("../../img/BG.png");
+        }
         .container {
             width: 80%;
             max-width: 1200px;
@@ -103,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <nav class="navbar">
         <div class="logo">
-            <img src="../resource/hiksrotIcon.png" alt="Hiksrot Logo">
+            <img src="../../img/hiksrotIcon.png" alt="Hiksrot Logo">
             HIKSROT
         </div>
         <ul class="nav-section">
@@ -114,7 +116,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <li><a href="achievement.php"><u>Achievement</u></a></li>
         </ul>
         <div class="photo-profile">
-            <img src="../resource/fotoProfile.png" alt="Foto Profil">
+            <img src="../../img/fotoProfile.png" alt="Foto Profil">
             <h5>Hello, <?php  echo $_SESSION['fname']?></h5>
         </div>
     </nav>

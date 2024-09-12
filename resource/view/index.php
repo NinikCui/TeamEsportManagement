@@ -94,7 +94,7 @@ if (isset($_SESSION['username'])) {
     </script>
     <nav class="navbar">
         <div class="logo">
-            <img src="resource/hiksrotIcon.png" alt="Hiksrot Logo">
+            <img src="../img/hiksrotIcon.png" alt="Hiksrot Logo">
             HIKSROT
         </div>
         <ul class="nav-section">
