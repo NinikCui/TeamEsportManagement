@@ -8,16 +8,29 @@ if (!isset($_SESSION['username'])) {
 $conn = new mysqli('localhost', 'root', '', 'esport');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $idAchi = $_POST['idachievement'];
+    
     $action = $_POST['action'];
+
+    
     if ($action == 'delete') {
-        
+            $idAchi = $_POST['idachievement'];
             $conn = new mysqli('localhost', 'root', '', 'esport');
             $stmt = $conn->prepare("delete from achievement where idachievement =". $idAchi);
             $stmt->execute();
             $stmt->close();
             $conn->close();
         
+    }
+    else if($action == "add"){
+        $idteam = $_POST['idteam'];
+        $namaAchi = $_POST['nameAchi'];
+        $dateAchi = $_POST['date'];
+        $desAchi = $_POST['descriptionAchi'];
+        $conn = new mysqli('localhost', 'root', '', 'esport');
+        $stmt = $conn->prepare("INSERT INTO achievement (idachievement, idteam, name, date, description) VALUES ('', '$idteam', '$namaAchi', '2024-09-09', '$desAchi')");
+        $stmt->execute();
+        $stmt->close();
+        $conn->close();
     }
     
 }
@@ -97,7 +110,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         .desc{
             cursor: pointer;
         }
-        /* Modal Style */
         .frmNew {
             display: none; 
             position: fixed;
@@ -114,7 +126,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             margin: 10% auto;
             padding: 20px;
             border-radius: 10px;
-            width: 40%;
+            width: 30%;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
@@ -133,7 +145,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         .formNew-Group{
             margin-bottom: 15px;
-            padding-bottom: 30px;
             color: black;
         }
 
@@ -163,11 +174,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             border-radius: 5px;
             cursor: pointer;
             float: right;
-            margin-bottom: 20px;
         }
 
         .formNew-btnAdd:hover {
             background-color: #55004d;
+        }
+        .formNew-btnAddContainer {
+            display: flex;
+        }
+        .formNew-Team{
+            padding: 5px;
         }
     </style>
 </head>
@@ -193,7 +209,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     </div>
 
-    <!-- MODAL  -->
     <div class="container">
         <script>
         function openFrmNew() {
@@ -217,11 +232,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div id="formNew" class="frmNew">
             <div class="frm-content">
                 <span class="close" onclick="closeFrmNew()">&times;</span>
-                <form method="POST" action="add_achievement.php">
+                <form method="POST" action="">
                     <h2>Add a new Achievement</h2>
                     <div class="formNew-Group">
                         <label for="name">Name</label>
-                        <input type="text" id="name" name="name" placeholder="Enter achievement name" required>
+                        <input type="text" id="name" name="nameAchi" placeholder="Enter achievement name" required>
+                    </div>
+
+                    <div class="formNew-Group">
+                        <label for="team">Team</label>
+                        <select id="cbteam" class="formNew-Team" name="idteam">
+                            <option value="">--- SELECT TEAM ---</option>
+                            <?php
+                                $conn = new mysqli('localhost', 'root', '', 'esport');
+                                $stmt = $conn->prepare("SELECT idteam, name FROM team;");
+                                $stmt->execute();
+                                $res = $stmt->get_result();
+                                while($rteam = $res->fetch_array()){
+                                    echo "<option  value='".$rteam["idteam"]."'>".$rteam["name"]."</option>";
+                                }
+                            ?>
+                        </select>
                     </div>
 
                     <div class="formNew-Group">
@@ -231,10 +262,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <div class="formNew-Group">
                         <label for="description">Description</label>
-                        <textarea id="description" name="description" placeholder="Enter achievement description" rows="4" required></textarea>
+                        <textarea id="description" name="descriptionAchi" placeholder="Enter achievement description" rows="4" required></textarea>
                     </div>
-
-                    <button type="submit" class="formNew-btnAdd">Add new</button>
+                    <div class="formNew-btnAddContainer">
+                        <button type="submit" name='action' value='add' class="formNew-btnAdd">Add new</button>
+                    </div>
                 </form>
             </div>
         </div>
