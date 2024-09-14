@@ -54,7 +54,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="photo-profile">
             <img src="../../img/fotoProfile.png" alt="Foto Profil">
             <h5>Hello, <?php  echo $_SESSION['active_user']->fname;?></h5>
+            <div  class="btn-logout">
+                <button  class="logout" onclick="confirmLogout()">Log Out</button>
+            </div>
         </div>
+        <script>
+            function confirmLogout() {
+            var result = confirm("Apakah Anda yakin ingin logout?");
+            if (result) {
+                window.location.href = "../logout.php"; 
+            } e
+        }
+        </script>
     </nav>
     
 </div>

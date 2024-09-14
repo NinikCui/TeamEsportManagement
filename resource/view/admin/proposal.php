@@ -97,6 +97,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             margin-right: 20px;
             
         }
+        
+
     </style>
 </head>
 <body>
@@ -118,7 +120,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <?php echo $_SESSION['active_user']->fname;
                 ?>
             </h5>
+            <div  class="btn-logout">
+                <button  class="logout" onclick="confirmLogout()">Log Out</button>
+            </div>
         </div>
+        <script>
+            function confirmLogout() {
+            var result = confirm("Apakah Anda yakin ingin logout?");
+            if (result) {
+                window.location.href = "../logout.php"; 
+            } 
+        }
+        </script>
+
+        
     </nav>
     <div class="container">
         

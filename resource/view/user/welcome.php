@@ -15,6 +15,6 @@ if (!isset($_SESSION['active_user'])) {
 </head>
 <body>
     <h1>Selamat datang, <?php echo $_SESSION['active_user']->fname ?>!</h1>
-    <a href="logout.php">Logout</a>
+    <a href="../logout.php">Logout</a>
 </body>
 </html>
