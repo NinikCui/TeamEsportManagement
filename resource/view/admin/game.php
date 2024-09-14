@@ -1,7 +1,8 @@
 <?php
+require_once('../../../classes/member.php');
 session_start();
-if (!isset($_SESSION['username'])) {
-    header('Location: ../index.php');
+if (!isset($_SESSION['active_user'])) {
+    header('Location: ../../../index.php');
     exit;
 }
 
@@ -52,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </ul>
         <div class="photo-profile">
             <img src="../../img/fotoProfile.png" alt="Foto Profil">
-            <h5>Hello, <?php  echo $_SESSION['fname']?></h5>
+            <h5>Hello, <?php  echo $_SESSION['active_user']->fname;?></h5>
         </div>
     </nav>
     

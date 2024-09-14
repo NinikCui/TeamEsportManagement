@@ -1,3 +1,6 @@
+<?php
+require_once('../../classes/member.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -142,7 +145,21 @@
         $username = $_POST['username'];
         $password = $_POST['password'];  
         
-        $stmt = $conn->prepare("SELECT * FROM member WHERE username='$username' AND password='$password'");
+        $member = new Member($conn);
+        if($member->login($username, $password)) {
+            $_SESSION['active_user'] = $member;
+            if($member->profile == "admin"){
+                header('Location: admin/proposal.php');
+                exit();
+            }else{
+                header('Location: user/welcome.php');
+                exit();
+            }
+        }else {
+            header('Location: login.php?status=failed');
+            exit();
+        }
+       /* $stmt = $conn->prepare("SELECT * FROM member WHERE username='$username' AND password='$password'");
         $stmt->execute();
         $res = $stmt->get_result();
 
@@ -165,7 +182,7 @@
         }
 
         $stmt->close();
-        $conn->close();
+        $conn->close(); */
     }
     ?>
     <div class="container">

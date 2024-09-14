@@ -1,7 +1,8 @@
 <?php
+require_once('../../../classes/member.php');
 session_start();
-if (!isset($_SESSION['username'])) {
-    header('Location: login.php');
+if (!isset($_SESSION['active_user'])) {
+    header('Location: ../login.php');
     exit;
 }
 ?>
@@ -13,7 +14,7 @@ if (!isset($_SESSION['username'])) {
     <title>Welcome</title>
 </head>
 <body>
-    <h1>Selamat datang, <?php echo $_SESSION['username']; ?>!</h1>
+    <h1>Selamat datang, <?php echo $_SESSION['active_user']->fname ?>!</h1>
     <a href="logout.php">Logout</a>
 </body>
 </html>

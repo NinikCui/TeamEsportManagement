@@ -83,7 +83,7 @@ if (isset($_SESSION['username'])) {
 </head>
 <body>
     <?php
-    $is_logged_in = isset($_SESSION['fname']); 
+    $is_logged_in = isset($_SESSION['active_user']); 
     ?>
     <script>
         function checkLogin(isLoggedIn) {

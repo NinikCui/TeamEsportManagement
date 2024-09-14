@@ -1,3 +1,6 @@
+<?php
+require_once('../../classes/member.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -137,7 +140,16 @@
         $username = $_POST['username'];
         $password = $_POST['password']; 
 
-        $checkUsername= "SELECT * FROM member WHERE username='$username'";
+        $member = new Member($conn);
+        if($member->Registrasi($username, $password,$first_name,$last_name)) {
+            header("Location: signUp.php?status=success"); 
+            exit(); 
+        }else {
+            header("Location: signUp.php?status=failed"); 
+            exit();
+        }
+
+      /*  $checkUsername= "SELECT * FROM member WHERE username='$username'";
         $result = $conn->query($checkUsername);
 
         if ($result->num_rows > 0) {
@@ -154,7 +166,7 @@
             }
         }
         $stmt->close();
-        $conn->close();
+        $conn->close();*/
     }
     ?>
     <div class="container">
