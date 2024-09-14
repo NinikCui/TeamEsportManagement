@@ -94,7 +94,7 @@ if (isset($_SESSION['username'])) {
     </script>
     <nav class="navbar">
         <div class="logo">
-            <img src="../img/hiksrotIcon.png" alt="Hiksrot Logo">
+            <img src="resource/img/hiksrotIcon.png" alt="Hiksrot Logo">
             HIKSROT
         </div>
         <ul class="nav-section">
@@ -103,8 +103,8 @@ if (isset($_SESSION['username'])) {
             <li><a href="#" onclick="checkLogin(<?php echo json_encode($is_logged_in); ?>)">Team Detail</a></li>
         </ul>
         <div class="nav-button">
-            <button class="sign-up-button"><a href="signUp.php">Sign Up</a></button>
-            <button class="login-button"><a href="login.php">Login</a></button>
+            <button class="sign-up-button"><a href="resource/view/signUp.php">Sign Up</a></button>
+            <button class="login-button"><a href="resource/view/login.php">Login</a></button>
         </div>
     </nav>
 </body>
