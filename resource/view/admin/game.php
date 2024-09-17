@@ -302,10 +302,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         echo "<td>" . $categori["name"] . "</td>";
                         echo "<td>" . $categori["description"] . "</td>";
                         echo "<td>
-                                <button type='button' onclick='openFrmEdit(\"" . $categori["idgame"] . "\", \"" . $categori["name"] . "\", \"" . $categori["description"] . "\")' style='color: green; border: none; background: none; cursor: pointer; font-size: 18px;'>⚙️ Update</button>
+                                <button type='button' onclick='openFrmEdit(\"" . $categori["idgame"] . "\", \"" . $categori["name"] . "\", \"" . $categori["description"] . "\")' style='color: green; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Update</button>
                                 <form method='POST' action='' style='display:inline;'>
                                     <input type='hidden' name='idgame' value='" . $categori["idgame"] . "'>
-                                    <button type='submit' name='action' value='delete' style='color: red; border: none; background: none; cursor: pointer; font-size: 18px;'>🗑️ Delete</button>
+                                    <button type='submit' name='action' value='delete' style='color: red; border: none; background: none; cursor: pointer; font-size: 18px;'><span>&#x1F5D1;</span> Delete</button>
                                 </form>
                               </td>";
                         echo "</tr>";
