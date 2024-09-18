@@ -30,6 +30,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
         $stmt->close();
         $conn->close();
+        
+        
     }
     else if ($action == "edit") {
         $idGame = $_POST['idgame'];
@@ -263,7 +265,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <span class="close" onclick="closeFrmNew()">&times;</span>
                     <form method="POST" action="">
                         <h2><span id="actionButtonText">Add a new Game</span></h2>
-                        <input type="hidden" id="idgame" name="idgame"> <!-- Hidden input untuk idgame saat update -->
+                        <input type="hidden" id="idgame" name="idgame"> 
                         <div class="formNew-Group">
                             <label for="name">Name</label>
                             <input type="text" id="gameName" name="gameName" placeholder="Enter Game Name" required>
@@ -311,9 +313,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr>";
+                    echo "<tar>";
                     echo "<td colspan='4' style='text-align: center;'>None</td>";
-                    echo "</tr>";
+                    echo "</tar>";
                 }
                 $stmt->close();
                 $conn->close();

@@ -9,6 +9,7 @@ if (!isset($_SESSION['active_user'])) {
 $conn = new mysqli('localhost', 'root', '', 'esport');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    
     $action = $_POST['action'];
 
     
@@ -18,39 +19,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $conn->prepare("delete from team where idteam =". $idTeam);
         $stmt->execute();
         $stmt->close();
-        $conn->close();
-        
+        $conn->close(); 
     }
     else if($action == "add"){
-        $game = $_POST['gameName'];
-        $description = $_POST['desc'];
+        $team = $_POST['teamName'];
+        $game = $_POST['game'];
         $conn = new mysqli('localhost', 'root', '', 'esport');
-        $stmt = $conn->prepare("INSERT INTO game (idgame, name, description) VALUES ('', '$game', '$description')");
+        $stmt = $conn->prepare("INSERT INTO team (idteam, idgame, name) VALUES ('', '$game', '$team')");
         $stmt->execute();
         $stmt->close();
         $conn->close();
     }
     else if ($action == "edit") {
         $idTeam = $_POST['idteam'];
-        $game = $_POST['Game'];
-        $namaTim = $_POST['name'];
+        $game = $_POST['game'];
+        $name = $_POST['teamName'];
         $conn = new mysqli('localhost', 'root', '', 'esport');
-        $stmt = $conn->prepare("UPDATE team SET name = ?, description = ? WHERE idgame = ". $idGame);
-        $stmt->bind_param("ss", $idTeam, $description);
+        $stmt = $conn->prepare("UPDATE team SET idgame = ?, name = ? WHERE idteam = ". $idTeam);
+        $stmt->bind_param("ss", $game, $name);
         $stmt->execute();
         $stmt->close();
         $conn->close();
-    }
+    } 
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team</title>
+    <title>Game</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <link href="../../css/nav.css" rel="stylesheet">
     <style>
         body {
@@ -201,43 +201,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <li><a href="team.php"><u>Team</u></a></li>
             <li><a href="game.php">Game</a></li>
             <li><a href="event.php">Event</a></li>
-            <li><a href="achievement.php">Achivement</a></li>
+            <li><a href="achievement.php">Achievement</a></li>
         </ul>
         <div class="photo-profile">
             <img src="../../img/fotoProfile.png" alt="Foto Profil">
-            <h5>Hello, <?php  echo $_SESSION['active_user']->fname;?></h5>
-            <div  class="btn-logout">
-                <button  class="logout" onclick="confirmLogout()">Log Out</button>
+            <h5>Hello, <?php echo $_SESSION['active_user']->fname; ?></h5>
+            <div class="btn-logout">
+                <button class="logout" onclick="confirmLogout()">Log Out</button>
             </div>
         </div>
         <script>
             function confirmLogout() {
-            var result = confirm("Apakah Anda yakin ingin logout?");
-            if (result) {
-                window.location.href = "../logout.php"; 
-            } 
-        }
+                var result = confirm("Apakah Anda yakin ingin logout?");
+                if (result) {
+                    window.location.href = "../logout.php";
+                }
+            }
         </script>
     </nav>
-
 
     <script>
         function openFrmNew() {
             document.getElementById('formNew').style.display = "block";
             document.getElementById('gameName').value = ""; 
-            document.getElementById('description').value = ""; 
+            document.getElementById('teamName').value = ""; 
             document.getElementById('actionButton').value = "add"; 
             document.getElementById('actionButtonText').innerText = "Add new"; 
             document.getElementById('idgame').value = ""; 
         }
 
-        function openFrmEdit(idgame, name, description) {
+        function openFrmEdit(idteam, gameName, teamName) {
             document.getElementById('formNew').style.display = "block";
-            document.getElementById('gameName').value = name; 
-            document.getElementById('description').value = description; 
+            document.getElementById('teamName').value = teamName; 
             document.getElementById('actionButton').value = "edit"; 
-            document.getElementById('actionButtonText').innerText = "Update Game"; 
-            document.getElementById('idgame').value = idgame; 
+            document.getElementById('actionButtonText').innerText = "Update Team";
+            document.getElementById('idteam').value = idteam;  
         }
 
         function closeFrmNew() {
@@ -260,16 +258,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="frm-content">
                     <span class="close" onclick="closeFrmNew()">&times;</span>
                     <form method="POST" action="">
-                        <h2><span id="actionButtonText">Add a new Game</span></h2>
-                        <input type="hidden" id="idgame" name="idgame"> <!-- Hidden input untuk idgame saat update -->
+                        <h2><span id="actionButtonText">Add a new Team</span></h2>
+                        <input type="hidden" id="idteam" name="idteam"> 
                         <div class="formNew-Group">
-                            <label for="name">Name</label>
-                            <input type="text" id="gameName" name="gameName" placeholder="Enter Game Name" required>
+                            <label for="teamName" formArrayName="control"> Team</label>
+                            <textarea id="teamName" name="teamName" placeholder="Enter Team Name" rows="4" required></textarea>
                         </div>
                         <div class="formNew-Group">
-                            <label for="description">Description</label>
-                            <textarea id="description" name="desc" placeholder="Enter Game Description" rows="4" required></textarea>
+                            <label for="game">Game</label>
+                            <select id="game" name="game">
+                                <option value="">--- Pilih Game ---</option>
+                                <?php
+                                    $q = "select * from game";
+                                    $resGame = $conn->query($q);
+                                    if($resGame){
+                                        while($rGame = $resGame->fetch_array()){
+                                            echo("<option value='".$rGame['idgame']."'>".$rGame["name"]."</option>");
+                                            
+                                        }
+                                    }
+                                    
+                                ?>
+                            </select>
                         </div>
+
                         <div class="formNew-btnAddContainer">
                             <button type="submit" id="actionButton" name="action" value="add" class="formNew-btnAdd">Add new</button>
                         </div>
@@ -281,26 +293,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <table class="table">
             <thead>
                 <tr>
-                    <th>Id Game</th>
-                    <th>Name</th>
-                    <th>Description</th>
+                    <th>Id Team</th>
+                    <th>Game Name</th>
+                    <th>team Name</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
                 $conn = new mysqli('localhost', 'root', '', 'esport');
-                $stmt = $conn->prepare("select t.idteam, g.name as Game, t.name from team t inner join game g on g.idgame = t.idgame;");
+                $stmt = $conn->prepare("select t.idteam, g.name as gameName, t.name as teamName from team t  inner join game g on g.idgame = t.idgame;");
                 $stmt->execute();
                 $res = $stmt->get_result();
                 if ($res->num_rows > 0) {
                     while ($categori = $res->fetch_array()) {
                         echo "<tr>";
                         echo "<td>" . $categori["idteam"] . "</td>";
-                        echo "<td>" . $categori["Game"] . "</td>";
-                        echo "<td>" . $categori["name"] . "</td>";
+                        echo "<td>" . $categori["gameName"] . "</td>";
+                        echo "<td>" . $categori["teamName"] . "</td>";
                         echo "<td>
-                                <button type='button' onclick='openFrmEdit(\"" . $categori["idteam"] . "\", \"" . $categori["Game"] . "\", \"" . $categori["name"] . "\")' style='color: green; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Update</button>
+                                <button type='button' onclick='openFrmEdit(\"" . $categori["idteam"] . "\", \"" . $categori["gameName"] . "\", \"" . $categori["teamName"] . "\")' style='color: green; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Update</button>
                                 <form method='POST' action='' style='display:inline;'>
                                     <input type='hidden' name='idteam' value='" . $categori["idteam"] . "'>
                                     <button type='submit' name='action' value='delete' style='color: red; border: none; background: none; cursor: pointer; font-size: 18px;'><span>&#x1F5D1;</span> Delete</button>
@@ -309,15 +321,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr>";
+                    echo "<tar>";
                     echo "<td colspan='4' style='text-align: center;'>None</td>";
-                    echo "</tr>";
+                    echo "</tar>";
                 }
                 $stmt->close();
                 $conn->close();
                 ?>
             </tbody>
         </table>
-</div>
+
+        <!-- Navigation Buttons -->
+        <div class="buttons">
+            <button>Back</button>
+            <button>Next</button>
+        </div>
+    </div>
 </body>
 </html>
