@@ -322,7 +322,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     echo "<td colspan='4' style='text-align: center;'>None</td>";
                     echo "</tar>";
                 }
-                $stmt->close();
+                $st->close();
                 $kon->close();
                 ?>
             </tbody>

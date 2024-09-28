@@ -281,7 +281,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <th>Name</th>
                     <th>Date</th>
                     <th>Action</th>
-                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -301,7 +300,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <form method='POST' action='seeDetail.php' style='display:inline;'>
                                     <input type='hidden' name='namaCate' value='Event'>
                                     <input type='hidden' name='idevent' value='" . $categori["idevent"] . "'>
-                                    <button type='submit' name='detail' value='detail' style='color: red; border: none; background: none; cursor: pointer; font-size: 18px;'><span>&#x1F5D1;</span> Detail</button>
+                                    <button type='submit' name='detail' value='detail' style='color: yellow; border: none; background: none; cursor: pointer; font-size: 18px;'>📝 Detail</button>
                                 </form>
                                 <form method='POST' action='' style='display:inline;'>
                                     <input type='hidden' name='idevent' value='" . $categori["idevent"] . "'>
