@@ -18,8 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conn = new mysqli('localhost', 'root', '', 'esport');
         $stmt = $conn->prepare("delete from team where idteam =". $idTeam);
         $stmt->execute();
-        $stmt->close();
-        $conn->close(); 
+        
     }
     else if($action == "add"){
         $team = $_POST['teamName'];
@@ -27,8 +26,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conn = new mysqli('localhost', 'root', '', 'esport');
         $stmt = $conn->prepare("INSERT INTO team (idteam, idgame, name) VALUES ('', '$game', '$team')");
         $stmt->execute();
-        $stmt->close();
-        $conn->close();
     }
     else if ($action == "edit") {
         $idTeam = $_POST['idteam'];
@@ -38,9 +35,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $conn->prepare("UPDATE team SET idgame = ?, name = ? WHERE idteam = ". $idTeam);
         $stmt->bind_param("ss", $game, $name);
         $stmt->execute();
-        $stmt->close();
-        $conn->close();
     } 
+    $stmt->close();
+        $conn->close(); 
 }
 ?>
 <!DOCTYPE html>
@@ -301,10 +298,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </thead>
             <tbody>
                 <?php
-                $conn = new mysqli('localhost', 'root', '', 'esport');
-                $stmt = $conn->prepare("select t.idteam, g.name as gameName, t.name as teamName from team t  inner join game g on g.idgame = t.idgame;");
-                $stmt->execute();
-                $res = $stmt->get_result();
+                $kon = new mysqli('localhost', 'root', '', 'esport');
+                $st = $kon->prepare("select t.idteam, g.name as gameName, t.name as teamName from team t  inner join game g on g.idgame = t.idgame;");
+                $st->execute();
+                $res = $st->get_result();
                 if ($res->num_rows > 0) {
                     while ($categori = $res->fetch_array()) {
                         echo "<tr>";
@@ -326,7 +323,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     echo "</tar>";
                 }
                 $stmt->close();
-                $conn->close();
+                $kon->close();
                 ?>
             </tbody>
         </table>
