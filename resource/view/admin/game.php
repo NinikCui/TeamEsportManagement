@@ -335,7 +335,7 @@ $pageStart = ($page - 1) * $maxRows;
         
         <div>
             <?php 
-                echo("Showing Page " . $pageStart + 1 . " to  " . $pageStart + $maxRows);
+                echo("Showing Data " . $pageStart + 1 . " to  " . $pageStart + $maxRows);
             ?>
         </div>
         <div class="buttons">

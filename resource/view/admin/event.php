@@ -41,7 +41,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conn->close();
     }
 }
-
+$maxRows = 5;
+$page = (isset($_GET["page"]) && is_numeric($_GET["page"])) ? ($_GET["page"]) :1;
+$pageStart = ($page - 1) * $maxRows;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -286,7 +288,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <tbody>
                 <?php
                 $conn = new mysqli('localhost', 'root', '', 'esport');
-                $stmt = $conn->prepare("SELECT * FROM event");
+                $stmt = $conn->prepare("SELECT * FROM event limit ". $pageStart.", ". $maxRows);
                 $stmt->execute();
                 $res = $stmt->get_result();
                 if ($res->num_rows > 0) {
@@ -315,15 +317,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     echo "</tr>";
                 }
                 $stmt->close();
-                $conn->close();
+                $q = " select count(*) as totalRows from event";
+                $resCount = $conn->query($q);
+                $rcount = $resCount->fetch_array();
+                $totalRows = $rcount["totalRows"];
+                $totalPages = ceil($totalRows / $maxRows);
                 ?>
             </tbody>
         </table>
-
-        <!-- Navigation Buttons -->
+        <div>
+            <?php 
+                echo("Showing Data " . $pageStart + 1 . " to  " . $pageStart + $maxRows);
+            ?>
+        </div>
         <div class="buttons">
-            <button>Back</button>
-            <button>Next</button>
+            <a href="<?php if($page <= 1){echo " # ";} else {echo "event.php?page=". $page - 1;} ?>"><button>Back</button></a>
+        <!--    <?php //for($i = 1; $i <= $totalPages; $i++) :?>
+                <a href="?page="<?php //echo($i);?>> <?php //  echo($i) ?> </a>
+            <?php   //endfor;  ?> -->
+            <a href="<?php if($page >= $totalPages){echo"#";} else{echo"event.php?page=".$page + 1 ;} ?>"><button>Next</button></a>
+
         </div>
     </div>
 </body>

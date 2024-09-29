@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     if ($action == 'delete') {
             $idAchi = $_POST['idachievement'];
-            $conn = new mysqli('localhost', 'root', '', 'esport');
+            
             $stmt = $conn->prepare("delete from achievement where idachievement =". $idAchi);
             $stmt->execute();
             $stmt->close();
@@ -26,16 +26,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $idteam = $_POST['idteam'];
         $namaAchi = $_POST['nameAchi'];
         $dateAchi = $_POST['date'];
+       
         $desAchi = $_POST['descriptionAchi'];
-        $conn = new mysqli('localhost', 'root', '', 'esport');
-        $stmt = $conn->prepare("INSERT INTO achievement (idachievement, idteam, name, date, description) VALUES ('', '$idteam', '$namaAchi', '2024-09-09', '$desAchi')");
+        
+        $stmt = $conn->prepare("INSERT INTO achievement (idachievement, idteam, name, date, description) VALUES ('', '$idteam', '$namaAchi', '$dateAchi', '$desAchi')");
         $stmt->execute();
         $stmt->close();
         $conn->close();
     }
     
 }
-
+$maxRows = 5;
+$page = (isset($_GET["page"]) && is_numeric($_GET["page"])) ? ($_GET["page"]) :1;
+$pageStart = ($page - 1) * $maxRows;
 
 ?>
 <!DOCTYPE html>
@@ -291,7 +294,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <table class="table">
             <thead>
                 <tr>
-                    <th>Id Proposal</th>
+                    <th>Id Achievement</th>
                     <th>Team</th>
                     <th>Nama</th>
                     <th>Date</th>
@@ -303,7 +306,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <?php
                     $conn = new mysqli('localhost', 'root', '', 'esport');
                     $stmt = $conn->prepare("SELECT a.idachievement, t.name as team, a.name, DATE_FORMAT(a.date,'%d/%m/%Y') as date, a.description  FROM achievement a
-                                            inner join team t on t.idteam = a.idteam");
+                                            inner join team t on t.idteam = a.idteam order by a.idachievement asc limit ". $pageStart.", ". $maxRows);
                     $stmt->execute();
                     $res = $stmt->get_result();
                     if($res->num_rows > 0 ){
@@ -328,15 +331,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         echo "</tr>";
                     }
                     $stmt->close();
-                    $conn->close();
+                    $q = " select count(*) as totalRows from achievement";
+                    $resCount = $conn->query($q);
+                    $rcount = $resCount->fetch_array();
+                    $totalRows = $rcount["totalRows"];
+                    $totalPages = ceil($totalRows / $maxRows);
                 ?>
             </tbody>
         </table>
-
-        <!-- Navigation Buttons -->
+        <div>
+            <?php 
+                echo("Showing Data " . $pageStart + 1 . " to  " . $pageStart + $maxRows);
+            ?>
+        </div>
         <div class="buttons">
-            <button>Back</button>
-            <button>Next</button>
+            <a href="<?php if($page <= 1){echo " # ";} else {echo "achievement.php?page=". $page - 1;} ?>"><button>Back</button></a>
+        <!--    <?php //for($i = 1; $i <= $totalPages; $i++) :?>
+                <a href="?page="<?php //echo($i);?>> <?php //  echo($i) ?> </a>
+            <?php   //endfor;  ?> -->
+            <a href="<?php if($page >= $totalPages){echo"#";} else{echo"achievement.php?page=".$page + 1 ;} ?>"><button>Next</button></a>
+
         </div>
 </div>
     
