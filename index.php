@@ -17,14 +17,10 @@ if (isset($_SESSION['username'])) {
     <title>HIKSROT</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <link href="resource/css/nav.css" rel="stylesheet">
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
-            background-color: #2a0136;
-            color: white;
-            text-align: center;
+         body {
+            background-image: url("resource/img/BG.png");
         }
 
         .navbar {
@@ -32,7 +28,6 @@ if (isset($_SESSION['username'])) {
             justify-content: space-between;
             align-items: center;
             padding: 20px;
-            background-color: #250129;
         }
         .logo {
             display: flex;

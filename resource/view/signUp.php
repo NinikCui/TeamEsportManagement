@@ -180,14 +180,14 @@ require_once('../../classes/member.php');
                 <input type="text"name="username" placeholder="Username" required>
                 <div class="password-container">
                     <input type="password" id="password" name="password" placeholder="Password" required>
-                    <span class="see-password" id="passEye"><img src="img/passwordMata.png"></span>
+                    <span class="see-password" id="passEye"><img src="../img/passwordMata.png"></span>
                 </div>
                 <button type="submit">Sign Up</button>
             </form>
             <p class="signin-text">Already have an account? <a href="login.php">Sign In</a></p>
         </div>
         <div class="image-container">
-            <img src="img/signUp.jpg" alt="signUpImage">
+            <img src="../img/signUp.jpg" alt="signUpImage">
         </div>
     </div>
 
