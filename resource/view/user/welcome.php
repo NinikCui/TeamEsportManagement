@@ -29,8 +29,8 @@ if (!isset($_SESSION['active_user'])) {
             HIKSROT
         </div>
         <ul class="nav-section">
-            <li><a href="#">A</a></li>
-            <li><a href="#">B</a></li>
+            <li><a href="welcome.php"><u>Home</u></a></li>
+            <li><a href="teamUser.php">Team</a></li>
             <li><a href="#">C</a></li>
             <li><a href="#">D</a></li>
             <li><a href="#">E</a></li>
