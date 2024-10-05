@@ -176,7 +176,7 @@ $pageStart = ($page - 1) * $maxRows;
         </table>
         <script>
             function alrt() {
-                alert("Data sudah masuk");
+                alert("Data sudah masuk, Tunggu Konfirmasi.");
             
             }
         </script>

@@ -302,6 +302,7 @@ $pageStart = ($page - 1) * $maxRows;
                                 <form method='POST' action='seeDetail.php' style='display:inline;'>
                                     <input type='hidden' name='namaCate' value='Event'>
                                     <input type='hidden' name='idevent' value='" . $categori["idevent"] . "'>
+                                    <input type='hidden' name='namaEvent' value='" . $categori["name"] . "'>
                                     <button type='submit' name='detail' value='detail' style='color: yellow; border: none; background: none; cursor: pointer; font-size: 18px;'>📝 Detail</button>
                                 </form>
                                 <form method='POST' action='' style='display:inline;'>
