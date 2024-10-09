@@ -34,7 +34,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->close();
         $conn->close();
     }
-    
+    else if ($action == "edit") {
+        $idAchi = $_POST['idachievement'];
+        $team = $_POST['idteam'];
+        $nameAchi = $_POST['nameAchi'];
+        $dateAchi = $_POST['date'];
+        $descAchi = $_POST['descriptionAchi'];
+        $stmt = $conn->prepare("UPDATE achievement SET idteam=?, name=?, date=?, description=? WHERE idachievement = ?");
+        $stmt->bind_param("ssssi", $team, $nameAchi, $dateAchi, $descAchi, $idAchi);
+        $stmt->execute();
+        $stmt->close();
+        $conn->close();
+    }
 }
 $maxRows = 5;
 $page = (isset($_GET["page"]) && is_numeric($_GET["page"])) ? ($_GET["page"]) :1;
@@ -220,140 +231,153 @@ $pageStart = ($page - 1) * $maxRows;
         }
         </script>
     </nav>
-    <div > 
+    <script>
+    function openFrmNew() {
+        document.getElementById('formNew').style.display = "block";
+        document.getElementById('name').value = ""; 
+        document.getElementById('description').value = ""; 
+        document.getElementById('actionButton').value = "add"; 
+        document.getElementById('actionButtonText').innerText = "Add new"; 
+        document.getElementById('idachievement').value = ""; 
+        document.getElementById('cbteam').selectedIndex = 0; // Reset combo box
+    }
+        function openFrmEdit(idachievement, name, team, date, description) {
+        document.getElementById('formNew').style.display = "block";
+        document.getElementById('idachievement').value = idachievement; // ID achievement untuk edit
+        document.getElementById('name').value = name;
+        document.getElementById('cbteam').value = team;
+        document.getElementById('date').value = date;
+        document.getElementById('description').value = description;
 
-    </div>
-
-    <div class="container">
-        <script>
-        function openFrmNew() {
-            document.getElementById('formNew').style.display = "block";
-        }
-
-        function closeFrmNew() {
-            document.getElementById('formNew').style.display = "none";
-        }
-        window.onclick = function(event) {
-            var frmNew = document.getElementById('formNew');
-            if (event.target == frmNew) {
-                frmNew.style.display = "none";
+        // Ubah tombol submit menjadi 'edit'
+        document.getElementById('actionButton').value = "edit";
+        document.getElementById('actionButtonText').innerText = "Update Achievement";
+        
+        // Set selected team in combo box
+        var cbteam = document.getElementById('cbteam');
+        for (var i = 0; i < cbteam.options.length; i++) {
+            if (cbteam.options[i].text === teamName) {
+                cbteam.selectedIndex = i;
+                break;
             }
         }
+    }
 
-        </script>
-        <form method="POST" action="">
-        <a  onclick="openFrmNew()" style="padding: 10px 20px; background-color: #fff; color: #3c0036; text-decoration: none; border-radius: 5px; border: none; cursor: pointer; float: right;">+ New</a>
+    function closeFrmNew() {
+        document.getElementById('formNew').style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        var frmNew = document.getElementById('formNew');
+        if (event.target == frmNew) {
+            frmNew.style.display = "none";
+        }
+    }
+</script>
+
+<div class="container">
+    <form method="POST" action="">
+        <a onclick="openFrmNew()" style="padding: 10px 20px; background-color: #fff; color: #3c0036; text-decoration: none; border-radius: 5px; border: none; cursor: pointer; float: right;">+ New</a>
 
         <div id="formNew" class="frmNew">
             <div class="frm-content">
                 <span class="close" onclick="closeFrmNew()">&times;</span>
-                <form method="POST" action="">
-                    <h2>Add a new Achievement</h2>
-                    <div class="formNew-Group">
-                        <label for="name">Name</label>
-                        <input type="text" id="name" name="nameAchi" placeholder="Enter achievement name" required>
-                    </div>
+                <h2><span id="actionButtonText">Add a new Achievement</span></h2>
+                <input type="hidden" id="idachievement" name="idachievement"> 
+                <div class="formNew-Group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="nameAchi" placeholder="Enter achievement name" required>
+                </div>
 
-                    <div class="formNew-Group">
-                        <label for="team">Team</label>
-                        <select id="cbteam" class="formNew-Team" name="idteam">
-                            <option value="">--- SELECT TEAM ---</option>
-                            <?php
-                                $conn = new mysqli('localhost', 'root', '', 'esport');
-                                $stmt = $conn->prepare("SELECT idteam, name FROM team;");
-                                $stmt->execute();
-                                $res = $stmt->get_result();
-                                while($rteam = $res->fetch_array()){
-                                    echo "<option  value='".$rteam["idteam"]."'>".$rteam["name"]."</option>";
-                                }
-                            ?>
-                        </select>
-                    </div>
+                <div class="formNew-Group">
+                    <label for="team">Team</label>
+                    <select id="cbteam" class="formNew-Team" name="idteam" required>
+                        <option value="">--- SELECT TEAM ---</option>
+                        <?php
+                            $conn = new mysqli('localhost', 'root', '', 'esport');
+                            $stmt = $conn->prepare("SELECT idteam, name FROM team;");
+                            $stmt->execute();
+                            $res = $stmt->get_result();
+                            while($rteam = $res->fetch_array()){
+                                echo "<option value='".$rteam["idteam"]."'>".$rteam["name"]."</option>";
+                            }
+                        ?>
+                    </select>
+                </div>
 
-                    <div class="formNew-Group">
-                        <label for="date">Date</label>
-                        <input type="date" id="date" name="date" required>
-                    </div>
+                <div class="formNew-Group">
+                    <label for="date">Date</label>
+                    <input type="date" id="date" name="date" required>
+                </div>
 
-                    <div class="formNew-Group">
-                        <label for="description">Description</label>
-                        <textarea id="description" name="descriptionAchi" placeholder="Enter achievement description" rows="4" required></textarea>
-                    </div>
-                    <div class="formNew-btnAddContainer">
-                        <button type="submit" name='action' value='add' class="formNew-btnAdd">Add new</button>
-                    </div>
-                </form>
+                <div class="formNew-Group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="descriptionAchi" placeholder="Enter achievement description" rows="4" required></textarea>
+                </div>
+                <div class="formNew-btnAddContainer">
+                    <button type="submit" id="actionButton" name='action' value='add' class="formNew-btnAdd">Add new</button>
+                </div>
             </div>
         </div>
-        </form>
-    
-    
-    </div>
-    <div class="container">
-        
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Id Achievement</th>
-                    <th>Team</th>
-                    <th>Nama</th>
-                    <th>Date</th>
-                    <th>Description</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                    $conn = new mysqli('localhost', 'root', '', 'esport');
-                    $stmt = $conn->prepare("SELECT a.idachievement, t.name as team, a.name, DATE_FORMAT(a.date,'%d/%m/%Y') as date, a.description  FROM achievement a
-                                            inner join team t on t.idteam = a.idteam order by a.idachievement asc limit ". $pageStart.", ". $maxRows);
-                    $stmt->execute();
-                    $res = $stmt->get_result();
-                    if($res->num_rows > 0 ){
-                        while($categori = $res->fetch_array()){
-                            echo "<tr>";
-                            echo "<td>" . $categori["idachievement"] . "</td>";
-                            echo "<td>" . $categori["team"] . "</td>";
-                            echo "<td>" . $categori["name"] . "</td>";
-                            echo "<td>" . $categori["date"] . "</td>";
-                            echo "<td class='desc'>" . $categori["description"] . "</td>";
-                            echo "<td>
-                                    <form method='POST' action=''>
-                                        <input type='hidden' name='idachievement' value='" . $categori["idachievement"] . "'>
-                                        <button type='submit' name='action' value='delete' style='color: red; border: none; background: none; cursor: pointer; font-size: 18px;'><span>&#x1F5D1;</span> Delete</button>
-                                    </form>
-                                </td>";
-                            echo "</tr>"; 
-                        }
-                    }else{
-                        echo "<tr>";
-                        echo "<td colspan='6' style='text-align: center;'>None</td>";
-                        echo "</tr>";
-                    }
-                    $stmt->close();
-                    $q = " select count(*) as totalRows from achievement";
-                    $resCount = $conn->query($q);
-                    $rcount = $resCount->fetch_array();
-                    $totalRows = $rcount["totalRows"];
-                    $totalPages = ceil($totalRows / $maxRows);
-                ?>
-            </tbody>
-        </table>
-        <div>
-            <?php 
-                echo("Showing Data " . $pageStart + 1 . " to  " . $pageStart + $maxRows);
-            ?>
-        </div>
-        <div class="buttons">
-            <a href="<?php if($page <= 1){echo " # ";} else {echo "achievement.php?page=". $page - 1;} ?>"><button>Back</button></a>
-        <!--    <?php //for($i = 1; $i <= $totalPages; $i++) :?>
-                <a href="?page="<?php //echo($i);?>> <?php //  echo($i) ?> </a>
-            <?php   //endfor;  ?> -->
-            <a href="<?php if($page >= $totalPages){echo"#";} else{echo"achievement.php?page=".$page + 1 ;} ?>"><button>Next</button></a>
+    </form>
 
-        </div>
-</div>
-    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id Achievement</th>
+                <th>Team</th>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+                $stmt = $conn->prepare("SELECT a.idachievement, t.name as team, a.name, DATE_FORMAT(a.date,'%d/%m/%Y') as date, a.description  FROM achievement a
+                                        INNER JOIN team t ON t.idteam = a.idteam ORDER BY a.idachievement ASC LIMIT ". $pageStart.", ". $maxRows);
+                $stmt->execute();
+                $res = $stmt->get_result();
+                if($res->num_rows > 0 ){
+                    while($categori = $res->fetch_array()){
+                        echo "<tr>";
+                        echo "<td>" . $categori["idachievement"] . "</td>";
+                        echo "<td>" . $categori["team"] . "</td>";
+                        echo "<td>" . $categori["name"] . "</td>";
+                        echo "<td>" . $categori["date"] . "</td>";
+                        echo "<td class='desc'>" . $categori["description"] . "</td>";
+                        echo "<td>
+                                <button type='button' onclick=\"openFrmEdit('".$categori["idachievement"]."', '".$categori["name"]."', '".$categori["team"]."', '".$categori["date"]."', '".$categori["description"]."')\" style='color: green; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Edit</button>
+                                <form method='POST' action='' style='display:inline;'>
+                                    <input type='hidden' name='idachievement' value='" . $categori["idachievement"] . "'>
+                                    <button type='submit' name='action' value='delete' style='color: red; border: none; background: none; cursor: pointer; font-size: 18px;'><span>&#x1F5D1;</span> Delete</button>
+                                </form>
+                              </td>";
+                        echo "</tr>"; 
+                    }
+                } else {
+                    echo "<tr><td colspan='6' style='text-align: center;'>None</td></tr>";
+                }
+                $stmt->close();
+                
+                $q = "SELECT COUNT(*) as totalRows FROM achievement";
+                $resCount = $conn->query($q);
+                $rcount = $resCount->fetch_array();
+                $totalRows = $rcount["totalRows"];
+                $totalPages = ceil($totalRows / $maxRows);
+            ?>
+        </tbody>
+    </table>
+
+    <div>
+        <?php 
+            echo("Showing Data " . ($pageStart + 1) . " to " . min($pageStart + $maxRows, $totalRows));
+        ?>
+    </div>
+    <div class="buttons">
+        <a href="<?php echo ($page <= 1) ? "#" : "achievement.php?page=" . ($page - 1); ?>"><button>Back</button></a>
+        <a href="<?php echo ($page >= $totalPages) ? "#" : "achievement.php?page=" . ($page + 1); ?>"><button>Next</button></a>
+    </div>
 </div>
 </body>
 </html>
