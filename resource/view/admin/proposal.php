@@ -169,8 +169,8 @@ $pageStart = ($page - 1) * $maxRows;
                             echo "<td>
                                     <form method='POST' action=''>
                                         <input type='hidden' name='id_proposal' value='" . $categori["idjoin_proposal"] . "'>
-                                        <button type='submit' name='action' value='approve' style='color: green; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Approve</button>
-                                        <button type='submit' name='action' value='rejected' style='color: red; border: none; background: none; cursor: pointer; font-size: 18px;'>✖ Decline</button>
+                                        <button type='submit' name='action' value='approve' style='color: #A0D683; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Approve</button>
+                                        <button type='submit' name='action' value='rejected' style='color: #FF474D; border: none; background: none; cursor: pointer; font-size: 18px;'>✖ Decline</button>
                                     </form>
                                 </td>";
                             echo "</tr>"; 

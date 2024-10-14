@@ -337,7 +337,7 @@ $pageStart = ($page - 1) * $maxRows;
                                 <form method='POST' action='' style='display:inline;'>
                                     <input type='hidden' name='idevent' value='" . $categori["idevent"] . "'>
                                     <input type='hidden' name='idteam' value='" . $categori["idteam"] . "'>
-                                    <button type='submit' name='action' value='delete' style='color: red; border: none; background: none; cursor: pointer; font-size: 18px;'><span>&#x1F5D1;</span> Delete</button>
+                                    <button type='submit' name='action' value='delete' style='color: #FF474D; border: none; background: none; cursor: pointer; font-size: 18px;'><span>&#x1F5D1;</span> Delete</button>
                                 </form>
                               </td>";
                         echo "</tr>";

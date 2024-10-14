@@ -155,7 +155,7 @@ $pageStart = ($page - 1) * $maxRows;
                         echo "<td>
                                     <form method='POST' action='' style='display:inline;'>
                                     <input type='hidden' name='idteam' value='" . $categori["idteam"] . "'>
-                                    <button type='submit' onclick='alrt()'name='action' value='join' style='color: green; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Update</button>
+                                    <button type='submit' onclick='alrt()'name='action' value='join' style='color: #A0D683; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Update</button>
                                 </form>
                               </td>";
                         echo "</tr>";

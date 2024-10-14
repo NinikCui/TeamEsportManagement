@@ -347,10 +347,10 @@ $pageStart = ($page - 1) * $maxRows;
                         echo "<td>" . $categori["date"] . "</td>";
                         echo "<td class='desc'>" . $categori["description"] . "</td>";
                         echo "<td>
-                                <button type='button' onclick=\"openFrmEdit('".$categori["idachievement"]."', '".$categori["name"]."', '".$categori["team"]."', '".$categori["date"]."', '".$categori["description"]."')\" style='color: green; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Edit</button>
+                                <button type='button' onclick=\"openFrmEdit('".$categori["idachievement"]."', '".$categori["name"]."', '".$categori["team"]."', '".$categori["date"]."', '".$categori["description"]."')\" style='color: #A0D683; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Edit</button>
                                 <form method='POST' action='' style='display:inline;'>
                                     <input type='hidden' name='idachievement' value='" . $categori["idachievement"] . "'>
-                                    <button type='submit' name='action' value='delete' style='color: red; border: none; background: none; cursor: pointer; font-size: 18px;'><span>&#x1F5D1;</span> Delete</button>
+                                    <button type='submit' name='action' value='delete' style='color: #FF474D; border: none; background: none; cursor: pointer; font-size: 18px;'><span>&#x1F5D1;</span> Delete</button>
                                 </form>
                               </td>";
                         echo "</tr>"; 
