@@ -6,29 +6,33 @@ if (!isset($_SESSION['active_user'])) {
     exit();
 }
 
-
-
 $conn = new mysqli('localhost', 'root', '', 'esport');
+
+// Ambil status dari query parameter (combo box)
+$status = isset($_GET['status']) ? $_GET['status'] : 'waiting'; // Default value 'waiting' if not set
+
+$maxRows = 5;
+$page = (isset($_GET["page"]) && is_numeric($_GET["page"])) ? ($_GET["page"]) : 1;
+$pageStart = ($page - 1) * $maxRows;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $idProposal = $_POST['id_proposal'];
-    $action = $_POST['action'];
+    $action = $_POST['action']; 
+    
     if ($action == 'approve') {
         $status = 'approved';
     } elseif ($action == 'rejected') {
         $status = 'rejected';
     }
+
     $sql = "UPDATE join_proposal SET status = ? WHERE idjoin_proposal = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('si', $status, $idProposal);
     $stmt->execute();
     $stmt->close();
-    $conn->close();
 }
-$maxRows = 5;
-$page = (isset($_GET["page"]) && is_numeric($_GET["page"])) ? ($_GET["page"]) :1;
-$pageStart = ($page - 1) * $maxRows;
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -97,10 +101,17 @@ $pageStart = ($page - 1) * $maxRows;
             border-radius: 5px;
             cursor: pointer;
             margin-right: 20px;
-            
+        }   
+        .filter{
+            background-color: #fff;
+            color: #3c0036;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 20px;
+            margin-bottom: 10px;
         }
-        
-
     </style>
 </head>
 <body>
@@ -134,11 +145,19 @@ $pageStart = ($page - 1) * $maxRows;
             } 
         }
         </script>
-
-        
     </nav>
     <div class="container">
-        
+        <!-- Form Filter -->
+        <form method="GET" action="proposal.php">
+            <label for="status">Filter by status: </label>
+            <select name="status" id="status" class="filter">
+                <option value="waiting" <?php if($status == 'waiting') echo 'selected'; ?>>Waiting</option>
+                <option value="approved" <?php if($status == 'approved') echo 'selected'; ?>>Approved</option>
+                <option value="rejected" <?php if($status == 'rejected') echo 'selected'; ?>>Rejected</option>
+            </select>
+            <button type="submit" class="filter">Filter</button><br>
+        </form>
+        <!-- Table Data -->
         <table class="table">
             <thead>
                 <tr>
@@ -146,7 +165,9 @@ $pageStart = ($page - 1) * $maxRows;
                     <th>Username</th>
                     <th>Team</th>
                     <th>Game</th>
-                    <th>Action</th>
+                    <?php if ($status == 'waiting'): ?>
+                        <th>Action</th> <!-- Tampilkan kolom Action hanya jika status adalah waiting -->
+                    <?php endif; ?>
                 </tr>
             </thead>
             <tbody>
@@ -156,7 +177,10 @@ $pageStart = ($page - 1) * $maxRows;
                                             inner join member m on m.idmember = jp.idmember 
                                             inner join team t on t.idteam = jp.idteam
                                             inner join  game g on g.idgame = t.idgame 
-                                            where status ='waiting' limit ". $pageStart.", ". $maxRows);
+                                            where status = ? limit ?, ?");
+                    // Ambil status dari combo box (default ke 'waiting')
+                    $statusFilter = isset($_GET['status']) ? $_GET['status'] : 'waiting';
+                    $stmt->bind_param('sii', $statusFilter, $pageStart, $maxRows);
                     $stmt->execute();
                     $res = $stmt->get_result();
                     if($res->num_rows > 0 ){
@@ -166,27 +190,23 @@ $pageStart = ($page - 1) * $maxRows;
                             echo "<td>" . $categori["username"] . "</td>";
                             echo "<td>" . $categori["team"] . "</td>";
                             echo "<td>" . $categori["game"] . "</td>";
-                            echo "<td>
-                                    <form method='POST' action=''>
-                                        <input type='hidden' name='id_proposal' value='" . $categori["idjoin_proposal"] . "'>
-                                        <button type='submit' name='action' value='approve' style='color: #A0D683; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Approve</button>
-                                        <button type='submit' name='action' value='rejected' style='color: #FF474D; border: none; background: none; cursor: pointer; font-size: 18px;'>✖ Decline</button>
-                                    </form>
-                                </td>";
+                            if ($statusFilter == 'waiting') {
+                                echo "<td>
+                                        <form method='POST' action=''>
+                                            <input type='hidden' name='id_proposal' value='" . $categori["idjoin_proposal"] . "'>
+                                            <button type='submit' name='action' value='approve' style='color: #A0D683; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Approve</button>
+                                            <button type='submit' name='action' value='rejected' style='color: #FF474D; border: none; background: none; cursor: pointer; font-size: 18px;'>✖ Decline</button>
+                                        </form>
+                                    </td>";
+                            }
                             echo "</tr>"; 
                         }
-                    }else{
+                    } else {
                         echo "<tr>";
                         echo "<td colspan='5' style='text-align: center;'>None</td>";
                         echo "</tr>";
                     }
                     $stmt->close();
-                
-                    $q = " select count(*) as totalRows from join_proposal";
-                    $resCount = $conn->query($q);
-                    $rcount = $resCount->fetch_array();
-                    $totalRows = $rcount["totalRows"];
-                    $totalPages = ceil($totalRows / $maxRows);
                 ?>
             </tbody>
         </table>
@@ -198,12 +218,8 @@ $pageStart = ($page - 1) * $maxRows;
         </div>
         <div class="buttons">
             <a href="<?php if($page <= 1){echo " # ";} else {echo "proposal.php?page=". $page - 1;} ?>"><button>Back</button></a>
-        <!--    <?php //for($i = 1; $i <= $totalPages; $i++) :?>
-                <a href="?page="<?php //echo($i);?>> <?php //  echo($i) ?> </a>
-            <?php   //endfor;  ?> -->
             <a href="<?php if($page >= $totalPages){echo"#";} else{echo"proposal.php?page=".$page + 1 ;} ?>"><button>Next</button></a>
-
         </div>
-</div>
+    </div>
 </body>
 </html>
