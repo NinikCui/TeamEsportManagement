@@ -109,9 +109,6 @@ $pageStart = ($page - 1) * $maxRows;
         <ul class="nav-section">
             <li><a href="welcome.php">Home</a></li>
             <li><a href="teamUser.php"><u>Team</u></a></li>
-            <li><a href="#">C</a></li>
-            <li><a href="#">D</a></li>
-            <li><a href="#">E</a></li>
         </ul>
         <div class="photo-profile">
             <img src="../../img/fotoProfile.png" alt="Foto Profil">

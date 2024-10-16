@@ -21,7 +21,8 @@ class Member {
         return $this->username;
     }
     public function login($uName, $uPass) {
-        $q = "SELECT * FROM member WHERE username='$uName' AND password='$uPass'";
+        $mdPass = md5($uPass);
+        $q = "SELECT * FROM member WHERE username='$uName' AND password='$mdPass'";
             
         $resultSet = $this->dbCon->query($q);
         if (mysqli_num_rows($resultSet) > 0) { 
@@ -47,7 +48,8 @@ class Member {
             return false;
             
         } else { 
-            $q = "INSERT INTO member (fname, lname, username, password, profile) VALUES ('$fName', '$lName', '$uName', '$uPass','member')";
+            $mdPass = md5($uPass);
+            $q = "INSERT INTO member (fname, lname, username, password, profile) VALUES ('$fName', '$lName', '$uName', '$mdPass','member')";
             if ($this->dbCon->query($q) === TRUE) {
                 return true;
             }
