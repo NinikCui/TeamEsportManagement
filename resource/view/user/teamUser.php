@@ -5,7 +5,24 @@ if (!isset($_SESSION['active_user'])) {
     header('Location: ../login.php');
     exit;
 }
+
+$idmember=  $_SESSION['active_user']->idmember;
+$cekTeam = false;
+$idTeamUser = "";
+$namaTeamUser ="";
 $conn = new mysqli('localhost', 'root', '', 'esport');
+$stmt = $conn->prepare("SELECT jp.*, t.name  FROM join_proposal jp inner join team t on t.idteam = jp.idteam where idmember = $idmember and  status ='approved' limit 1 ;");
+$stmt->execute();        
+$res = $stmt->get_result();
+if ($res->num_rows > 0) {
+    $cekTeam = true;
+    while ($t = $res->fetch_array()) {
+        $idTeamUser = $t['idteam'];
+        $namaTeamUser = $t['name'];
+    }
+}
+
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
@@ -13,7 +30,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     
     if ($action == 'join') {
-        $idmember=  $_SESSION['active_user']->idmember;
         $idTeam = $_POST['idteam'];
         $conn = new mysqli('localhost', 'root', '', 'esport');
         $stmt = $conn->prepare("INSERT INTO join_proposal (idmember, idteam, description, status) VALUES ( '$idmember', '$idTeam', 'UHUYY', 'waiting');");
@@ -127,18 +143,21 @@ $pageStart = ($page - 1) * $maxRows;
         </script>
     </nav>
     <div class="container">
-        
-        <table class="table">
-            <thead>
+        <?php 
+            if($cekTeam){
+                echo "<h1>Selamat Anda Telah Bergabung Dalam Team $namaTeamUser</h1>";
+            }else{
+               echo " <table class=\"table\">
+               <thead>
                 <tr>
                     <th>Id Team</th>
                     <th>Game Name</th>
                     <th>team Name</th>
                     <th>Action</th>
                 </tr>
-            </thead>
-            <tbody>
-            <?php
+                </thead>
+                <tbody>";
+            
                 $kon = new mysqli('localhost', 'root', '', 'esport');
                 $st = $kon->prepare("select t.idteam, g.name as gameName, t.name as teamName from team t  inner join game g on g.idgame = t.idgame limit ". $pageStart.", ". $maxRows);
                 $st->execute();
@@ -168,28 +187,29 @@ $pageStart = ($page - 1) * $maxRows;
                 $rcount = $resCount->fetch_array();
                 $totalRows = $rcount["totalRows"];
                 $totalPages = ceil($totalRows / $maxRows);
-                ?>
-            </tbody>
-        </table>
+                
+                echo " </tbody>
+                </table>";
+
+                echo "<div>";
+                echo "Showing data " . $pageStart + 1 . " to  " . $pageStart + $maxRows;
+                echo "</div>
+                      <div class =\"buttons\">
+                      <a href=\"";if($page <= 1){echo " # ";} else {echo "teamUser.php?page=". $page - 1;} echo "\"><button>Back</button></a>";
+                      echo "<a href=\"";if($page >= $totalPages){echo"#";} else{echo"teamUser.php?page=".$page + 1 ;} echo "\"><button>Next</button></a>";
+                      
+            }
+
+        ?>
+        
+
+       
         <script>
             function alrt() {
                 alert("Data sudah masuk, Tunggu Konfirmasi.");
             
             }
         </script>
-        <div>
-            <?php 
-                echo("Showing Data " . $pageStart + 1 . " to  " . $pageStart + $maxRows);
-            ?>
-        </div>
-        <div class="buttons">
-            <a href="<?php if($page <= 1){echo " # ";} else {echo "teamUser.php?page=". $page - 1;} ?>"><button>Back</button></a>
-        <!--    <?php //for($i = 1; $i <= $totalPages; $i++) :?>
-                <a href="?page="<?php //echo($i);?>> <?php //  echo($i) ?> </a>
-            <?php   //endfor;  ?> -->
-            <a href="<?php if($page >= $totalPages){echo"#";} else{echo"teamUser.php?page=".$page + 1 ;} ?>"><button>Next</button></a>
-
-        </div>
 </div>
 </body>
 </html>
