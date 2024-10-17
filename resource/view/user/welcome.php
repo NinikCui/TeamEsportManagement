@@ -27,13 +27,7 @@ if (!isset($_SESSION['active_user'])) {
             flex-wrap:  wrap;
             gap: 50px;
         }
-        .cont-bubble{
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            max-width: 500px;
-        }
+        
         .container .info{
             font-size: 32px;
         }
@@ -41,31 +35,7 @@ if (!isset($_SESSION['active_user'])) {
             font-size: 16px;
             margin-top: 0px;
         }
-        #pubgm{
-            margin-top: 30px;
-            width: 250px;
-            height: 250px;
-        }
-        #valo{
-            margin-right: 50px;
-            width: 270px;
-            height: 270px;
-        }
-        .bubble {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: linear-gradient(to bottom, rgba(100, 90, 150, 0.5),rgba(255, 255, 255, 0));
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-        .bubble img{
-            object-fit: cover;
-            max-width: 90%;
-            max-height: 80%;
-        }
+       
     </style>
 </head>
 <body>
@@ -102,17 +72,7 @@ if (!isset($_SESSION['active_user'])) {
              on your favorite competitive games. Join us to stay ahead in the <br>
              game and connect with a community of passionate gamers!</p>
         </div>
-        <div class="cont-bubble">
-            <div class="bubble">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/Mobile_Legends_Bang_Bang_logo.png" alt="Mobile Legends: Bang Bang logo">
-            </div>
-            <div id="pubgm" class="bubble">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/4/43/PUBG_Mobile_simple_logo_black.png" alt="PUBGM logo">
-            </div>
-            <div id="valo" class="bubble">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Valorant_logo_-_pink_color_version.svg/1280px-Valorant_logo_-_pink_color_version.svg.png" alt="PUBGM logo">
-            </div>
-        </div>
+        
         
         
     </div>

@@ -297,6 +297,7 @@ $pageStart = ($page - 1) * $maxRows;
                     <th>Id Team</th>
                     <th>Game Name</th>
                     <th>team Name</th>
+                    <th>Member</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -312,7 +313,13 @@ $pageStart = ($page - 1) * $maxRows;
                         echo "<td>" . $categori["idteam"] . "</td>";
                         echo "<td>" . $categori["gameName"] . "</td>";
                         echo "<td>" . $categori["teamName"] . "</td>";
+                        echo "<td> <form method='POST' action='seeMember.php' style='display:inline;'>
+                                    <input type='hidden' name='idteam' value='" . $categori["idteam"] . "'>
+                                    <input type='hidden' name='namateam' value='" . $categori["teamName"] . "'>
+                                    <button type='submit' name='detail' value='detail' style='color: yellow; border: none; background: none; cursor: pointer; font-size: 18px;'>📝 Detail</button>
+                                </form></td>";
                         echo "<td>
+                                
                                 <button type='button' onclick='openFrmEdit(\"" . $categori["idteam"] . "\", \"" . $categori["gameName"] . "\", \"" . $categori["teamName"] . "\")' style='color: #A0D683; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Update</button>
                                 <form method='POST' action='' style='display:inline;'>
                                     <input type='hidden' name='idteam' value='" . $categori["idteam"] . "'>
