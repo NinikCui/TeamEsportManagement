@@ -275,9 +275,22 @@ $pageStart = ($page - 1) * $maxRows;
     }
 </script>
 
+<script>
+    function filterTeams() {
+        const input = document.getElementById("search-team").value.toLowerCase();
+        const rows = document.querySelectorAll("#achievement-table tbody tr");
+
+        rows.forEach(row => {
+            const teamName = row.querySelector(".team-name").textContent.toLowerCase();
+            row.style.display = teamName.includes(input) ? "" : "none";
+        });
+    }
+</script>
+
 <div class="container">
+    
     <form method="POST" action="">
-        <a onclick="openFrmNew()" style="padding: 10px 20px; background-color: #fff; color: #3c0036; text-decoration: none; border-radius: 5px; border: none; cursor: pointer; float: right;">+ New</a>
+        <a onclick="openFrmNew()" style="padding: 10px 20px; background-color: #fff; color: #3c0036; text-decoration: none; border-radius: 5px; border: none; margin-bottom: 10px; cursor: pointer; float: right;">+ New</a>
 
         <div id="formNew" class="frmNew">
             <div class="frm-content">
@@ -320,7 +333,12 @@ $pageStart = ($page - 1) * $maxRows;
             </div>
         </div>
     </form>
-
+     <!-- Search Form -->
+     <form method="GET" action="">
+        <input type="text" name="team_name" placeholder="Search by team name..." value="<?php echo isset($_GET['team_name']) ? $_GET['team_name'] : ''; ?>">
+        <button type="submit">Search</button>
+    </form>
+    <!-- Table -->
     <table class="table">
         <thead>
             <tr>
@@ -334,8 +352,21 @@ $pageStart = ($page - 1) * $maxRows;
         </thead>
         <tbody>
             <?php
-                $stmt = $conn->prepare("SELECT a.idachievement, t.name as team, a.name, DATE_FORMAT(a.date,'%d/%m/%Y') as date, a.description  FROM achievement a
+                $teamNameFilter = isset($_GET['team_name']) ? $_GET['team_name'] : '';
+                if (!empty($teamNameFilter)) {
+                    $stmt = $conn->prepare("SELECT a.idachievement, t.name as team, a.name, DATE_FORMAT(a.date,'%d/%m/%Y') as date, a.description  
+                                            FROM achievement a
+                                            INNER JOIN team t ON t.idteam = a.idteam
+                                            WHERE t.name LIKE ?
+                                            ORDER BY a.idachievement ASC 
+                                            LIMIT ?, ?");
+                    $searchTerm = $teamNameFilter . "%"; 
+                    $stmt->bind_param("ssi", $searchTerm, $pageStart, $maxRows);
+                } else {
+                    // Jika tidak ada filter, ambil semua data
+                    $stmt = $conn->prepare("SELECT a.idachievement, t.name as team, a.name, DATE_FORMAT(a.date,'%d/%m/%Y') as date, a.description  FROM achievement a
                                         INNER JOIN team t ON t.idteam = a.idteam ORDER BY a.idachievement ASC LIMIT ". $pageStart.", ". $maxRows);
+                }
                 $stmt->execute();
                 $res = $stmt->get_result();
                 if($res->num_rows > 0 ){
