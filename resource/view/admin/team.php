@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($action == 'delete') {
         $idTeam = $_POST['idteam'];
         $conn = new mysqli('localhost', 'root', '', 'esport');
-        $stmt = $conn->prepare("delete from team where idteam =". $idTeam);
+        $stmt = $conn->prepare("UPDATE team SET isdeleted = 1 WHERE idteam = ". $idTeam);
         $stmt->execute();
         
     }
@@ -24,8 +24,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $team = $_POST['teamName'];
         $game = $_POST['game'];
         $conn = new mysqli('localhost', 'root', '', 'esport');
-        $stmt = $conn->prepare("INSERT INTO team (idteam, idgame, name) VALUES ('', '$game', '$team')");
+
+        $stmt = $conn->prepare("SELECT idteam, isdeleted FROM team WHERE name = ? AND idgame = ?");
+        $stmt->bind_param('si', $team, $game); 
         $stmt->execute();
+        $result = $stmt->get_result();
+
+        if($result->num_rows > 0){
+            $row = $result->fetch_assoc();
+            if($row['isdeleted'] == 1){
+                $idteam = $row['idteam'];
+                $updateStmt = $conn->prepare("UPDATE team SET isdeleted = 0 WHERE idteam = ?");
+                $updateStmt->bind_param('i', $idteam);
+                $updateStmt->execute();
+            }
+        } else {
+            $insertStmt = $conn->prepare("INSERT INTO team (idteam, idgame, name) VALUES ('', ?, ?)");
+            $insertStmt->bind_param('is', $game, $team); 
+            $insertStmt->execute();
+        }
     }
     else if ($action == "edit") {
         $idTeam = $_POST['idteam'];
@@ -37,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
     } 
     $stmt->close();
-        $conn->close(); 
+    $conn->close(); 
 }
 $maxRows = 5;
 $page = (isset($_GET["page"]) && is_numeric($_GET["page"])) ? ($_GET["page"]) :1;
@@ -304,7 +321,7 @@ $pageStart = ($page - 1) * $maxRows;
             <tbody>
                 <?php
                 $kon = new mysqli('localhost', 'root', '', 'esport');
-                $st = $kon->prepare("select t.idteam, g.name as gameName, t.name as teamName from team t  inner join game g on g.idgame = t.idgame limit ". $pageStart.", ". $maxRows);
+                $st = $kon->prepare("select t.idteam, g.name as gameName, t.name as teamName from team t  inner join game g on g.idgame = t.idgame where t.isdeleted = 0 limit ". $pageStart.", ". $maxRows);
                 $st->execute();
                 $res = $st->get_result();
                 if ($res->num_rows > 0) {
