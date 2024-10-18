@@ -169,20 +169,7 @@ $pageStart = ($page - 1) * $maxRows;
                 ?>
             </tbody>
         </table>
-        <div>
-            <?php 
-                echo("Showing Data " . $pageStart + 1 . " to  " . $pageStart + $maxRows);
-            ?>
-        </div>
-        <!-- Navigation Buttons -->
-        <div class="buttons">
-            <a href="<?php if($page <= 1){echo " # ";} else {echo "seeMember.php?page=". $page - 1;} ?>"><button>Back</button></a>
-        <!--    <?php //for($i = 1; $i <= $totalPages; $i++) :?>
-                <a href="?page="<?php //echo($i);?>> <?php //  echo($i) ?> </a>
-            <?php   //endfor;  ?> -->
-            <a href="<?php if($page >= $totalPages){echo"#";} else{echo"seeMember.php?page=".$page + 1 ;} ?>"><button>Next</button></a>
-
-        </div>
+        
     </div>
 </body>
 </html>
