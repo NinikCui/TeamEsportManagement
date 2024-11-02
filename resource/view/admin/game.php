@@ -1,5 +1,6 @@
 <?php
 require_once('../../../classes/member.php');
+require_once('../../../classes/Game.php');
 session_start();
 if (!isset($_SESSION['active_user'])) {
     header('Location: ../../../index.php');
@@ -7,7 +8,7 @@ if (!isset($_SESSION['active_user'])) {
 }
 
 $conn = new mysqli('localhost', 'root', '', 'esport');
-
+$g = new Game($conn);
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $action = $_POST['action'];
@@ -15,34 +16,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     if ($action == 'delete') {
         $idGame = $_POST['idgame'];
-        $conn = new mysqli('localhost', 'root', '', 'esport');
-        $stmt = $conn->prepare("delete from game where idgame =". $idGame);
-        $stmt->execute();
-        $stmt->close();
-        $conn->close();
+        $g ->DeleteGame($idGame);
         
     }
     else if($action == "add"){
         $game = $_POST['gameName'];
         $description = $_POST['desc'];
-        $conn = new mysqli('localhost', 'root', '', 'esport');
-        $stmt = $conn->prepare("INSERT INTO game (idgame, name, description) VALUES ('', '$game', '$description')");
-        $stmt->execute();
-        $stmt->close();
-        $conn->close();
-        
-        
+        $g->AddGame($game,$description);
     }
     else if ($action == "edit") {
         $idGame = $_POST['idgame'];
         $game = $_POST['gameName'];
         $description = $_POST['desc'];
-        $conn = new mysqli('localhost', 'root', '', 'esport');
-        $stmt = $conn->prepare("UPDATE game SET name = ?, description = ? WHERE idgame = ". $idGame);
-        $stmt->bind_param("ss", $game, $description);
-        $stmt->execute();
-        $stmt->close();
-        $conn->close();
+        $g->EditGame($idGame,$game,$description);
     }
     
 }
@@ -295,23 +281,18 @@ $pageStart = ($page - 1) * $maxRows;
             </thead>
             <tbody>
                 <?php
-                $conn = new mysqli('localhost', 'root', '', 'esport');
-                $stmt = $conn->prepare("SELECT * FROM game
-                                                limit ". $pageStart.", ". $maxRows);
-                $stmt->execute();
-                $res = $stmt->get_result();
-
+                $dataGame = $g->ReadDataGame($pageStart,$maxRows);
                 
-                if ($res->num_rows > 0) {
-                    while ($categori = $res->fetch_array()) {
+                if (!empty($dataGame)) {
+                    foreach($dataGame as $dgame) {
                         echo "<tr>";
-                        echo "<td>" . $categori["idgame"] . "</td>";
-                        echo "<td>" . $categori["name"] . "</td>";
-                        echo "<td>" . $categori["description"] . "</td>";
+                        echo "<td>" . $dgame["idgame"] . "</td>";
+                        echo "<td>" . $dgame["name"] . "</td>";
+                        echo "<td>" . $dgame["description"] . "</td>";
                         echo "<td>
-                                <button type='button' onclick='openFrmEdit(\"" . $categori["idgame"] . "\", \"" . $categori["name"] . "\", \"" . $categori["description"] . "\")' style='color: #A0D683; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Update</button>
+                                <button type='button' onclick='openFrmEdit(\"" . $dgame["idgame"] . "\", \"" . $dgame["name"] . "\", \"" . $dgame["description"] . "\")' style='color: #A0D683; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Update</button>
                                 <form method='POST' action='' style='display:inline;'>
-                                    <input type='hidden' name='idgame' value='" . $categori["idgame"] . "'>
+                                    <input type='hidden' name='idgame' value='" . $dgame["idgame"] . "'>
                                     <button type='submit' name='action' value='delete' style='color: #FF474D; border: none; background: none; cursor: pointer; font-size: 18px;'><span>&#x1F5D1;</span> Delete</button>
                                 </form>
                               </td>";
@@ -322,13 +303,9 @@ $pageStart = ($page - 1) * $maxRows;
                     echo "<td colspan='4' style='text-align: center;'>None</td>";
                     echo "</tar>";
                 }
-                $stmt->close();
                 
-                $q = " select count(*) as totalRows from game";
-                $resCount = $conn->query($q);
-                $rcount = $resCount->fetch_array();
-                $totalRows = $rcount["totalRows"];
-                $totalPages = ceil($totalRows / $maxRows);
+                
+                $totalPages = $g->ReadPages($maxRows);
                 ?>
             </tbody>
         </table>

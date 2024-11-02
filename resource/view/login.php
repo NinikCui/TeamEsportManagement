@@ -196,7 +196,7 @@ require_once('../../classes/member.php');
                     <input type="password" id="password" name="password" placeholder="Password" required>
                     <span class="see-password" id="passEye"><img src="../img/passwordMata.png"></span>
                 </div>
-                <a href="forgetPass.php" class="forgot-password">Forget password</a>
+                <!--<a href="forgetPass.php" class="forgot-password">Forget password</a> -->
                 <button type="submit">Sign In</button>
             </form>
             <p class="signin-text">Don't have an account? <a href="signUp.php">Sign Up</a></p>

@@ -1,5 +1,6 @@
 <?php
 require_once('../../../classes/member.php');
+require_once('../../../classes/Join_Proposal.php');
 session_start();
 if (!isset($_SESSION['active_user'])) {
     header('Location: ../../../index.php');
@@ -13,32 +14,16 @@ $status = isset($_GET['status']) ? $_GET['status'] : 'waiting';
 $maxRows = 5;
 $page = (isset($_GET["page"]) && is_numeric($_GET["page"])) ? ($_GET["page"]) : 1;
 $pageStart = ($page - 1) * $maxRows;
-
+$jp = new Join_Proposal($conn);
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $idProposal = $_POST['id_proposal'];
     $action = $_POST['action']; 
     $id_user = $_POST['id_user'];
     $id_team = $_POST['id_team'];
-    if ($action == 'approve') {
-        $statusTerpilih = 'approved';
-        $stmt = $conn->prepare("UPDATE join_proposal SET status = 'rejected' WHERE idmember = $id_user;"); 
-        $stmt->execute();
-        $stmt->close();
-
-
-        $stmt = $conn->prepare("INSERT INTO team_members (idteam, idmember, description) VALUES ('$id_team', '$id_user', 'DITERIMA');");
-        $stmt->execute();
-        $stmt->close();
-
-    } elseif ($action == 'rejected') {
-        $statusTerpilih = 'rejected';
-    }
     
-    $sql = "UPDATE join_proposal SET status = ? WHERE idjoin_proposal = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param('si', $statusTerpilih, $idProposal);
-    $stmt->execute();
-    $stmt->close();
+    
+    $jp ->UpdateProposal($action,$id_user,$id_team,$idProposal);
+
 }
 ?>
 
@@ -181,43 +166,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </thead>
             <tbody>
                 <?php
-                    $conn = new mysqli('localhost', 'root', '', 'esport');
-                    $stmt = $conn->prepare("SELECT jp.idjoin_proposal, m.username, t.name as team, g.name as game, m.idmember as id_user, t.idteam as id_team FROM join_proposal jp
-                                            inner join member m on m.idmember = jp.idmember 
-                                            inner join team t on t.idteam = jp.idteam
-                                            inner join  game g on g.idgame = t.idgame 
-                                            where status = ? limit ?, ?");
-                    // Ambil status dari combo box (default ke 'waiting')
                     $statusFilter = isset($_GET['status']) ? $_GET['status'] : 'waiting';
-                    $stmt->bind_param('sii', $statusFilter, $pageStart, $maxRows);
-                    $stmt->execute();
-                    $res = $stmt->get_result();
-                    if($res->num_rows > 0 ){
-                        while($categori = $res->fetch_array()){
-                            echo "<tr>";
-                            echo "<td>" . $categori["idjoin_proposal"] . "</td>";
-                            echo "<td>" . $categori["username"] . "</td>";
-                            echo "<td>" . $categori["team"] . "</td>";
-                            echo "<td>" . $categori["game"] . "</td>";
-                            if ($statusFilter == 'waiting') {
-                                echo "<td>
-                                        <form method='POST' action=''>
-                                            <input type='hidden' name='id_proposal' value='" . $categori["idjoin_proposal"] . "'>
-                                             <input type='hidden' name='id_user' value='" . $categori["id_user"] . "'>
-                                            <input type='hidden' name='id_team' value='" . $categori["id_team"] . "'>
-                                            <button type='submit' name='action' value='approve' style='color: #A0D683; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Approve</button>
-                                            <button type='submit' name='action' value='rejected' style='color: #FF474D; border: none; background: none; cursor: pointer; font-size: 18px;'>✖ Decline</button>
-                                        </form>
-                                    </td>";
-                            }
-                            echo "</tr>"; 
+                    $proposals = $jp->getProposalsByStatus($statusFilter, $pageStart, $maxRows);
+
+                    // Tampilkan data
+                    if (!empty($proposals)) {
+                        foreach ($proposals as $proposal) {
+                            echo $jp->renderProposalRow($proposal, $statusFilter === 'waiting');
                         }
                     } else {
-                        echo "<tr>";
-                        echo "<td colspan='5' style='text-align: center;'>None</td>";
-                        echo "</tr>";
+                        echo "<tr><td colspan='5' style='text-align: center;'>None</td></tr>";
                     }
-                    $stmt->close();
+
+                  
+                    $totalPages = $jp->totPages($status,$maxRows);
                 ?>
             </tbody>
         </table>
@@ -228,8 +190,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ?>
         </div>
         <div class="buttons">
-            <a href="<?php if($page <= 1){echo " # ";} else {echo "proposal.php?page=". $page - 1;} ?>"><button>Back</button></a>
-            <a href="<?php if($page >= $totalPages){echo"#";} else{echo"proposal.php?page=".$page + 1 ;} ?>"><button>Next</button></a>
+            <a href="<?php if($page <= 1){echo " # ";} else {echo "proposal.php?page=". $page - 1 . "&status=" .$status;} ?>"><button>Back</button></a>
+            <a href="<?php if($page >= $totalPages){echo"#";} else{echo"proposal.php?page=".$page + 1 . "&status=" .$status;} ?>"><button>Next</button></a>
         </div>
     </div>
 </body>

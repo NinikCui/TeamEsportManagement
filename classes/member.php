@@ -13,7 +13,6 @@ class Member {
     public string $password;
     public string $profile;
     
-    // constructor
     public function __construct($dbConnection) {
         $this->dbCon = $dbConnection;
     }

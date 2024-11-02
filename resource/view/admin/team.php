@@ -1,5 +1,6 @@
 <?php
 require_once('../../../classes/member.php');
+require_once('../../../classes/Team.php');
 session_start();
 if (!isset($_SESSION['active_user'])) {
     header('Location: ../../../index.php');
@@ -7,7 +8,7 @@ if (!isset($_SESSION['active_user'])) {
 }
 
 $conn = new mysqli('localhost', 'root', '', 'esport');
-
+$t = new Team($conn);
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $action = $_POST['action'];
@@ -15,46 +16,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     if ($action == 'delete') {
         $idTeam = $_POST['idteam'];
-        $conn = new mysqli('localhost', 'root', '', 'esport');
-        $stmt = $conn->prepare("UPDATE team SET isdeleted = 1 WHERE idteam = ". $idTeam);
-        $stmt->execute();
+        $t->DeleteTeam($idTeam);
         
     }
     else if($action == "add"){
         $team = $_POST['teamName'];
         $game = $_POST['game'];
-        $conn = new mysqli('localhost', 'root', '', 'esport');
-
-        $stmt = $conn->prepare("SELECT idteam, isdeleted FROM team WHERE name = ? AND idgame = ?");
-        $stmt->bind_param('si', $team, $game); 
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if($result->num_rows > 0){
-            $row = $result->fetch_assoc();
-            if($row['isdeleted'] == 1){
-                $idteam = $row['idteam'];
-                $updateStmt = $conn->prepare("UPDATE team SET isdeleted = 0 WHERE idteam = ?");
-                $updateStmt->bind_param('i', $idteam);
-                $updateStmt->execute();
-            }
-        } else {
-            $insertStmt = $conn->prepare("INSERT INTO team (idteam, idgame, name) VALUES ('', ?, ?)");
-            $insertStmt->bind_param('is', $game, $team); 
-            $insertStmt->execute();
-        }
+        $t->AddTeam($game,$team);
     }
     else if ($action == "edit") {
         $idTeam = $_POST['idteam'];
         $game = $_POST['game'];
         $name = $_POST['teamName'];
-        $conn = new mysqli('localhost', 'root', '', 'esport');
-        $stmt = $conn->prepare("UPDATE team SET idgame = ?, name = ? WHERE idteam = ". $idTeam);
-        $stmt->bind_param("ss", $game, $name);
-        $stmt->execute();
+        $t->EditTeam($game,$name,$idTeam);
     } 
-    $stmt->close();
-    $conn->close(); 
+    
 }
 $maxRows = 5;
 $page = (isset($_GET["page"]) && is_numeric($_GET["page"])) ? ($_GET["page"]) :1;
@@ -320,26 +296,23 @@ $pageStart = ($page - 1) * $maxRows;
             </thead>
             <tbody>
                 <?php
-                $kon = new mysqli('localhost', 'root', '', 'esport');
-                $st = $kon->prepare("select t.idteam, g.name as gameName, t.name as teamName from team t  inner join game g on g.idgame = t.idgame where t.isdeleted = 0 limit ". $pageStart.", ". $maxRows);
-                $st->execute();
-                $res = $st->get_result();
-                if ($res->num_rows > 0) {
-                    while ($categori = $res->fetch_array()) {
+                $teams =  $t->ReadDataTeam($pageStart, $maxRows);
+                if (!empty($teams)) {
+                    foreach ($teams as $team) {
                         echo "<tr>";
-                        echo "<td>" . $categori["idteam"] . "</td>";
-                        echo "<td>" . $categori["gameName"] . "</td>";
-                        echo "<td>" . $categori["teamName"] . "</td>";
+                        echo "<td>" . $team["idteam"] . "</td>";
+                        echo "<td>" . $team["gameName"] . "</td>";
+                        echo "<td>" . $team["teamName"] . "</td>";
                         echo "<td> <form method='POST' action='seeMember.php' style='display:inline;'>
-                                    <input type='hidden' name='idteam' value='" . $categori["idteam"] . "'>
-                                    <input type='hidden' name='namateam' value='" . $categori["teamName"] . "'>
+                                    <input type='hidden' name='idteam' value='" . $team["idteam"] . "'>
+                                    <input type='hidden' name='namateam' value='" . $team["teamName"] . "'>
                                     <button type='submit' name='detail' value='detail' style='color: yellow; border: none; background: none; cursor: pointer; font-size: 18px;'>📝 Detail</button>
                                 </form></td>";
                         echo "<td>
                                 
-                                <button type='button' onclick='openFrmEdit(\"" . $categori["idteam"] . "\", \"" . $categori["gameName"] . "\", \"" . $categori["teamName"] . "\")' style='color: #A0D683; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Update</button>
+                                <button type='button' onclick='openFrmEdit(\"" . $team["idteam"] . "\", \"" . $team["gameName"] . "\", \"" . $team["teamName"] . "\")' style='color: #A0D683; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Update</button>
                                 <form method='POST' action='' style='display:inline;'>
-                                    <input type='hidden' name='idteam' value='" . $categori["idteam"] . "'>
+                                    <input type='hidden' name='idteam' value='" . $team["idteam"] . "'>
                                     <button type='submit' name='action' value='delete' style='color: #FF474D; border: none; background: none; cursor: pointer; font-size: 18px;'><span>&#x1F5D1;</span> Delete</button>
                                 </form>
                               </td>";
@@ -347,15 +320,11 @@ $pageStart = ($page - 1) * $maxRows;
                     }
                 } else {
                     echo "<tar>";
-                    echo "<td colspan='4' style='text-align: center;'>None</td>";
+                    echo "<td colspan='5' style='text-align: center;'>None</td>";
                     echo "</tar>";
                 }
-                $st->close();
-                $q = " select count(*) as totalRows from team";
-                $resCount = $conn->query($q);
-                $rcount = $resCount->fetch_array();
-                $totalRows = $rcount["totalRows"];
-                $totalPages = ceil($totalRows / $maxRows);
+                
+                $totalPages = $t->ReadPages($maxRows);
                 ?>
             </tbody>
         </table>

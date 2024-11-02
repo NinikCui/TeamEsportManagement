@@ -1,5 +1,6 @@
 <?php
 require_once('../../../classes/member.php');
+require_once('../../../classes/Join_Proposal.php');
 session_start();
 if (!isset($_SESSION['active_user'])) {
     header('Location: ../login.php');
@@ -11,16 +12,15 @@ $cekTeam = false;
 $idTeamUser = "";
 $namaTeamUser ="";
 $conn = new mysqli('localhost', 'root', '', 'esport');
-$stmt = $conn->prepare("SELECT jp.*, t.name  FROM join_proposal jp inner join team t on t.idteam = jp.idteam where idmember = $idmember and  status ='approved' limit 1 ;");
-$stmt->execute();        
-$res = $stmt->get_result();
-if ($res->num_rows > 0) {
+
+$jp = new Join_Proposal($conn);
+$teamUser = $jp ->CekTeamUser($idmember);
+if(count($teamUser) == 2 ){
     $cekTeam = true;
-    while ($t = $res->fetch_array()) {
-        $idTeamUser = $t['idteam'];
-        $namaTeamUser = $t['name'];
-    }
+    $idTeamUser = $teamUser[0];
+    $namaTeamUser = $teamUser[1];
 }
+
 
 
 
@@ -31,12 +31,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     if ($action == 'join') {
         $idTeam = $_POST['idteam'];
-        $conn = new mysqli('localhost', 'root', '', 'esport');
-        $stmt = $conn->prepare("INSERT INTO join_proposal (idmember, idteam, description, status) VALUES ( '$idmember', '$idTeam', 'UHUYY', 'waiting');");
-        $stmt->execute();
+        $jp->JoinTeamUser($idmember,$idTeam);
     }
 
-    $stmt->close();
 }
 
 $maxRows = 5;
@@ -158,35 +155,31 @@ $pageStart = ($page - 1) * $maxRows;
                 </thead>
                 <tbody>";
             
-                $kon = new mysqli('localhost', 'root', '', 'esport');
-                $st = $kon->prepare("select t.idteam, g.name as gameName, t.name as teamName from team t  inner join game g on g.idgame = t.idgame limit ". $pageStart.", ". $maxRows);
-                $st->execute();
-                $res = $st->get_result();
-                if ($res->num_rows > 0) {
-                    while ($categori = $res->fetch_array()) {
-                        echo "<tr>";
-                        echo "<td>" . $categori["idteam"] . "</td>";
-                        echo "<td>" . $categori["gameName"] . "</td>";
-                        echo "<td>" . $categori["teamName"] . "</td>";
-                        echo "<td>
+                $teams = $jp ->GetProposalUser($pageStart,$maxRows);
+                if (!empty($teams)) {
+                    foreach ($teams as $team) {
+                        echo "<tr>
+                                <td>" .($team['idteam']) . "</td>
+                                <td>" . ($team['gameName']) . "</td>
+                                <td>" . ($team['teamName']) . "</td>
+                                <td>
                                     <form method='POST' action='' style='display:inline;'>
-                                    <input type='hidden' name='idteam' value='" . $categori["idteam"] . "'>
-                                    <button type='submit' onclick='alrt()'name='action' value='join' style='color: #A0D683; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Join</button>
-                                </form>
-                              </td>";
-                        echo "</tr>";
+                                        <input type='hidden' name='idteam' value='" . ($team['idteam']) . "'>
+                                        <button type='submit' onclick='alrt()' name='action' value='join' 
+                                                style='color: #A0D683; border: none; background: none; cursor: pointer; font-size: 18px;'>
+                                            ✔ Join
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>";
                     }
                 } else {
-                    echo "<tar>";
-                    echo "<td colspan='4' style='text-align: center;'>None</td>";
-                    echo "</tar>";
+                    echo'<tr>
+                                <td colspan="4" style="text-align: center;">None</td>
+                            </tr>';
                 }
-                $st->close();
-                $q = " select count(*) as totalRows from team";
-                $resCount = $conn->query($q);
-                $rcount = $resCount->fetch_array();
-                $totalRows = $rcount["totalRows"];
-                $totalPages = ceil($totalRows / $maxRows);
+                
+                $totalPages = $jp->totPagesUser($maxRows);
                 
                 echo " </tbody>
                 </table>";
