@@ -1,5 +1,6 @@
 <?php 
 require_once('../../../classes/member.php');
+require_once('../../../classes/EventTeams.php');
 session_start();
 if (!isset($_SESSION['active_user'])) {
     header('Location: ../../../index.php');
@@ -17,8 +18,10 @@ if (isset($_POST['namaCate'])) {
     $_SESSION['idEventDetail'] = $idEventDetail;
     $_SESSION['namaEventDetail'] = $namaEventDetail;
 }
-$conn = new mysqli('localhost', 'root', '', 'esport');
 
+
+$conn = new mysqli('localhost', 'root', '', 'esport');
+$et = new EventTeams($conn);
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     if (isset($_POST['action'])){
@@ -27,45 +30,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($action == 'delete') {
             $idEvent = $_POST['idevent'];
             $idTeam = $_POST['idteam'];
-            $conn = new mysqli('localhost', 'root', '', 'esport');
-            $stmt = $conn->prepare("delete from event_teams where idevent =". $idEvent ." and idteam=". $idTeam ."");
-            $stmt->execute();
-            $stmt->close();
-            
+            $et->DeleteEventTeam($idEvent,$idTeam);
         }
         else if($action == "add"){
             $idteam = $_POST['idteam'];
             $idevent = $_SESSION['idEventDetail']; // Mengambil idevent dari session
             
-            // Cek apakah kombinasi idevent dan idteam sudah ada
-            $checkStmt = $conn->prepare("SELECT * FROM event_teams WHERE idevent = ? AND idteam = ?");
-            $checkStmt->bind_param("ii", $idevent, $idteam);
-            $checkStmt->execute();
-            $result = $checkStmt->get_result();
+            $notif = $et->AddEventTeam($idevent, $idteam);
             
-            if ($result->num_rows > 0) {
-                // Gunakan alert untuk memberitahu pengguna
+            if ($notif != "" ) {
                 echo "<script>
-                        alert('Team sudah terdaftar untuk event ini.');
+                        alert('$notif');
                       </script>";
-            } else {
-                $stmt = $conn->prepare("INSERT INTO event_teams (idevent, idteam) VALUES (?, ?)");
-                $stmt->bind_param("ii", $idevent, $idteam);
-                if ($stmt->execute()) {
-                    // Gunakan alert untuk memberitahu pengguna
-                    echo "<script>
-                            alert('Team berhasil ditambahkan.');
-                          </script>";
-                } else {
-                    // Gunakan alert untuk memberitahu pengguna
-                    echo "<script>
-                            alert('Terjadi kesalahan saat menambahkan team.');
-                          </script>";
-                }
-                $stmt->close();
+            } 
+            else{
+                echo "<script>
+                        alert('Terjadi kesalahan saat menambahkan team.');
+                      </script>";
             }
-            $checkStmt->close();
-            $conn->close();
         }   
     }
 }
@@ -323,20 +305,15 @@ $pageStart = ($page - 1) * $maxRows;
             </thead>
             <tbody>
                 <?php
-                $conn = new mysqli('localhost', 'root', '', 'esport');
-                $stmt = $conn->prepare("select et.idevent, et.idteam, t.name from event_teams et 
-                                        inner join team t on et.idteam = t.idteam 
-                                        where et.idevent = " .$idEventDetail." limit ". $pageStart.", ". $maxRows);
-                $stmt->execute();
-                $res = $stmt->get_result();
-                if ($res->num_rows > 0) {
-                    while ($categori = $res->fetch_array()) {
+                $teams = $et->ReadDataEventTeam($idEventDetail,$pageStart,$maxRows);
+                if (!empty($teams)) {
+                    foreach($teams as $team) {
                         echo "<tr>";
-                        echo "<td>" . $categori["name"] . "</td>";
+                        echo "<td>" . $team["name"] . "</td>";
                         echo "<td>
                                 <form method='POST' action='' style='display:inline;'>
-                                    <input type='hidden' name='idevent' value='" . $categori["idevent"] . "'>
-                                    <input type='hidden' name='idteam' value='" . $categori["idteam"] . "'>
+                                    <input type='hidden' name='idevent' value='" . $team["idevent"] . "'>
+                                    <input type='hidden' name='idteam' value='" . $team["idteam"] . "'>
                                     <button type='submit' name='action' value='delete' style='color: #FF474D; border: none; background: none; cursor: pointer; font-size: 18px;'><span>&#x1F5D1;</span> Delete</button>
                                 </form>
                               </td>";
@@ -347,12 +324,6 @@ $pageStart = ($page - 1) * $maxRows;
                     echo "<td colspan='4' style='text-align: center;'>None</td>";
                     echo "</tr>";
                 }
-                $stmt->close();
-                $q = " select count(*) as totalRows from event";
-                $resCount = $conn->query($q);
-                $rcount = $resCount->fetch_array();
-                $totalRows = $rcount["totalRows"];
-                $totalPages = ceil($totalRows / $maxRows);
                 ?>
             </tbody>
         </table>

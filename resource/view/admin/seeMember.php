@@ -1,5 +1,6 @@
 <?php 
 require_once('../../../classes/member.php');
+require_once('../../../classes/TeamMember.php');
 session_start();
 if (!isset($_SESSION['active_user'])) {
     header('Location: ../../../index.php');
@@ -10,30 +11,18 @@ if (isset($_POST['idteam'])) {
     $namateam = $_POST['namateam'];
 }
 $conn = new mysqli('localhost', 'root', '', 'esport');
-
+$tm = new TeamMember($conn);
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['idteamDelete'])) {
     $idTeamMember = $_POST['idteamDelete'];
     $namateam = $_POST['namateamDelete'];
     if(isset($_POST['action'])){
-
         $action = $_POST['action'];
         if ($action == 'delete') {
-        
             $idTeam = $_POST['idteamDelete'];
             $idMember = $_POST['idmemberDelete'];
-            $conn = new mysqli('localhost', 'root', '', 'esport');
-            $stmt = $conn->prepare("delete from team_members where idteam = $idTeam and idmember =$idMember;");
-            $stmt->execute();
-            $stmt-> close();
-    
-            $stmt = $conn->prepare("delete from join_proposal where idmember = $idMember and idteam = $idTeam and status ='approved';");
-            $stmt->execute();
-            $stmt->close();
-            
+            $tm->DeleteTeamMember($idTeam ,$idMember);
         }
-    }
-    
-    
+    } 
 }
 $maxRows = 5;
 $page = (isset($_GET["page"]) && is_numeric($_GET["page"])) ? ($_GET["page"]) :1;
@@ -137,18 +126,15 @@ $pageStart = ($page - 1) * $maxRows;
             </thead>
             <tbody>
                 <?php
-                $kon = new mysqli('localhost', 'root', '', 'esport');
-                $stmt = $kon->prepare("select tm.* , m.username from team_members tm inner join member m on m.idmember = tm.idmember where idteam = $idTeamMember limit ". $pageStart.", ". $maxRows);
-                $stmt->execute();
-                $res = $stmt->get_result();
-                if ($res->num_rows > 0) {
-                    while ($categori = $res->fetch_array()) {
+                $members = $tm->ReadDataTeamMember($idTeamMember,$pageStart,$maxRows);
+                if (!empty($members)) {
+                    foreach($members as $mem) {
                         echo "<tr>";
-                        echo "<td>" . $categori["username"] . "</td>";
+                        echo "<td>" . $mem["username"] . "</td>";
                         echo "<td>
                                 <form method='POST' action='' style='display:inline;'>
-                                    <input type='hidden' name='idteamDelete' value='" . $categori["idteam"] . "'>
-                                    <input type='hidden' name='idmemberDelete' value='" . $categori["idmember"] . "'>
+                                    <input type='hidden' name='idteamDelete' value='" . $mem["idteam"] . "'>
+                                    <input type='hidden' name='idmemberDelete' value='" . $mem["idmember"] . "'>
                                     <input type='hidden' name='namateamDelete' value='" . $namateam . "'>
                                     <button type='submit' name='action' value='delete' style='color: #FF474D; border: none; background: none; cursor: pointer; font-size: 18px;'><span>&#x1F5D1;</span> Delete</button>
                                 </form>
@@ -160,12 +146,7 @@ $pageStart = ($page - 1) * $maxRows;
                     echo "<td colspan='4' style='text-align: center;'>None</td>";
                     echo "</tr>";
                 }
-                $stmt->close();
-                $q = " select count(*) as totalRows from event";
-                $resCount = $conn->query($q);
-                $rcount = $resCount->fetch_array();
-                $totalRows = $rcount["totalRows"];
-                $totalPages = ceil($totalRows / $maxRows);
+                
                 ?>
             </tbody>
         </table>

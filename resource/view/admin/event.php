@@ -1,5 +1,6 @@
 <?php
 require_once('../../../classes/member.php');
+require_once('../../../classes/Event.php');
 session_start();
 if (!isset($_SESSION['active_user'])) {
     header('Location: ../../../index.php');
@@ -7,38 +8,26 @@ if (!isset($_SESSION['active_user'])) {
 }
 
 $conn = new mysqli('localhost', 'root', '', 'esport');
-
+$e = new Event($conn);
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $action = $_POST['action'];
 
     if ($action == 'delete') {
         $idEvent = $_POST['idevent'];
-        $conn = new mysqli('localhost', 'root', '', 'esport');
-        $stmt = $conn->prepare("delete from event where idevent =". $idEvent);
-        $stmt->execute();
-        $stmt->close();
-        $conn->close();
+        $e->DeleteEvent($idEvent);
         
     }
     else if($action == "add"){
         $nameEvent = $_POST['name'];
         $dateEvent = $_POST['date'];
-        $conn = new mysqli('localhost', 'root', '', 'esport');
-        $stmt = $conn->prepare("INSERT INTO event (idevent, name, date) VALUES ('', '$nameEvent', '$dateEvent')");
-        $stmt->execute();
-        $stmt->close();
-        $conn->close();
+        $e->AddEvent($nameEvent,$dateEvent);
     }
     else if ($action == "edit") {
         $idEvent = $_POST['idevent'];
         $nameEvent = $_POST['name'];
         $dateEvent = $_POST['date'];
-        $stmt = $conn->prepare("UPDATE event SET name=?, date=? WHERE idevent = " . $idEvent );
-        $stmt->bind_param("ss", $nameEvent, $dateEvent);
-        $stmt->execute();
-        $stmt->close();
-        $conn->close();
+        $e->EditEvent($nameEvent, $dateEvent,$idEvent);
     }
 }
 $maxRows = 5;
@@ -287,26 +276,23 @@ $pageStart = ($page - 1) * $maxRows;
             </thead>
             <tbody>
                 <?php
-                $conn = new mysqli('localhost', 'root', '', 'esport');
-                $stmt = $conn->prepare("SELECT * FROM event limit ". $pageStart.", ". $maxRows);
-                $stmt->execute();
-                $res = $stmt->get_result();
-                if ($res->num_rows > 0) {
-                    while ($categori = $res->fetch_array()) {
+                $events = $e->ReadDataEvent($pageStart,$maxRows);
+                if (!empty($events)) {
+                    foreach($events as $eve) {
                         echo "<tr>";
-                        echo "<td>" . $categori["idevent"] . "</td>";
-                        echo "<td>" . $categori["name"] . "</td>";
-                        echo "<td>" . $categori["date"] . "</td>";
+                        echo "<td>" . $eve["idevent"] . "</td>";
+                        echo "<td>" . $eve["name"] . "</td>";
+                        echo "<td>" . $eve["date"] . "</td>";
                         echo "<td>
-                                <button type='button' style='color: #A0D683; border: none; background: none; cursor: pointer; font-size: 18px;' onclick='openFrmEdit(" . $categori["idevent"] . ", \"" . $categori["name"] . "\", \"" . $categori["date"] . "\")'>✔ Update</button>
+                                <button type='button' style='color: #A0D683; border: none; background: none; cursor: pointer; font-size: 18px;' onclick='openFrmEdit(" . $eve["idevent"] . ", \"" . $eve["name"] . "\", \"" . $eve["date"] . "\")'>✔ Update</button>
                                 <form method='POST' action='seeDetail.php' style='display:inline;'>
                                     <input type='hidden' name='namaCate' value='Event'>
-                                    <input type='hidden' name='idevent' value='" . $categori["idevent"] . "'>
-                                    <input type='hidden' name='namaEvent' value='" . $categori["name"] . "'>
+                                    <input type='hidden' name='idevent' value='" . $eve["idevent"] . "'>
+                                    <input type='hidden' name='namaEvent' value='" . $eve["name"] . "'>
                                     <button type='submit' name='detail' value='detail' style='color: yellow; border: none; background: none; cursor: pointer; font-size: 18px;'>📝 Detail</button>
                                 </form>
                                 <form method='POST' action='' style='display:inline;'>
-                                    <input type='hidden' name='idevent' value='" . $categori["idevent"] . "'>
+                                    <input type='hidden' name='idevent' value='" . $eve["idevent"] . "'>
                                     <button type='submit' name='action' value='delete' style='color: #FF474D; border: none; background: none; cursor: pointer; font-size: 18px;'><span>&#x1F5D1;</span> Delete</button>
                                 </form>
                               </td>";
@@ -317,12 +303,8 @@ $pageStart = ($page - 1) * $maxRows;
                     echo "<td colspan='4' style='text-align: center;'>None</td>";
                     echo "</tr>";
                 }
-                $stmt->close();
-                $q = " select count(*) as totalRows from event";
-                $resCount = $conn->query($q);
-                $rcount = $resCount->fetch_array();
-                $totalRows = $rcount["totalRows"];
-                $totalPages = ceil($totalRows / $maxRows);
+                
+                $totalPages = $e->ReadPages($maxRows);
                 ?>
             </tbody>
         </table>

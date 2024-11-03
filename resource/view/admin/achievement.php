@@ -1,5 +1,6 @@
 <?php
 require_once('../../../classes/member.php');
+require_once('../../../classes/Achievement.php');
 session_start();
 if (!isset($_SESSION['active_user'])) {
     header('Location: ../../../index.php');
@@ -7,20 +8,15 @@ if (!isset($_SESSION['active_user'])) {
 }
 
 $conn = new mysqli('localhost', 'root', '', 'esport');
-
+$a = new Achievement($conn);
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $action = $_POST['action'];
 
     
     if ($action == 'delete') {
-            $idAchi = $_POST['idachievement'];
-            
-            $stmt = $conn->prepare("delete from achievement where idachievement =". $idAchi);
-            $stmt->execute();
-            $stmt->close();
-            $conn->close();
-        
+        $idAchi = $_POST['idachievement'];
+        $a->DeleteAchievement($idAchi);
     }
     else if($action == "add"){
         $idteam = $_POST['idteam'];
@@ -29,10 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
        
         $desAchi = $_POST['descriptionAchi'];
         
-        $stmt = $conn->prepare("INSERT INTO achievement (idachievement, idteam, name, date, description) VALUES ('', '$idteam', '$namaAchi', '$dateAchi', '$desAchi')");
-        $stmt->execute();
-        $stmt->close();
-        $conn->close();
+        $a->AddAchievement($idteam,$namaAchi,$dateAchi,$desAchi);
     }
     else if ($action == "edit") {
         $idAchi = $_POST['idachievement'];
@@ -40,11 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $nameAchi = $_POST['nameAchi'];
         $dateAchi = $_POST['date'];
         $descAchi = $_POST['descriptionAchi'];
-        $stmt = $conn->prepare("UPDATE achievement SET idteam=?, name=?, date=?, description=? WHERE idachievement = ?");
-        $stmt->bind_param("ssssi", $team, $nameAchi, $dateAchi, $descAchi, $idAchi);
-        $stmt->execute();
-        $stmt->close();
-        $conn->close();
+        $a->EditAchievement($team,$nameAchi,$dateAchi,$descAchi,$idAchi);
     }
 }
 $maxRows = 5;
@@ -353,34 +342,19 @@ $pageStart = ($page - 1) * $maxRows;
         <tbody>
             <?php
                 $teamNameFilter = isset($_GET['team_name']) ? $_GET['team_name'] : '';
-                if (!empty($teamNameFilter)) {
-                    $stmt = $conn->prepare("SELECT a.idachievement, t.name as team, a.name, DATE_FORMAT(a.date,'%d/%m/%Y') as date, a.description  
-                                            FROM achievement a
-                                            INNER JOIN team t ON t.idteam = a.idteam
-                                            WHERE t.name LIKE ?
-                                            ORDER BY a.idachievement ASC 
-                                            LIMIT ?, ?");
-                    $searchTerm = $teamNameFilter . "%"; 
-                    $stmt->bind_param("ssi", $searchTerm, $pageStart, $maxRows);
-                } else {
-                    // Jika tidak ada filter, ambil semua data
-                    $stmt = $conn->prepare("SELECT a.idachievement, t.name as team, a.name, DATE_FORMAT(a.date,'%d/%m/%Y') as date, a.description  FROM achievement a
-                                        INNER JOIN team t ON t.idteam = a.idteam ORDER BY a.idachievement ASC LIMIT ". $pageStart.", ". $maxRows);
-                }
-                $stmt->execute();
-                $res = $stmt->get_result();
-                if($res->num_rows > 0 ){
-                    while($categori = $res->fetch_array()){
+                $achievements = $a->ReadDataAchievement($teamNameFilter,$pageStart,$maxRows);
+                if(!empty($achievements)){
+                    foreach($achievements as $achiee){
                         echo "<tr>";
-                        echo "<td>" . $categori["idachievement"] . "</td>";
-                        echo "<td>" . $categori["team"] . "</td>";
-                        echo "<td>" . $categori["name"] . "</td>";
-                        echo "<td>" . $categori["date"] . "</td>";
-                        echo "<td class='desc'>" . $categori["description"] . "</td>";
+                        echo "<td>" . $achiee["idachievement"] . "</td>";
+                        echo "<td>" . $achiee["team"] . "</td>";
+                        echo "<td>" . $achiee["name"] . "</td>";
+                        echo "<td>" . $achiee["date"] . "</td>";
+                        echo "<td class='desc'>" . $achiee["description"] . "</td>";
                         echo "<td>
-                                <button type='button' onclick=\"openFrmEdit('".$categori["idachievement"]."', '".$categori["name"]."', '".$categori["team"]."', '".$categori["date"]."', '".$categori["description"]."')\" style='color: #A0D683; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Edit</button>
+                                <button type='button' onclick=\"openFrmEdit('".$achiee["idachievement"]."', '".$achiee["name"]."', '".$achiee["team"]."', '".$achiee["date"]."', '".$achiee["description"]."')\" style='color: #A0D683; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Edit</button>
                                 <form method='POST' action='' style='display:inline;'>
-                                    <input type='hidden' name='idachievement' value='" . $categori["idachievement"] . "'>
+                                    <input type='hidden' name='idachievement' value='" . $achiee["idachievement"] . "'>
                                     <button type='submit' name='action' value='delete' style='color: #FF474D; border: none; background: none; cursor: pointer; font-size: 18px;'><span>&#x1F5D1;</span> Delete</button>
                                 </form>
                               </td>";
@@ -389,20 +363,16 @@ $pageStart = ($page - 1) * $maxRows;
                 } else {
                     echo "<tr><td colspan='6' style='text-align: center;'>None</td></tr>";
                 }
-                $stmt->close();
                 
-                $q = "SELECT COUNT(*) as totalRows FROM achievement";
-                $resCount = $conn->query($q);
-                $rcount = $resCount->fetch_array();
-                $totalRows = $rcount["totalRows"];
-                $totalPages = ceil($totalRows / $maxRows);
+                
+                $totalPages = $a->ReadPages($maxRows);
             ?>
         </tbody>
     </table>
 
     <div>
         <?php 
-            echo("Showing Data " . ($pageStart + 1) . " to " . min($pageStart + $maxRows, $totalRows));
+            echo("Showing Data " . $pageStart + 1 . " to  " . $pageStart + $maxRows);      
         ?>
     </div>
     <div class="buttons">
