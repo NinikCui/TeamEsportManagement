@@ -15,22 +15,30 @@ class Team{
         $stmt->bind_param('si', $team, $game); 
         $stmt->execute();
         $result = $stmt->get_result();
-
-        if($result->num_rows > 0){
+        $teamId = null;
+    
+        if($result->num_rows > 0) {
             $row = $result->fetch_assoc();
-            if($row['isdeleted'] == 1){
-                $idteam = $row['idteam'];
+            if($row['isdeleted'] == 1) {
+                $teamId = $row['idteam'];
                 $updateStmt = $this->dbCon->prepare("UPDATE team SET isdeleted = 0 WHERE idteam = ?");
-                $updateStmt->bind_param('i', $idteam);
+                $updateStmt->bind_param('i', $teamId);
                 $updateStmt->execute();
                 $updateStmt->close();
+            } else {
+                
+                return false;
             }
         } else {
-            $insertStmt = $this->dbCon->prepare("INSERT INTO team (idteam, idgame, name) VALUES ('', ?, ?)");
+            $insertStmt = $this->dbCon->prepare("INSERT INTO team (idgame, name) VALUES (?, ?)");
             $insertStmt->bind_param('is', $game, $team); 
             $insertStmt->execute();
+            $teamId = $this->dbCon->insert_id; 
             $insertStmt->close();
         }
+    
+        $stmt->close();
+        return $teamId;
     }
 
 

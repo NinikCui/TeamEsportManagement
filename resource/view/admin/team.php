@@ -12,24 +12,85 @@ $t = new Team($conn);
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $action = $_POST['action'];
-
+    $uploadSuccess = true;
+    $imgPath = '';
     
+    if (isset($_FILES['teamImage']) && $_FILES['teamImage']['error'] == 0) {
+        $allowed = ['jpg'];
+        $filename = $_FILES['teamImage']['name'];
+        $fileExt = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        
+        if (!in_array($fileExt, $allowed)) {
+            echo "<script>alert('Only JPG files are allowed!');</script>";
+            $uploadSuccess = false;
+        }
+        
+        if ($uploadSuccess) {
+            if (!file_exists('../../img/teamImg')) {
+                mkdir('../../img/teamImg', 0777, true);
+            }
+        }
+    }
+
     if ($action == 'delete') {
         $idTeam = $_POST['idteam'];
+        // Delete associated image if it exists
+        $oldImagePath = "../../img/teamImg/{$idTeam}.jpg";
+        if (file_exists($oldImagePath)) {
+            unlink($oldImagePath);
+        }
         $t->DeleteTeam($idTeam);
-        
     }
-    else if($action == "add"){
+    else if($action == "add") {
         $team = $_POST['teamName'];
         $game = $_POST['game'];
-        $t->AddTeam($game,$team);
+        $newId = $t->AddTeam($game, $team);
+        if($newId !== false) {
+            // Handle image upload
+            if ($uploadSuccess && isset($_FILES['teamImage'])) {
+                $newImagePath = "../../img/teamImg/$newId.jpg";
+                move_uploaded_file($_FILES['teamImage']['tmp_name'], $newImagePath);
+            }
+        } else {
+            echo "<script>alert('Team already exists!');</script>";
+        }
     }
     else if ($action == "edit") {
         $idTeam = $_POST['idteam'];
         $game = $_POST['game'];
         $name = $_POST['teamName'];
-        $t->EditTeam($game,$name,$idTeam);
-    } 
+        
+        // Handle image update - hanya jika ada file baru yang diupload
+        if (isset($_FILES['teamImage']) && $_FILES['teamImage']['error'] == 0) {
+            $imagePath = "../../img/teamImg/{$idTeam}.jpg";
+            
+            // Simpan gambar baru
+            if ($uploadSuccess) {
+                // Backup gambar lama jika ada
+                if (file_exists($imagePath)) {
+                    $backupPath = $imagePath . '.bak';
+                    copy($imagePath, $backupPath);
+                }
+                
+                // Coba upload gambar baru
+                if (move_uploaded_file($_FILES['teamImage']['tmp_name'], $imagePath)) {
+                    // Jika berhasil, hapus backup
+                    if (file_exists($backupPath)) {
+                        unlink($backupPath);
+                    }
+                } else {
+                    // Jika gagal, kembalikan gambar lama
+                    if (file_exists($backupPath)) {
+                        rename($backupPath, $imagePath);
+                    }
+                    echo "<script>alert('Failed to update image!');</script>";
+                }
+            }
+        }
+        // Jika tidak ada file baru, biarkan gambar lama tetap ada
+        
+        $t->EditTeam($game, $name, $idTeam);
+    }
     
 }
 $maxRows = 5;
@@ -142,17 +203,31 @@ $pageStart = ($page - 1) * $maxRows;
         }
         .formNew-Group{
             margin-bottom: 15px;
-            color: black;
         }
 
         .formNew-Group label {
             display: block;
-            font-size: 16px;
             margin-bottom: 5px;
             color: black;
-            padding-bottom: 20px;
         }
-
+        .formNew-Group input[type="file"] {
+            width: calc(100% - 120px);
+        }
+        .formNew-Group small {
+            color: #666;
+            font-size: 12px;
+        }
+        .table img {
+            max-width: 100px;
+            max-height: 100px;
+            object-fit: contain;
+        }
+        .formNew-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
         .formNew-Group input, .formNew-Group textarea {
             width: 80%;
             padding: 10px;
@@ -181,6 +256,27 @@ $pageStart = ($page - 1) * $maxRows;
         }
         .formNew-Team{
             padding: 5px;
+        }
+        .image-upload-container {
+            display: flex;
+            align-items: start;
+            gap: 20px;
+        }
+
+        .image-preview {
+            width: 100px;
+            height: 100px;
+            border: 1px dashed #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
         }
     </style>
 </head>
@@ -215,74 +311,132 @@ $pageStart = ($page - 1) * $maxRows;
     </nav>
 
     <script>
-        function openFrmNew() {
-            document.getElementById('formNew').style.display = "block";
-            document.getElementById('gameName').value = ""; 
-            document.getElementById('teamName').value = ""; 
-            document.getElementById('actionButton').value = "add"; 
-            document.getElementById('actionButtonText').innerText = "Add new"; 
-            document.getElementById('idgame').value = ""; 
+        function previewImage(input) {
+            const preview = document.getElementById('preview');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                // Jika tidak ada file baru dipilih dan ini adalah mode edit,
+                // kembalikan ke gambar yang sudah ada
+                const idteam = document.getElementById('idteam').value;
+                if (idteam && document.getElementById('actionButton').value === 'edit') {
+                    preview.src = `../../img/teamImg/${idteam}.jpg?t=${new Date().getTime()}`;
+                    preview.style.display = 'block';
+                } else {
+                    preview.src = '';
+                    preview.style.display = 'none';
+                }
+            }
         }
-
         function openFrmEdit(idteam, gameName, teamName) {
             document.getElementById('formNew').style.display = "block";
             document.getElementById('teamName').value = teamName; 
+            document.getElementById('game').value = gameName;
             document.getElementById('actionButton').value = "edit"; 
             document.getElementById('actionButtonText').innerText = "Update Team";
-            document.getElementById('idteam').value = idteam;  
+            document.getElementById('idteam').value = idteam;
+            document.getElementById('teamImage').removeAttribute('required');
+            
+            // Reset preview when opening edit form
+            const preview = document.getElementById('preview');
+            // Tambahkan timestamp untuk mencegah caching
+            preview.src = `../../img/teamImg/${idteam}.jpg?t=${new Date().getTime()}`;
+            preview.style.display = 'block';
+            
+            // Handle error loading gambar
+            preview.onerror = function() {
+                this.style.display = 'none';
+            };
+            preview.onload = function() {
+                this.style.display = 'block';
+            };
+        }
+
+
+        function openFrmNew() {
+            document.getElementById('formNew').style.display = "block";
+            document.getElementById('teamName').value = ""; 
+            document.getElementById('game').value = "";
+            document.getElementById('actionButton').value = "add"; 
+            document.getElementById('actionButtonText').innerText = "Add new"; 
+            document.getElementById('idteam').value = "";
+            document.getElementById('teamImage').setAttribute('required', '');
+            
+            // Reset preview when opening new form
+            const preview = document.getElementById('preview');
+            preview.src = '';
+            preview.style.display = 'none';
         }
 
         function closeFrmNew() {
             document.getElementById('formNew').style.display = "none";
         }
 
+        // Menutup modal jika user klik di luar modal
         window.onclick = function(event) {
-            var frmNew = document.getElementById('formNew');
-            if (event.target == frmNew) {
-                frmNew.style.display = "none";
+            var modal = document.getElementById('formNew');
+            if (event.target == modal) {
+                modal.style.display = "none";
             }
         }
     </script>
 
     <div class="container">
-        <form method="POST" action="">
-            <a onclick="openFrmNew()" style="margin-bottom: 15px; padding: 10px 20px; background-color: #fff; color: #3c0036; text-decoration: none; border-radius: 5px; border: none; cursor: pointer; float: right;">+ New</a>
+        <a onclick="openFrmNew()" style="margin-bottom: 15px; padding: 10px 20px; background-color: #fff; color: #3c0036; text-decoration: none; border-radius: 5px; border: none; cursor: pointer; float: right;">+ New</a>
 
-            <div id="formNew" class="frmNew">
-                <div class="frm-content">
-                    <span class="close" onclick="closeFrmNew()">&times;</span>
-                    <form method="POST" action="">
-                        <h2><span id="actionButtonText">Add a new Team</span></h2>
-                        <input type="hidden" id="idteam" name="idteam"> 
-                        <div class="formNew-Group">
-                            <label for="teamName" formArrayName="control"> Team</label>
-                            <textarea id="teamName" name="teamName" placeholder="Enter Team Name" rows="4" required></textarea>
-                        </div>
-                        <div class="formNew-Group">
-                            <label for="game">Game</label>
-                            <select id="game" name="game">
-                                <option value="">--- Pilih Game ---</option>
-                                <?php
-                                    $q = "select * from game";
-                                    $resGame = $conn->query($q);
-                                    if($resGame){
-                                        while($rGame = $resGame->fetch_array()){
-                                            echo("<option value='".$rGame['idgame']."'>".$rGame["name"]."</option>");
-                                            
-                                        }
+    <!-- Form modal untuk add/edit -->
+        <div id="formNew" class="frmNew">
+            <div class="frm-content">
+                <span class="close" onclick="closeFrmNew()">&times;</span>
+                <form method="POST" action="" enctype="multipart/form-data">
+                    <h2><span id="actionButtonText">Add a new Team</span></h2>
+                    <input type="hidden" id="idteam" name="idteam">
+                    
+                    <div class="formNew-Group">
+                        <label for="teamName">Team Name</label>
+                        <textarea id="teamName" name="teamName" placeholder="Enter Team Name" rows="4" required></textarea>
+                    </div>
+                    
+                    <div class="formNew-Group">
+                        <label for="game">Game</label>
+                        <select id="game" name="game" required>
+                            <option value="">--- Pilih Game ---</option>
+                            <?php
+                                $q = "select * from game";
+                                $resGame = $conn->query($q);
+                                if($resGame){
+                                    while($rGame = $resGame->fetch_array()){
+                                        echo("<option value='".$rGame['idgame']."'>".$rGame["name"]."</option>");
                                     }
-                                    
-                                ?>
-                            </select>
-                        </div>
+                                }
+                            ?>
+                        </select>
+                    </div>
 
-                        <div class="formNew-btnAddContainer">
-                            <button type="submit" id="actionButton" name="action" value="add" class="formNew-btnAdd">Add new</button>
+                    <div class="formNew-Group">
+                        <label for="teamImage">Team Image</label>
+                        <div class="image-upload-container">
+                            <input type="file" id="teamImage" name="teamImage" accept=".jpg" class="formNew-input" onchange="previewImage(this);">
+                            <div id="imagePreview" class="image-preview">
+                                <img id="preview" src="" alt="Preview" style="display: none;">
+                            </div>
                         </div>
-                    </form>
-                </div>
+                        <small>*Only JPG files allowed</small>
+                    </div>
+                    <div class="formNew-btnAddContainer">
+                        <button type="submit" id="actionButton" name="action" value="add" class="formNew-btnAdd">Add new</button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
 
         <table class="table">
             <thead>
@@ -291,6 +445,7 @@ $pageStart = ($page - 1) * $maxRows;
                     <th>Game Name</th>
                     <th>team Name</th>
                     <th>Member</th>
+                    <th>Logo</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -303,11 +458,15 @@ $pageStart = ($page - 1) * $maxRows;
                         echo "<td>" . $team["idteam"] . "</td>";
                         echo "<td>" . $team["gameName"] . "</td>";
                         echo "<td>" . $team["teamName"] . "</td>";
+                        $idTeamGambar = $team["idteam"];
                         echo "<td> <form method='POST' action='seeMember.php' style='display:inline;'>
                                     <input type='hidden' name='idteam' value='" . $team["idteam"] . "'>
                                     <input type='hidden' name='namateam' value='" . $team["teamName"] . "'>
                                     <button type='submit' name='detail' value='detail' style='color: yellow; border: none; background: none; cursor: pointer; font-size: 18px;'>📝 Detail</button>
-                                </form></td>";
+                                </form></td>
+                               <td>
+                               <img src=\"../../img/teamImg/$idTeamGambar.jpg\">
+                               </td>";
                         echo "<td>
                                 
                                 <button type='button' onclick='openFrmEdit(\"" . $team["idteam"] . "\", \"" . $team["gameName"] . "\", \"" . $team["teamName"] . "\")' style='color: #A0D683; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Update</button>
@@ -320,7 +479,7 @@ $pageStart = ($page - 1) * $maxRows;
                     }
                 } else {
                     echo "<tar>";
-                    echo "<td colspan='5' style='text-align: center;'>None</td>";
+                    echo "<td colspan='6' style='text-align: center;'>None</td>";
                     echo "</tar>";
                 }
                 
