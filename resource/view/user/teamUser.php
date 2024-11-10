@@ -143,6 +143,12 @@ $pageStart = ($page - 1) * $maxRows;
         <?php 
             if($cekTeam){
                 echo "<h1>Selamat Anda Telah Bergabung Dalam Team $namaTeamUser</h1>";
+                //KERJA DISINI 
+
+                    
+
+                //DISINI  
+
             }else{
                echo " <table class=\"table\">
                <thead>

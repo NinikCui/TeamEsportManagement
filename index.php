@@ -74,6 +74,24 @@ if (isset($_SESSION['username'])) {
             color: white;
             text-decoration: none;
         }
+
+
+        .container{
+            margin-left: 15%;
+            margin-top: 5%;
+            display: flex;
+            flex-wrap:  wrap;
+            gap: 50px;
+        }
+        
+        .container .info{
+            font-size: 32px;
+        }
+        .info p{
+            font-size: 16px;
+            margin-top: 0px;
+        }
+        
     </style>
 </head>
 <body>
@@ -102,5 +120,18 @@ if (isset($_SESSION['username'])) {
             <button class="login-button"><a href="resource/view/login.php">Login</a></button>
         </div>
     </nav>
+    <div class="container">
+        <div class="info">
+            <h1>DISCOVER COLLECT <br>GAMES FROM US</h1>
+            <p>Welcome to HIKSROT, the ultimate hub for eSports enthusiasts!<br>
+             Dive into the latest news, game strategies, and exclusive content <br>
+             on your favorite competitive games. Join us to stay ahead in the <br>
+             game and connect with a community of passionate gamers!</p>
+        </div>
+        <div class="container-img">
+            <img src="resource/img/imgHome.png">
+        </div>
+        
+    </div>
 </body>
 </html>

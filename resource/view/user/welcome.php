@@ -35,7 +35,7 @@ if (!isset($_SESSION['active_user'])) {
             font-size: 16px;
             margin-top: 0px;
         }
-       
+        
     </style>
 </head>
 <body>
@@ -72,8 +72,9 @@ if (!isset($_SESSION['active_user'])) {
              on your favorite competitive games. Join us to stay ahead in the <br>
              game and connect with a community of passionate gamers!</p>
         </div>
-        
-        
+        <div class="container-img">
+            <img src="../../img/imgHome.png">
+        </div>
         
     </div>
 </body>
