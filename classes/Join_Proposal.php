@@ -161,6 +161,99 @@ class Join_Proposal{
         return $teams;
 
     }
+
+
+
+
+
+
+    //TAB JIKA USER SUDAH TERPILIIH
+    public function getTeamMembers($idTeam, $pageStart = 0, $maxRows = 5) {
+        $query = "SELECT m.idmember, m.username 
+                 FROM join_proposal jp 
+                 INNER JOIN member m ON m.idmember = jp.idmember 
+                 WHERE jp.idteam = ? AND jp.status = 'approved'
+                 LIMIT ?, ?";
+        $stmt = $this->dbCon->prepare($query);
+        $stmt->bind_param("sii", $idTeam, $pageStart, $maxRows);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $members = [];
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $members[] = $row;
+            }
+        }
+        $stmt->close();
+        return $members;
+    }
+    
+    public function getTeamAchievements($idTeam, $pageStart = 0, $maxRows = 5) {
+        $query = "SELECT name, date, description 
+                 FROM achievement 
+                 WHERE idteam = ?
+                 LIMIT ?, ?";
+        $stmt = $this->dbCon->prepare($query);
+        $stmt->bind_param("sii", $idTeam, $pageStart, $maxRows);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $achievements = [];
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $achievements[] = $row;
+            }
+        }
+        $stmt->close();
+        return $achievements;
+    }
+    
+    public function getTeamEvents($idTeam, $pageStart = 0, $maxRows = 5) {
+        $query = "SELECT e.name, e.date 
+                 FROM event e 
+                 INNER JOIN event_teams et ON et.idevent = e.idevent
+                 WHERE et.IDTEAM = ?
+                 LIMIT ?, ?";
+        $stmt = $this->dbCon->prepare($query);
+        $stmt->bind_param("sii", $idTeam, $pageStart, $maxRows);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $events = [];
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $events[] = $row;
+            }
+        }
+        $stmt->close();
+        return $events;
+    }
+    
+    // Method untuk mendapatkan total data
+    public function getTotalMembers($idTeam) {
+        $query = "SELECT COUNT(*) as total FROM join_proposal WHERE idteam = ? AND status = 'approved'";
+        $stmt = $this->dbCon->prepare($query);
+        $stmt->bind_param("s", $idTeam);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc()['total'];
+    }
+    
+    public function getTotalAchievements($idTeam) {
+        $query = "SELECT COUNT(*) as total FROM achievement WHERE idteam = ?";
+        $stmt = $this->dbCon->prepare($query);
+        $stmt->bind_param("s", $idTeam);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc()['total'];
+    }
+    
+    public function getTotalEvents($idTeam) {
+        $query = "SELECT COUNT(*) as total FROM event e INNER JOIN event_teams et ON et.idevent = e.idevent WHERE et.IDTEAM = ?";
+        $stmt = $this->dbCon->prepare($query);
+        $stmt->bind_param("s", $idTeam);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc()['total'];
+    }
 }
 
 ?>

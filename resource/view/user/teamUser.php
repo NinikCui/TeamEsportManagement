@@ -111,6 +111,29 @@ $pageStart = ($page - 1) * $maxRows;
             margin-right: 20px;
             
         }
+
+
+        .tab-link {
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .tab-link:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .tab-link.active {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .tab-content {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -132,23 +155,183 @@ $pageStart = ($page - 1) * $maxRows;
         </div>
         <script>
             function confirmLogout() {
-            var result = confirm("Apakah Anda yakin ingin logout?");
-            if (result) {
-                window.location.href = "../logout.php"; 
-            } 
-        }
+                var result = confirm("Apakah Anda yakin ingin logout?");
+                if (result) {
+                    window.location.href = "../logout.php"; 
+                } 
+            }
+            function showContent(contentType) {
+                // Sembunyikan semua konten
+                window.location.href = `teamUser.php?tab=${contentType}&page=1`;
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // Hapus class active dari semua tab
+                document.querySelectorAll('.tab-link').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                
+                // Tampilkan konten yang dipilih
+                document.getElementById(contentType + 'Content').classList.add('active');
+                document.getElementById(contentType + 'Tab').classList.add('active');
+
+                // Selalu set page ke 1 saat berganti tab
+                const newUrl = new URL(window.location);
+                newUrl.searchParams.set('tab', contentType);
+                newUrl.searchParams.set('page', '1');
+                window.location.href = newUrl.toString();
+            }
+
+            //  untuk handle back/forward browser
+            window.addEventListener('popstate', function() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const currentTab = urlParams.get('tab') || 'member';
+                showContent(currentTab);
+            });
+
+        
+            document.addEventListener('DOMContentLoaded', function() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const currentTab = urlParams.get('tab') || 'member';
+            });
+
+
         </script>
     </nav>
     <div class="container">
         <?php 
-            if($cekTeam){
-                echo "<h1>Selamat Anda Telah Bergabung Dalam Team $namaTeamUser</h1>";
-                //KERJA DISINI 
+            if($cekTeam)
+            {
+                $currentTab = isset($_GET['tab']) ? $_GET['tab'] : 'member';
+                $page = (isset($_GET["page"]) && is_numeric($_GET["page"])) ? $_GET["page"] : 1;
+                $maxRows = 5;
+                $pageStart = ($page - 1) * $maxRows;
 
+                echo "
+                <table class=\"table\">  
+                    <thead>
+                        <tr>
+                            <th colspan=\"2\" > <img src=\"../../img/teamImg/$idTeamUser.jpg\" width=\"400\" > </th>
+                            <th >  $namaTeamUser Team's</th>
+                        </tr>
+                        <tr>
+                            <th id=\"memberTab\" class=\"tab-link " . ($currentTab == 'member' ? 'active' : '') . "\" onclick=\"showContent('member')\">Member Team</th>
+                            <th id=\"achievementTab\" class=\"tab-link " . ($currentTab == 'achievement' ? 'active' : '') . "\" onclick=\"showContent('achievement')\">Achievement Team</th>
+                            <th id=\"eventTab\" class=\"tab-link " . ($currentTab == 'event' ? 'active' : '') . "\" onclick=\"showContent('event')\">Event Team</th>
+                        </tr>
+                    </thead> 
+                </table>";
+                if($currentTab == 'member') {
+                    echo "<table class='table'>
+                        <tr>
+                            <th>ID Member</th>
+                            <th>Nama Member</th>
+                        </tr>";
+                        
+                    $members = $jp->getTeamMembers($idTeamUser, $pageStart, $maxRows);
+                    $totalMembers = $jp->getTotalMembers($idTeamUser);
+                    $totalPages = ceil($totalMembers / $maxRows);
                     
+                    if (!empty($members)) {
+                        foreach($members as $member) {
+                            echo "<tr>
+                                    <td>{$member['idmember']}</td>
+                                    <td>{$member['username']}</td>
+                                </tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='2'>No members found</td></tr>";
+                    }
+                    echo "</table>";
+                    
+                    if ($totalMembers > 0) {
+                        echo "<div class='buttons'>";
+                        if($page > 1) {
+                            echo "<a href='teamUser.php?tab=member&page=" . ($page - 1) . "'><button>Previous</button></a>";
+                        }
+                        if($page < $totalPages) {
+                            echo "<a href='teamUser.php?tab=member&page=" . ($page + 1) . "'><button>Next</button></a>";
+                        }
+                        echo "</div>";
+                    }
+                }
+                
+                // Achievement tab
+                if($currentTab == 'achievement') {
+                    echo "<table class='table'>
+                        <tr>
+                            <th>Nama Achievement</th>
+                            <th>Tanggal</th>
+                            <th>Description</th>
+                        </tr>";
+                        
+                    $achievements = $jp->getTeamAchievements($idTeamUser, $pageStart, $maxRows);
+                    $totalAchievements = $jp->getTotalAchievements($idTeamUser);
+                    $totalPages = ceil($totalAchievements / $maxRows);
+                    
+                    if (!empty($achievements)) {
+                        foreach($achievements as $achievement) {
+                            echo "<tr>
+                                    <td>{$achievement['name']}</td>
+                                    <td>{$achievement['date']}</td>
+                                    <td>{$achievement['description']}</td>
+                                </tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='3'>No achievements found</td></tr>";
+                    }
+                    echo "</table>";
+                    
+                    if ($totalAchievements > 0) {
+                        echo "<div class='buttons'>";
+                        if($page > 1) {
+                            echo "<a href='teamUser.php?tab=achievement&page=" . ($page - 1) . "'><button>Previous</button></a>";
+                        }
+                        if($page < $totalPages) {
+                            echo "<a href='teamUser.php?tab=achievement&page=" . ($page + 1) . "'><button>Next</button></a>";
+                        }
+                        echo "</div>";
+                    }
+                }
+                
+                // Event tab
+                if($currentTab == 'event') {
+                    echo "<table class='table'>
+                        <tr>
+                            <th>Nama Event</th>
+                            <th>Tanggal</th>
+                        </tr>";
+                        
+                    $events = $jp->getTeamEvents($idTeamUser, $pageStart, $maxRows);
+                    $totalEvents = $jp->getTotalEvents($idTeamUser);
+                    $totalPages = ceil($totalEvents / $maxRows);
+                    
+                    if (!empty($events)) {
+                        foreach($events as $event) {
+                            echo "<tr>
+                                    <td>{$event['name']}</td>
+                                    <td>{$event['date']}</td>
+                                </tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='2'>No events found</td></tr>";
+                    }
+                    echo "</table>";
+                    
+                    if ($totalEvents > 0) {
+                        echo "<div class='buttons'>";
+                        if($page > 1) {
+                            echo "<a href='teamUser.php?tab=event&page=" . ($page - 1) . "'><button>Previous</button></a>";
+                        }
+                        if($page < $totalPages) {
+                            echo "<a href='teamUser.php?tab=event&page=" . ($page + 1) . "'><button>Next</button></a>";
+                        }
+                        echo "</div>";
+                    }
+                }
 
-                //DISINI  
-
+                
             }else{
                echo " <table class=\"table\">
                <thead>
