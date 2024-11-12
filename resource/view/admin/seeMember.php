@@ -5,7 +5,13 @@ session_start();
 if (!isset($_SESSION['active_user'])) {
     header('Location: ../../../index.php');
     exit;
+}else{
+    if($_SESSION['active_user']->profile != "admin"){
+        header('Location: ProjectFSP/notfound.php');
+        exit;
+    }
 }
+
 if (isset($_POST['idteam'])) {
     $idTeamMember = $_POST['idteam'];
     $namateam = $_POST['namateam'];

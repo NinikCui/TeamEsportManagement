@@ -4,7 +4,13 @@ session_start();
 if (!isset($_SESSION['active_user'])) {
     header('Location: ../login.php');
     exit;
+}else{
+    if($_SESSION['active_user']->profile != "member"){
+        header('Location: ProjectFSP/notfound.php');
+        exit;
+    }
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

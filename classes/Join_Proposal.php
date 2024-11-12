@@ -170,9 +170,9 @@ class Join_Proposal{
     //TAB JIKA USER SUDAH TERPILIIH
     public function getTeamMembers($idTeam, $pageStart = 0, $maxRows = 5) {
         $query = "SELECT m.idmember, m.username 
-                 FROM join_proposal jp 
-                 INNER JOIN member m ON m.idmember = jp.idmember 
-                 WHERE jp.idteam = ? AND jp.status = 'approved'
+                 FROM team_members tm 
+                 INNER JOIN member m ON m.idmember = tm.idmember 
+                 WHERE tm.idteam = ? 
                  LIMIT ?, ?";
         $stmt = $this->dbCon->prepare($query);
         $stmt->bind_param("sii", $idTeam, $pageStart, $maxRows);

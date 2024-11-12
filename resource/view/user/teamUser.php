@@ -6,6 +6,12 @@ if (!isset($_SESSION['active_user'])) {
     header('Location: ../login.php');
     exit;
 }
+else{
+    if($_SESSION['active_user']->profile != "member"){
+        header('Location: ProjectFSP/notfound.php');
+        exit;
+    }
+}
 
 $idmember=  $_SESSION['active_user']->idmember;
 $cekTeam = false;

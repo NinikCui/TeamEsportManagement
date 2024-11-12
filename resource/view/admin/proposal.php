@@ -5,6 +5,11 @@ session_start();
 if (!isset($_SESSION['active_user'])) {
     header('Location: ../../../index.php');
     exit();
+}else{
+    if($_SESSION['active_user']->profile != "admin"){
+        header('Location: ProjectFSP/notfound.php');
+        exit;
+    }
 }
 
 $conn = new mysqli('localhost', 'root', '', 'esport');
