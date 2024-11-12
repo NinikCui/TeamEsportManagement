@@ -18,7 +18,15 @@ require_once('../../classes/member.php');
     }
 
     body {
-        background-color: #FAFAFA;
+        margin: 0;
+        padding: 0;
+        font-family: "Poppins", sans-serif;
+        color: white;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-image: url("../img/BG.png");
         display: flex;
         justify-content: center;
         align-items: center;

@@ -6,7 +6,7 @@ if (!isset($_SESSION['active_user'])) {
     exit;
 }else{
     if($_SESSION['active_user']->profile != "member"){
-        header('Location: ProjectFSP/notfound.php');
+        header('Location: ProjectFSP/utilities/404.php');
         exit;
     }
 }

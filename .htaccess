@@ -1,1 +1,4 @@
-ErrorDocument 404 /ProjectFSP/notfound.php
+ErrorDocument 404 /ProjectFSP/utilities/404.php
+ErrorDocument 403 /ProjectFSP/utilities/403.php
+
+RedirectMatch 403 ^/ProjectFSP/classes/.*$

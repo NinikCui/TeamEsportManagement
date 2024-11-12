@@ -13,14 +13,14 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
-  flex-wrap: wrap;
+  padding: 20px;
+  position: relative;
 }
 
 .logo {
   display: flex;
   align-items: center;
-  font-size: 28px;
+  font-size: 24px;
   font-weight: bold;
 }
 
@@ -28,8 +28,9 @@ body {
   width: 50px;
   height: auto;
   margin-right: 10px;
-  margin-left: 20px;
 }
+
+
 
 .photo-profile {
   display: flex;
@@ -50,17 +51,13 @@ body {
   display: flex;
   gap: 20px;
   align-items: center;
-  padding: 0;
-  margin: 0;
-  flex-wrap: wrap;
 }
 
 .nav-section li a {
   text-decoration: none;
   color: white;
-  font-size: 20px;
-  margin-right: 10px;
-  margin-left: 10px;
+  font-size: 18px;
+  padding: 5px 15px;
 }
 
 .btn-logout {
@@ -83,4 +80,57 @@ body {
 
 .logout:hover {
   background-color: blueviolet;
+}
+@media screen and (max-width: 1024px) {
+  .nav-section li a {
+      margin-right: 50px;
+      margin-left: 50px;
+  }
+}
+
+@media screen and (max-width: 868px) {
+  .menu-toggle {
+      display: flex;
+  }
+
+  .navbar {
+      flex-wrap: wrap;
+  }
+
+  .nav-section {
+      display: none;
+      width: 100%;
+      flex-direction: column;
+      text-align: center;
+      background-color: rgba(93, 32, 167, 0.9);
+      position: absolute;
+      top: 100%;
+      left: 0;
+      padding: 20px 0;
+  }
+
+  .nav-section.active {
+      display: flex;
+  }
+
+  .nav-section li a {
+      margin: 10px 0;
+      display: block;
+  }
+
+}
+@media screen and (max-width: 480px) {
+  .navbar {
+      padding: 10px;
+  }
+
+  .logo {
+      font-size: 20px;
+  }
+
+  .logo img {
+      width: 40px;
+  }
+
+  
 }
