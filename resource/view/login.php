@@ -1,5 +1,31 @@
 <?php
 require_once('../../classes/member.php');
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        session_start();
+
+        $conn = new mysqli('localhost', 'root', '', 'esport');
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+
+        $member = new Member($conn);
+        if ($member->login($username, $password)) {
+            $_SESSION['active_user'] = $member;
+            if ($member->profile == "admin") {
+                header('Location: admin/proposal.php');
+                exit();
+            } else {
+                header('Location: user/welcome.php');
+                exit();
+            }
+        } else {
+            header('Location: login.php?status=failed');
+            exit();
+        }
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -164,33 +190,7 @@ require_once('../../classes/member.php');
     </style>
 </head>
 <body>
-    <?php
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        session_start();
-
-        $conn = new mysqli('localhost', 'root', '', 'esport');
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
-        $username = $_POST['username'];
-        $password = $_POST['password'];
-
-        $member = new Member($conn);
-        if ($member->login($username, $password)) {
-            $_SESSION['active_user'] = $member;
-            if ($member->profile == "admin") {
-                header('Location: admin/proposal.php');
-                exit();
-            } else {
-                header('Location: user/welcome.php');
-                exit();
-            }
-        } else {
-            header('Location: login.php?status=failed');
-            exit();
-        }
-    }
-    ?>
+    
     <div class="container">
         <div class="image-container"></div>
         <div class="form-container">

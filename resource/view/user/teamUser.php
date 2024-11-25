@@ -187,6 +187,10 @@ $pageStart = ($page - 1) * $maxRows;
                 newUrl.searchParams.set('tab', contentType);
                 newUrl.searchParams.set('page', '1');
                 window.location.href = newUrl.toString();
+
+                <?php if($cekTeam): ?>
+                setTimeout(() => refreshTeamImage('<?php echo $idTeamUser; ?>'), 100);
+                <?php endif; ?>
             }
 
             //  untuk handle back/forward browser
@@ -202,7 +206,29 @@ $pageStart = ($page - 1) * $maxRows;
                 const currentTab = urlParams.get('tab') || 'member';
             });
 
+            function refreshTeamImage(idTeam) {
+                const teamImages = document.querySelectorAll(`img[src*="${idTeam}.jpg"]`);
+                const timestamp = new Date().getTime();
+                
+                teamImages.forEach(img => {
+                    const newSrc = img.src.split('?')[0] + '?v=' + timestamp;
+                    img.src = newSrc;
+                });
+            }
+            function setupImageRefresh(idTeam) {
+                // Refresh gambar setiap kali tab berubah
+                const tabLinks = document.querySelectorAll('.tab-link');
+                tabLinks.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        setTimeout(() => refreshTeamImage(idTeam), 100);
+                    });
+                });
 
+                // Refresh gambar saat halaman dimuat
+                window.addEventListener('load', () => {
+                    refreshTeamImage(idTeam);
+                });
+            }
         </script>
     </nav>
     <div class="container">
@@ -213,12 +239,17 @@ $pageStart = ($page - 1) * $maxRows;
                 $page = (isset($_GET["page"]) && is_numeric($_GET["page"])) ? $_GET["page"] : 1;
                 $maxRows = 5;
                 $pageStart = ($page - 1) * $maxRows;
+                $timestamp = time();
 
                 echo "
-                <table class=\"table\">  
+               <table class=\"table\">  
                     <thead>
                         <tr>
-                            <th colspan=\"2\" > <img src=\"../../img/teamImg/$idTeamUser.jpg\" width=\"400\" > </th>
+                            <th colspan=\"2\" > 
+                                <img src=\"../../img/teamImg/$idTeamUser.jpg?v=$timestamp\" width=\"400\" 
+                                    onerror=\"this.onerror=null; this.src='../../img/default-team.jpg';\" 
+                                    onload=\"this.style.display='block';\"> 
+                            </th>
                             <th >  $namaTeamUser Team's</th>
                         </tr>
                         <tr>

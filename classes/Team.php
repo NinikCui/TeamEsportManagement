@@ -10,7 +10,7 @@ class Team{
         $this->dbCon = $dbConnection;
     }
 
-    public function AddTeam($game,$team){
+    public function AddTeam($game,$team, $uploadSuccess){
         $stmt = $this->dbCon->prepare("SELECT idteam, isdeleted FROM team WHERE name = ? AND idgame = ?");
         $stmt->bind_param('si', $team, $game); 
         $stmt->execute();
@@ -36,9 +36,11 @@ class Team{
             $teamId = $this->dbCon->insert_id; 
             $insertStmt->close();
         }
-    
+        if ($uploadSuccess ) {
+            $newImagePath = "../../img/teamImg/$teamId.jpg";
+            move_uploaded_file($_FILES['teamImage']['tmp_name'], $newImagePath);
+        }
         $stmt->close();
-        return $teamId;
     }
 
 
@@ -50,13 +52,13 @@ class Team{
     }
 
     public function DeleteTeam($idTeam){
-        $stmt = $this->dbCon->prepare("UPDATE team SET isdeleted = 1 WHERE idteam = ". $idTeam);
+        $stmt = $this->dbCon->prepare("DELETE FROM team  WHERE idteam = ". $idTeam);
         $stmt->execute();
         $stmt->close();
     }
     
     public function ReadDataTeam($pageStart,$maxRows){
-        $stmt = $this->dbCon->prepare("select t.idteam, g.name as gameName, t.name as teamName from team t  inner join game g on g.idgame = t.idgame where t.isdeleted = 0 limit ". $pageStart.", ". $maxRows);
+        $stmt = $this->dbCon->prepare("select t.idteam, g.name as gameName, t.name as teamName from team t  inner join game g on g.idgame = t.idgame limit ". $pageStart.", ". $maxRows);
         $stmt->execute();
         $res = $stmt->get_result();
 

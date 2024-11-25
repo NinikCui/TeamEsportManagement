@@ -49,27 +49,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     else if($action == "add") {
         $team = $_POST['teamName'];
         $game = $_POST['game'];
-        $newId = $t->AddTeam($game, $team);
-        if($newId !== false) {
-            // Handle image upload
-            if ($uploadSuccess && isset($_FILES['teamImage'])) {
-                $newImagePath = "../../img/teamImg/$newId.jpg";
-                move_uploaded_file($_FILES['teamImage']['tmp_name'], $newImagePath);
-            }
-        } else {
-            echo "<script>alert('Team already exists!');</script>";
-        }
+         $t->AddTeam($game, $team, $uploadSuccess);
     }
     else if ($action == "edit") {
         $idTeam = $_POST['idteam'];
         $game = $_POST['game'];
         $name = $_POST['teamName'];
         
-        // Handle image update - hanya jika ada file baru yang diupload
+        // Handle image update
         if (isset($_FILES['teamImage']) && $_FILES['teamImage']['error'] == 0) {
             $imagePath = "../../img/teamImg/{$idTeam}.jpg";
             
-            // Simpan gambar baru
             if ($uploadSuccess) {
                 // Backup gambar lama jika ada
                 if (file_exists($imagePath)) {
@@ -79,10 +69,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 
                 // Coba upload gambar baru
                 if (move_uploaded_file($_FILES['teamImage']['tmp_name'], $imagePath)) {
-                    // Jika berhasil, hapus backup
+                    // Jika berhasil, hapus backup dan clear cache dengan touch
                     if (file_exists($backupPath)) {
                         unlink($backupPath);
                     }
+                    touch($imagePath); // Update timestamp file
                 } else {
                     // Jika gagal, kembalikan gambar lama
                     if (file_exists($backupPath)) {
@@ -92,7 +83,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             }
         }
-        // Jika tidak ada file baru, biarkan gambar lama tetap ada
         
         $t->EditTeam($game, $name, $idTeam);
     }
@@ -329,11 +319,10 @@ $pageStart = ($page - 1) * $maxRows;
                 
                 reader.readAsDataURL(input.files[0]);
             } else {
-                // Jika tidak ada file baru dipilih dan ini adalah mode edit,
-                // kembalikan ke gambar yang sudah ada
+                // Jika tidak ada file baru dipilih dan ini adalah mode edit
                 const idteam = document.getElementById('idteam').value;
                 if (idteam && document.getElementById('actionButton').value === 'edit') {
-                    preview.src = `../../img/teamImg/${idteam}.jpg?t=${new Date().getTime()}`;
+                    preview.src = `../../img/teamImg/${idteam}.jpg?v=${new Date().getTime()}`;
                     preview.style.display = 'block';
                 } else {
                     preview.src = '';
@@ -341,6 +330,7 @@ $pageStart = ($page - 1) * $maxRows;
                 }
             }
         }
+
         function openFrmEdit(idteam, gameName, teamName) {
             document.getElementById('formNew').style.display = "block";
             document.getElementById('teamName').value = teamName; 
@@ -350,13 +340,12 @@ $pageStart = ($page - 1) * $maxRows;
             document.getElementById('idteam').value = idteam;
             document.getElementById('teamImage').removeAttribute('required');
             
-            // Reset preview when opening edit form
+            // Reset preview dengan timestamp
             const preview = document.getElementById('preview');
-            // Tambahkan timestamp untuk mencegah caching
-            preview.src = `../../img/teamImg/${idteam}.jpg?t=${new Date().getTime()}`;
+            const timestamp = new Date().getTime();
+            preview.src = `../../img/teamImg/${idteam}.jpg?v=${timestamp}`;
             preview.style.display = 'block';
             
-            // Handle error loading gambar
             preview.onerror = function() {
                 this.style.display = 'none';
             };
@@ -364,7 +353,13 @@ $pageStart = ($page - 1) * $maxRows;
                 this.style.display = 'block';
             };
         }
-
+        function refreshImage(idteam) {
+            const images = document.querySelectorAll(`img[src*="${idteam}.jpg"]`);
+            const timestamp = new Date().getTime();
+            images.forEach(img => {
+                img.src = `../../img/teamImg/${idteam}.jpg?v=${timestamp}`;
+            });
+        }
 
         function openFrmNew() {
             document.getElementById('formNew').style.display = "block";
@@ -470,8 +465,8 @@ $pageStart = ($page - 1) * $maxRows;
                                     <button type='submit' name='detail' value='detail' style='color: yellow; border: none; background: none; cursor: pointer; font-size: 18px;'>📝 Detail</button>
                                 </form></td>
                                <td>
-                               <img src=\"../../img/teamImg/$idTeamGambar.jpg\">
-                               </td>";
+                                    <img src=\"../../img/teamImg/$idTeamGambar.jpg?v=" . time() . "\">
+                                </td>";
                         echo "<td>
                                 
                                 <button type='button' onclick='openFrmEdit(\"" . $team["idteam"] . "\", \"" . $team["gameName"] . "\", \"" . $team["teamName"] . "\")' style='color: #A0D683; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Update</button>
