@@ -1,5 +1,25 @@
 <?php
 require_once('../../classes/member.php');
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $conn = new mysqli('localhost', 'root', '', 'esport');
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    $first_name = $_POST['firstName'];
+    $last_name = $_POST['lastName'];
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    require_once('../../classes/member.php');
+    $member = new Member($conn);
+    if ($member->Registrasi($username, $password, $first_name, $last_name)) {
+        header("Location: signUp.php?status=success");
+        exit();
+    } else {
+        header("Location: signUp.php?status=failed");
+        exit();
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -170,26 +190,7 @@ require_once('../../classes/member.php');
 <body>
     <!-- PHP Logic -->
     <?php
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $conn = new mysqli('localhost', 'root', '', 'esport');
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
-        $first_name = $_POST['firstName'];
-        $last_name = $_POST['lastName'];
-        $username = $_POST['username'];
-        $password = $_POST['password'];
-
-        require_once('../../classes/member.php');
-        $member = new Member($conn);
-        if ($member->Registrasi($username, $password, $first_name, $last_name)) {
-            header("Location: signUp.php?status=success");
-            exit();
-        } else {
-            header("Location: signUp.php?status=failed");
-            exit();
-        }
-    }
+    
     ?>
     <!-- HTML Content -->
     <div class="container">
@@ -210,10 +211,8 @@ require_once('../../classes/member.php');
             </form>
             <p class="signin-text">Already have an account? <a href="login.php">Sign In</a></p>
         </div>
-        <!-- <div class="image-container"></div> -->
     </div>
     <script>
-        // Alert based on status
         document.addEventListener('DOMContentLoaded', () => {
             const urlPar = new URLSearchParams(window.location.search);
             const status = urlPar.get('status');
@@ -226,7 +225,6 @@ require_once('../../classes/member.php');
             }
         });
 
-        // Toggle password visibility
         document.querySelector("#passEye").addEventListener("click", function () {
             const password = document.querySelector("#password");
             const type = password.getAttribute("type") === "password" ? "text" : "password";
