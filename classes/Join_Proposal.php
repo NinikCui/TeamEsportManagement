@@ -143,7 +143,7 @@ class Join_Proposal{
                 t.name as teamName 
             FROM team t 
             INNER JOIN game g ON g.idgame = t.idgame 
-            where isdeleted = 0
+           
             LIMIT ?, ?"
         );
         $stmt->bind_param('ii', $pageStart, $maxRows);
