@@ -52,7 +52,9 @@ if (!isset($_SESSION['active_user'])) {
         </div>
         <ul class="nav-section">
             <li><a href="welcome.php"><u>Home</u></a></li>
-            <li><a href="teamUser.php">Team</a></li>
+            <li><a href="seeAllTeam.php">Team Detail</a></li>
+
+            <li><a href="teamUser.php">Apply Team</a></li>
         </ul>
         <div class="photo-profile">
             <img src="../../img/fotoProfile.png" alt="Foto Profil">

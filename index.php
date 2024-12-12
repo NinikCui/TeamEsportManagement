@@ -242,8 +242,7 @@ if (isset($_SESSION['username'])) {
         </div>
         <ul class="nav-section">
             <li><a href="index.php"><u>Home</u></a></li>
-            <li><a href="#" onclick="checkLogin(<?php echo json_encode($is_logged_in); ?>)">Game Detail</a></li>
-            <li><a href="#" onclick="checkLogin(<?php echo json_encode($is_logged_in); ?>)">Team Detail</a></li>
+            <li><a href="seeAllTeam.php">Team Detail</a></li>
         </ul>
         <div class="nav-button">
             <button class="sign-up-button"><a href="resource/view/signUp.php">Sign Up</a></button>
