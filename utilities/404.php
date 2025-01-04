@@ -13,35 +13,55 @@ header("HTTP/1.0 404 Not Found");
     <link href="/ProjectFSP/resource/css/nav.css" rel="stylesheet">
 
     <style>
-         body {
+        body {
             background-image: url("/ProjectFSP/resource/img/BG.png");
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
         }
-        .container{
+        .container {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
             height: 100vh;
-
-            
+            padding: 20px;
         }
-        .info-1{
-            font-size: 300px;
+        .info-1 {
+            font-size: 20vw; 
+            margin: 0;
+            line-height: 1;
+        }
+        .info-2 {
+            font-size: 8vw; 
             margin: 0;
         }
-        .info-2{
-            font-size: 50px;
-            margin: 0;
 
+        @media (max-width: 768px) {
+            .info-1 {
+                font-size: 40vw; 
+            }
+            .info-2 {
+                font-size: 12vw;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .info-1 {
+                font-size: 40vw;
+            }
+            .info-2 {
+                font-size: 10vw;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="info-1">404 </h1>
-        <H1 class="info-2">NOT FOUND</H1>
+        <h1 class="info-1">404</h1>
+        <h1 class="info-2">NOT FOUND</h1>
     </div>
-    
 </body>
 </html>

@@ -16,7 +16,7 @@ if (isset($_POST['idteam'])) {
     $idTeamMember = $_POST['idteam'];
     $namateam = $_POST['namateam'];
 }
-$conn = new mysqli('localhost', 'root', '', 'esport');
+$conn = new mysqli('localhost', 'root', '', 'fullstack');
 $tm = new TeamMember($conn);
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['idteamDelete'])) {
     $idTeamMember = $_POST['idteamDelete'];

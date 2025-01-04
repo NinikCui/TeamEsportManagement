@@ -4,7 +4,7 @@ require_once('../../classes/member.php');
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         session_start();
 
-        $conn = new mysqli('localhost', 'root', '', 'esport');
+        $conn = new mysqli('localhost', 'root', '', 'fullstack');
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
         }

@@ -17,7 +17,7 @@ $idmember=  $_SESSION['active_user']->idmember;
 $cekTeam = false;
 $idTeamUser = "";
 $namaTeamUser ="";
-$conn = new mysqli('localhost', 'root', '', 'esport');
+$conn = new mysqli('localhost', 'root', '', 'fullstack');
 
 $jp = new Join_Proposal($conn);
 $teamUser = $jp ->CekTeamUser($idmember);

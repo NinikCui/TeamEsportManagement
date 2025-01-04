@@ -12,7 +12,7 @@ if (!isset($_SESSION['active_user'])) {
     }
 }
 
-$conn = new mysqli('localhost', 'root', '', 'esport');
+$conn = new mysqli('localhost', 'root', '', 'fullstack');
 
 $status = isset($_GET['status']) ? $_GET['status'] : 'waiting'; 
 

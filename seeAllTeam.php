@@ -3,7 +3,7 @@ require_once('classes/Team.php');
 session_start();
 
 
-$conn = new mysqli('localhost', 'root', '', 'esport');
+$conn = new mysqli('localhost', 'root', '', 'fullstack');
 $t = new Team($conn);
 
 

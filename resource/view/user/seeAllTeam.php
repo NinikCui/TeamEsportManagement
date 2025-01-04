@@ -14,7 +14,7 @@ else{
 }
 
 $idmember=  $_SESSION['active_user']->idmember;
-$conn = new mysqli('localhost', 'root', '', 'esport');
+$conn = new mysqli('localhost', 'root', '', 'fullstack');
 $t = new Team($conn);
 
 

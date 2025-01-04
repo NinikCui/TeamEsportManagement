@@ -26,7 +26,7 @@ if (isset($_POST['namaCate'])) {
 }
 
 
-$conn = new mysqli('localhost', 'root', '', 'esport');
+$conn = new mysqli('localhost', 'root', '', 'fullstack');
 $et = new EventTeams($conn);
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
@@ -281,7 +281,7 @@ $pageStart = ($page - 1) * $maxRows;
                         <select id="cbteam" class="formNew-Team" name="idteam">
                             <option value="">--- SELECT TEAM ---</option>
                             <?php
-                                $conn = new mysqli('localhost', 'root', '', 'esport');
+                                $conn = new mysqli('localhost', 'root', '', 'fullstack');
                                 $stmt = $conn->prepare("SELECT idteam, name FROM team;");
                                 $stmt->execute();
                                 $res = $stmt->get_result();

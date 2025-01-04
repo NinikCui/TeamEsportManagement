@@ -1,9 +1,9 @@
 <?php
 session_start();
 if (isset($_SESSION['username'])) {
-    if($_SESSION['profile'] == "admin"){
+    if ($_SESSION['profile'] == "admin") {
         header('Location: admin/proposal.php');
-    }else{
+    } else {
         header('Location: user/welcome.php');
     }
     exit();
@@ -19,9 +19,14 @@ if (isset($_SESSION['username'])) {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <link href="resource/css/nav.css" rel="stylesheet">
     <style>
-        body {
+        /* General styles */
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+
+        body {
             font-family: "Poppins", sans-serif;
             color: white;
             background-image: url("resource/img/BG.png");
@@ -31,6 +36,7 @@ if (isset($_SESSION['username'])) {
             background-attachment: fixed;
             min-height: 100vh;
         }
+
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -51,7 +57,6 @@ if (isset($_SESSION['username'])) {
             height: auto;
             margin-right: 10px;
         }
-        
 
         .menu-toggle {
             display: none;
@@ -64,7 +69,7 @@ if (isset($_SESSION['username'])) {
             width: 25px;
             height: 3px;
             background-color: white;
-            margin: 2px 0;
+            margin: 3px 0;
             transition: 0.4s;
         }
 
@@ -108,31 +113,48 @@ if (isset($_SESSION['username'])) {
         }
 
         .container {
-            margin-left: 15%;
-            margin-top: 5%;
             display: flex;
-            flex-wrap: wrap;
-            gap: 50px;
+            justify-content: space-between;
+            align-items: center;
+            margin: 5% 10%;
         }
 
-        .container .info {
-            font-size: 32px;
+        .info h1 {
+            font-size: 48px;
+            line-height: 1.3;
         }
 
         .info p {
+            margin-top: 20px;
             font-size: 16px;
-            margin-top: 0px;
+            line-height: 1.8;
         }
 
-        
+        .container-img img {
+            max-width: 100%;
+            height: auto;
+        }
 
-        @media screen and (max-width: 868px) {
-            .menu-toggle {
-                display: flex;
+        /* Media Queries */
+        @media screen and (max-width: 992px) {
+            .container {
+                flex-direction: column;
+                text-align: center;
+                gap: 30px;
             }
 
-            .navbar {
-                flex-wrap: wrap;
+            .info h1 {
+                font-size: 36px;
+            }
+
+            .info p {
+                font-size: 14px;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
             }
 
             .nav-section {
@@ -158,21 +180,10 @@ if (isset($_SESSION['username'])) {
 
             .container {
                 margin: 20px;
-                justify-content: center;
-                text-align: center;
             }
 
-            .container .info {
+            .info h1 {
                 font-size: 28px;
-            }
-
-            .info p {
-                font-size: 14px;
-            }
-
-            .container-img img {
-                max-width: 100%;
-                height: auto;
             }
         }
 
@@ -182,7 +193,7 @@ if (isset($_SESSION['username'])) {
             }
 
             .logo {
-                font-size: 15px;
+                font-size: 18px;
             }
 
             .logo img {
@@ -197,10 +208,9 @@ if (isset($_SESSION['username'])) {
             .nav-button button {
                 padding: 8px 15px;
                 font-size: 14px;
-                margin-left: 5px;
             }
 
-            .container .info {
+            .info h1 {
                 font-size: 24px;
             }
 
@@ -208,23 +218,21 @@ if (isset($_SESSION['username'])) {
                 font-size: 12px;
             }
         }
-        
     </style>
 </head>
 <body>
-    <?php
-    $is_logged_in = isset($_SESSION['active_user']); 
-    ?>
+    <?php $is_logged_in = isset($_SESSION['active_user']); ?>
     <script>
         function checkLogin(isLoggedIn) {
-            if (isLoggedIn == false) {
+            if (!isLoggedIn) {
                 alert("Anda harus login terlebih dahulu untuk mengakses halaman ini.");
             }
         }
+
         document.addEventListener('DOMContentLoaded', function() {
             const menuToggle = document.querySelector('.menu-toggle');
             const navSection = document.querySelector('.nav-section');
-            
+
             menuToggle.addEventListener('click', function() {
                 navSection.classList.toggle('active');
             });
@@ -253,14 +261,13 @@ if (isset($_SESSION['username'])) {
         <div class="info">
             <h1>DISCOVER COLLECT <br>GAMES FROM US</h1>
             <p>Welcome to HIKSROT, the ultimate hub for eSports enthusiasts!<br>
-             Dive into the latest news, game strategies, and exclusive content <br>
-             on your favorite competitive games. Join us to stay ahead in the <br>
-             game and connect with a community of passionate gamers!</p>
+                Dive into the latest news, game strategies, and exclusive content <br>
+                on your favorite competitive games. Join us to stay ahead in the <br>
+                game and connect with a community of passionate gamers!</p>
         </div>
         <div class="container-img">
-            <img src="resource/img/imgHome.png">
+            <img src="resource/img/imgHome.png" alt="Hiksrot Game Image">
         </div>
-        
     </div>
 </body>
 </html>
