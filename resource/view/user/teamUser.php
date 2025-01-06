@@ -140,10 +140,103 @@ $pageStart = ($page - 1) * $maxRows;
         .tab-content.active {
             display: block;
         }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            color: white;
+        }
+
+        .navbar .hamburger {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .navbar .logo img {
+            height: 40px;
+        }
+
+        .navbar .nav-section {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar .nav-section li a {
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+        }
+
+        .navbar .nav-section li a:hover {
+            text-decoration: underline;
+        }
+
+        .navbar .photo-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar .photo-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .navbar .btn-logout button {
+            background-color: purple;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .navbar .hamburger {
+                display: block;
+            }
+
+            .navbar .nav-section {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                text-align: center;
+                background-color: rgba(93, 32, 167, 0.9);
+                position: absolute;
+                top: 100%;
+                left: 0;
+                padding: 20px 0;
+            }
+
+            .navbar .nav-section.active {
+                display: flex;
+            }
+        }
     </style>
 </head>
 <body>
     <nav class="navbar">
+        <!-- Hamburger Icon -->
+        <div class="hamburger" onclick="toggleMenu()">
+            &#9776; 
+        </div>
         <div class="logo">
             <img src="../../img/hiksrotIcon.png" alt="Hiksrot Logo">
             HIKSROT
@@ -151,18 +244,19 @@ $pageStart = ($page - 1) * $maxRows;
         <ul class="nav-section">
             <li><a href="welcome.php">Home</a></li>
             <li><a href="seeAllTeam.php">Team Detail</a></li>
-
-            <li><a href="teamUser.php"><u>Apply Team</u></a></li>
+            <li><a href="teamUser.php">Apply Team</a></li>
         </ul>
         <div class="photo-profile">
             <img src="../../img/fotoProfile.png" alt="Foto Profil">
-            <h5>Hello, <?php  echo $_SESSION['active_user']->fname;?></h5>
-            <div  class="btn-logout">
-                <button  class="logout" onclick="confirmLogout()">Log Out</button>
+            <h5>Hello, <?php echo $_SESSION['active_user']->fname; ?></h5>
+            <div class="btn-logout">
+                <button class="logout" onclick="confirmLogout()">Log Out</button>
             </div>
         </div>
-        <script>
-            function confirmLogout() {
+    </nav>
+
+    <script>
+        function confirmLogout() {
                 var result = confirm("Apakah Anda yakin ingin logout?");
                 if (result) {
                     window.location.href = "../logout.php"; 
@@ -231,8 +325,20 @@ $pageStart = ($page - 1) * $maxRows;
                     refreshTeamImage(idTeam);
                 });
             }
-        </script>
-    </nav>
+            
+            //logout navbar
+            function confirmLogout() {
+                var result = confirm("Apakah Anda yakin ingin logout?");
+                    if (result) {
+                        window.location.href = "../logout.php";
+                    }
+            }
+            function toggleMenu() {
+                const navSection = document.querySelector('.nav-section');
+                navSection.classList.toggle('active');
+            }
+    </script>
+
     <div class="container">
         <?php 
             if($cekTeam)
@@ -431,6 +537,6 @@ $pageStart = ($page - 1) * $maxRows;
             
             }
         </script>
-</div>
+    </div>
 </body>
 </html>

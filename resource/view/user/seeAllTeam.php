@@ -205,18 +205,109 @@ $pageStart = ($page - 1) * $maxRows;
             max-height: 100%;
             object-fit: contain;
         }
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            color: white;
+        }
+
+        .navbar .hamburger {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .navbar .logo img {
+            height: 40px;
+        }
+
+        .navbar .nav-section {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar .nav-section li a {
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+        }
+
+        .navbar .nav-section li a:hover {
+            text-decoration: underline;
+        }
+
+        .navbar .photo-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar .photo-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .navbar .btn-logout button {
+            background-color: purple;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .navbar .hamburger {
+                display: block;
+            }
+
+            .navbar .nav-section {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                text-align: center;
+                background-color: rgba(93, 32, 167, 0.9);
+                position: absolute;
+                top: 100%;
+                left: 0;
+                padding: 20px 0;
+            }
+
+            .navbar .nav-section.active {
+                display: flex;
+            }
+        }
     </style>
 </head>
 <body>
     <nav class="navbar">
+        <!-- Hamburger Icon -->
+        <div class="hamburger" onclick="toggleMenu()">
+            &#9776; 
+        </div>
         <div class="logo">
             <img src="../../img/hiksrotIcon.png" alt="Hiksrot Logo">
             HIKSROT
         </div>
         <ul class="nav-section">
-        <li><a href="welcome.php">Home</a></li>
-            <li><a href="seeAllTeam.php"><u>Team Detail</u></a></li>
-
+            <li><a href="welcome.php">Home</a></li>
+            <li><a href="seeAllTeam.php">Team Detail</a></li>
             <li><a href="teamUser.php">Apply Team</a></li>
         </ul>
         <div class="photo-profile">
@@ -226,14 +317,6 @@ $pageStart = ($page - 1) * $maxRows;
                 <button class="logout" onclick="confirmLogout()">Log Out</button>
             </div>
         </div>
-        <script>
-            function confirmLogout() {
-                var result = confirm("Apakah Anda yakin ingin logout?");
-                if (result) {
-                    window.location.href = "../logout.php";
-                }
-            }
-        </script>
     </nav>
 
     <script>
@@ -318,12 +401,21 @@ $pageStart = ($page - 1) * $maxRows;
                 modal.style.display = "none";
             }
         }
+
+        //logout navbar
+        function confirmLogout() {
+            var result = confirm("Apakah Anda yakin ingin logout?");
+                if (result) {
+                    window.location.href = "../logout.php";
+                }
+        }
+        function toggleMenu() {
+            const navSection = document.querySelector('.nav-section');
+            navSection.classList.toggle('active');
+        }
     </script>
 
     <div class="container">
-        <a onclick="openFrmNew()" style="margin-bottom: 15px; padding: 10px 20px; background-color: #fff; color: #3c0036; text-decoration: none; border-radius: 5px; border: none; cursor: pointer; float: right;">+ New</a>
-
-
         <table class="table">
             <thead>
                 <tr>
@@ -366,11 +458,7 @@ $pageStart = ($page - 1) * $maxRows;
         <!-- Navigation Buttons -->
         <div class="buttons">
             <a href="<?php if($page <= 1){echo " # ";} else {echo "seeAllTeam.php?page=". $page - 1;} ?>"><button>Back</button></a>
-        <!--    <?php //for($i = 1; $i <= $totalPages; $i++) :?>
-                <a href="?page="<?php //echo($i);?>> <?php //  echo($i) ?> </a>
-            <?php   //endfor;  ?> -->
             <a href="<?php if($page >= $totalPages){echo"#";} else{echo"seeAllTeam.php?page=".$page + 1 ;} ?>"><button>Next</button></a>
-
         </div>
     </div>
 </body>

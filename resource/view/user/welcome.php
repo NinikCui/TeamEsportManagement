@@ -79,146 +79,92 @@ if (!isset($_SESSION['active_user'])) {
             display: block;
         }
 
-        /* Navbar Styles */
         .navbar {
-            padding: 15px 20px;
-            position: relative;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            color: white;
         }
 
-        .logo {
+        .navbar .hamburger {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .navbar .logo {
             display: flex;
             align-items: center;
             gap: 10px;
-            color: #fff;
+            font-size: 24px;
             font-weight: bold;
         }
 
-        .logo img {
+        .navbar .logo img {
             height: 40px;
-            width: auto;
         }
 
-        .nav-section {
+        .navbar .nav-section {
             display: flex;
             gap: 20px;
             list-style: none;
+            margin: 0;
+            padding: 0;
         }
 
-        .nav-section a {
-            color: #fff;
+        .navbar .nav-section li a {
             text-decoration: none;
-            font-size: 16px;
+            color: white;
+            font-size: 18px;
         }
 
-        .photo-profile {
+        .navbar .nav-section li a:hover {
+            text-decoration: underline;
+        }
+
+        .navbar .photo-profile {
             display: flex;
             align-items: center;
             gap: 10px;
-            color: #fff;
         }
 
-        .photo-profile img {
+        .navbar .photo-profile img {
             width: 40px;
             height: 40px;
             border-radius: 50%;
         }
 
-        .btn-logout button {
-            background: #800080;
+        .navbar .btn-logout button {
+            background-color: purple;
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
+            padding: 10px 20px;
+            border-radius: 5px;
             cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .btn-logout button:hover {
-            background: #5618b8;
-        }
-
-        /* Hamburger Menu */
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            padding: 10px;
-            z-index: 100;
-        }
-
-        .hamburger span {
-            width: 25px;
-            height: 3px;
-            background-color: #fff;
-            margin: 2px 0;
-            transition: 0.4s;
-        }
-
-        /* Hamburger Animation */
-        .hamburger.active span:nth-child(1) {
-            transform: rotate(-45deg) translate(-5px, 6px);
-        }
-
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .hamburger.active span:nth-child(3) {
-            transform: rotate(45deg) translate(-5px, -6px);
+            font-size: 16px;
+            width: 100%;
         }
 
         /* Media Queries */
         @media screen and (max-width: 768px) {
-            .hamburger {
-                display: flex;
-                position: absolute;
-                top: 15px;
-                right: 20px;
+            .navbar .hamburger {
+                display: block;
             }
 
-            .navbar {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .nav-section {
+            .navbar .nav-section {
                 display: none;
                 width: 100%;
                 flex-direction: column;
-                padding: 20px 0;
-                position: absolute;
-                top: 70px;
-                left: 0;
-                z-index: 99;
-            }
-
-            .nav-section.active {
-                display: flex;
-            }
-
-            .nav-section li {
                 text-align: center;
-                padding: 10px 0;
-                width: 100%;
-            }
-
-            .photo-profile {
-                display: none;
-                width: 100%;
-                justify-content: center;
-                padding: 20px 0;
+                background-color: rgba(93, 32, 167, 0.9);
                 position: absolute;
                 top: 100%;
                 left: 0;
-                flex-direction: column;
-                align-items: center;
-                gap: 15px;
+                padding: 20px 0;
             }
 
-            .photo-profile.active {
+            .navbar .nav-section.active {
                 display: flex;
             }
 
@@ -245,18 +191,17 @@ if (!isset($_SESSION['active_user'])) {
     </style>
 </head>
 <body>
-    <nav class="navbar">
+<nav class="navbar">
+        <!-- Hamburger Icon -->
+        <div class="hamburger" onclick="toggleMenu()">
+            &#9776; 
+        </div>
         <div class="logo">
             <img src="../../img/hiksrotIcon.png" alt="Hiksrot Logo">
             HIKSROT
         </div>
-        <div class="hamburger">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
         <ul class="nav-section">
-            <li><a href="welcome.php"><u>Home</u></a></li>
+            <li><a href="welcome.php">Home</a></li>
             <li><a href="seeAllTeam.php">Team Detail</a></li>
             <li><a href="teamUser.php">Apply Team</a></li>
         </ul>
@@ -283,13 +228,6 @@ if (!isset($_SESSION['active_user'])) {
     </div>
 
     <script>
-        // Hamburger Menu Toggle
-        document.querySelector('.hamburger').addEventListener('click', function() {
-            this.classList.toggle('active');
-            document.querySelector('.nav-section').classList.toggle('active');
-            document.querySelector('.photo-profile').classList.toggle('active');
-        });
-
         // Close menu when clicking outside
         document.addEventListener('click', function(event) {
             const hamburger = document.querySelector('.hamburger');
@@ -309,6 +247,11 @@ if (!isset($_SESSION['active_user'])) {
                 window.location.href = "../logout.php";
             }
         }
+
+        function toggleMenu() {
+                const navSection = document.querySelector('.nav-section');
+                navSection.classList.toggle('active');
+            }
     </script>
 </body>
 </html>

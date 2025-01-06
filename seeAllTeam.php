@@ -56,7 +56,6 @@ $pageStart = ($page - 1) * $maxRows;
             height: auto;
             margin-right: 10px;
         }
-        
 
         .menu-toggle {
             display: none;
@@ -69,7 +68,7 @@ $pageStart = ($page - 1) * $maxRows;
             width: 25px;
             height: 3px;
             background-color: white;
-            margin: 2px 0;
+            margin: 3px 0;
             transition: 0.4s;
         }
 
@@ -171,6 +170,12 @@ $pageStart = ($page - 1) * $maxRows;
         .table th {
             background-color: rgba(255, 255, 255, 0.3);
         }
+
+        .table img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover; 
+        }
         
         .buttons {
             display: flex;
@@ -187,12 +192,131 @@ $pageStart = ($page - 1) * $maxRows;
             border-radius: 5px;
             cursor: pointer;
             margin-right: 20px;
+        }
+        @media screen and (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-section {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                text-align: center;
+                background-color: rgba(93, 32, 167, 0.9);
+                position: absolute;
+                top: 100%;
+                left: 0;
+                padding: 20px 0;
+            }
+
+            .nav-section.active {
+                display: flex;
+            }
+
+            .nav-section li a {
+                margin: 10px 0;
+                display: block;
+            }
+
+            .container {
+                margin: 20px;
+            }
+
+            .info h1 {
+                font-size: 28px;
+            }
+
+            .table {
+                font-size: 14px;
+            }
+
+            .table th, .table td {
+                padding: 10px;
+            }
+
+            .buttons {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .buttons button {
+                width: 100%; /* Agar tombol memenuhi lebar kontainer */
+                text-align: center;
+                margin-right: 0;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .navbar {
+                padding: 10px;
+            }
+
+            .logo {
+                font-size: 18px;
+            }
+
+            .logo img {
+                width: 30px;
+            }
+
+            .nav-button {
+                display: flex;
+                gap: 10px;
+            }
+
+            .nav-button button {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+
+            .info h1 {
+                font-size: 24px;
+            }
+
+            .info p {
+                font-size: 12px;
+            }
             
+            .table {
+                font-size: 12px;
+            }
+
+            .table th, .table td {
+                padding: 8px;
+            }
+
+            .buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .buttons button {
+                width: 100%;
+                font-size: 12px;
+            }
+
+            .container {
+                margin: 10px;
+                padding: 10px;
+                gap: 20px;
+            }
+
+            .image-preview {
+                width: 80px;
+                height: 80px;
+            }
+
+            .info {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 <body>
-<nav class="navbar">
+    <nav class="navbar">
         <div class="menu-toggle">
             <span></span>
             <span></span>
@@ -294,11 +418,19 @@ $pageStart = ($page - 1) * $maxRows;
                 modal.style.display = "none";
             }
         }
+
+        //NAVBAR
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navSection = document.querySelector('.nav-section');
+
+            menuToggle.addEventListener('click', function() {
+                navSection.classList.toggle('active');
+            });
+        });
     </script>
 
     <div class="container">
-
-
         <table class="table">
             <thead>
                 <tr>
@@ -341,11 +473,7 @@ $pageStart = ($page - 1) * $maxRows;
         <!-- Navigation Buttons -->
         <div class="buttons">
             <a href="<?php if($page <= 1){echo " # ";} else {echo "seeAllTeam.php?page=". $page - 1;} ?>"><button>Back</button></a>
-        <!--    <?php //for($i = 1; $i <= $totalPages; $i++) :?>
-                <a href="?page="<?php //echo($i);?>> <?php //  echo($i) ?> </a>
-            <?php   //endfor;  ?> -->
             <a href="<?php if($page >= $totalPages){echo"#";} else{echo"seeAllTeam.php?page=".$page + 1 ;} ?>"><button>Next</button></a>
-
         </div>
     </div>
 </body>

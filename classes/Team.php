@@ -11,7 +11,7 @@ class Team{
     }
 
     public function AddTeam($game,$team, $uploadSuccess){
-        $stmt = $this->dbCon->prepare("SELECT idteam, isdeleted FROM team WHERE name = ? AND idgame = ?");
+        $stmt = $this->dbCon->prepare("SELECT idteam FROM team WHERE name = ? AND idgame = ?");
         $stmt->bind_param('si', $team, $game); 
         $stmt->execute();
         $result = $stmt->get_result();
@@ -19,16 +19,12 @@ class Team{
     
         if($result->num_rows > 0) {
             $row = $result->fetch_assoc();
-            if($row['isdeleted'] == 1) {
                 $teamId = $row['idteam'];
                 $updateStmt = $this->dbCon->prepare("UPDATE team SET isdeleted = 0 WHERE idteam = ?");
                 $updateStmt->bind_param('i', $teamId);
                 $updateStmt->execute();
                 $updateStmt->close();
-            } else {
-                
-                return false;
-            }
+            
         } else {
             $insertStmt = $this->dbCon->prepare("INSERT INTO team (idgame, name) VALUES (?, ?)");
             $insertStmt->bind_param('is', $game, $team); 
