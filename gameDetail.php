@@ -35,7 +35,8 @@ $totalPages = $game->ReadPages($maxRows);
      body {
     margin: 0;
     padding: 0;
-    font-family: "Poppins", sans-serif;
+    font-family: 'Poppins', sans-serif;
+    background-color: #0a0a0a;
     color: white;
     background-image: url("resource/img/BG.png");
     background-size: cover;
@@ -45,30 +46,86 @@ $totalPages = $game->ReadPages($maxRows);
     min-height: 100vh;
 }
 
-/* Navbar Styles */
+/* Navbar styles */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 20px;
-    position: relative;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(5px);
+    background: rgba(0, 0, 0, 0.8);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 .logo {
     display: flex;
     align-items: center;
+    gap: 10px;
     font-size: 24px;
     font-weight: bold;
+    color: white;
+    text-decoration: none;
 }
 
 .logo img {
-    width: 50px;
+    width: 40px;
     height: auto;
-    margin-right: 10px;
 }
 
+.nav-section {
+    display: flex;
+    gap: 30px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-section a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-section a:hover {
+    color: #8A2BE2;
+}
+
+.nav-button {
+    display: flex;
+    gap: 15px;
+}
+
+.nav-button button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.sign-up-button {
+    background: transparent;
+    border: 2px solid white !important;
+    color: white;
+}
+
+.login-button {
+    background: #8A2BE2;
+    color: white;
+}
+
+.sign-up-button:hover {
+    background: white;
+    color: #8A2BE2;
+}
+
+.login-button:hover {
+    background: #6B1FB3;
+}
 .menu-toggle {
     display: none;
     flex-direction: column;
@@ -84,127 +141,62 @@ $totalPages = $game->ReadPages($maxRows);
     transition: 0.4s;
 }
 
-.nav-section {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-}
 
-.nav-section li a {
-    text-decoration: none;
-    color: white;
-    font-size: 18px;
-    padding: 5px 15px;
-    transition: color 0.3s ease;
-}
-
-.nav-section li a:hover {
-    color: #5d20a7;
-}
-
-.nav-button button {
-    margin-left: 15px;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
-    transition: all 0.3s ease;
-}
-
-.login-button {
-    background-color: #5d20a7;
-    color: white;
-}
-
-.login-button:hover {
-    background-color: #4a1a85;
-}
-
-.nav-button .sign-up-button {
-    background-color: transparent;
-    color: white;
-    border: 2px solid white;
-}
-
-.nav-button .sign-up-button:hover {
-    background-color: white;
-    color: #5d20a7;
-}
-
-.nav-button a {
-    color: inherit;
-    text-decoration: none;
-}
-
-/* Container and Content Styles */
+/* Container styles */
 .container {
     max-width: 1200px;
     margin: 40px auto;
     padding: 0 20px;
 }
 
-/* Game Card Styles */
 .game-card {
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.8);
     border-radius: 15px;
-    padding: 25px;
+    padding: 30px;
     margin-bottom: 30px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    animation: fadeIn 0.5s ease forwards;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.game-card h2 {
-    color: white;
-    margin: 0 0 20px 0;
-    padding-bottom: 15px;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+.game-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.game-info h2 {
+    margin: 0 0 10px 0;
     font-size: 24px;
+    color: #8A2BE2;
 }
 
 .game-description {
     color: #cecece;
-    margin-bottom: 20px;
-    font-size: 0.9em;
+    font-size: 16px;
     line-height: 1.6;
-}
-
-/* Section Styles */
-.section {
     margin-bottom: 30px;
 }
 
-.section h3 {
-    color: white;
-    margin: 0 0 15px 0;
-    font-size: 20px;
-    font-weight: 600;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 10px;
-}
-
-/* Teams Grid Styles */
+/* Teams section */
 .teams-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 20px;
     margin-bottom: 30px;
 }
 
 .team-item {
-    text-align: center;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(138, 43, 226, 0.1);
+    border-radius: 10px;
     padding: 15px;
-    border-radius: 8px;
+    text-align: center;
     transition: transform 0.3s ease;
 }
 
 .team-item:hover {
     transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.2);
 }
 
 .team-item img {
@@ -212,13 +204,47 @@ $totalPages = $game->ReadPages($maxRows);
     height: 80px;
     border-radius: 50%;
     margin-bottom: 10px;
-    object-fit: cover;
+    border: 2px solid #8A2BE2;
 }
 
-.team-item span {
-    display: block;
+.team-item h3 {
+    margin: 10px 0;
+    font-size: 18px;
     color: white;
-    font-size: 0.9em;
+}
+
+/* Events section */
+.events-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.events-table th {
+    background: rgba(138, 43, 226, 0.2);
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    color: white;
+}
+
+.events-table td {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+}
+
+.events-table tr {
+    transition: transform 0.3s ease;
+}
+
+.events-table tr:hover {
+    transform: translateX(5px);
+}
+
+.section-title {
+    font-size: 20px;
+    color: #8A2BE2;
+    margin: 30px 0 20px;
 }
 
 /* Table Styles */
@@ -240,7 +266,7 @@ $totalPages = $game->ReadPages($maxRows);
 }
 
 .table th {
-    background-color: rgba(93, 32, 167, 0.6);
+    background-color: rgba(138, 43, 226, 0.2);
     color: white;
     font-weight: 600;
     text-transform: uppercase;
@@ -253,63 +279,56 @@ $totalPages = $game->ReadPages($maxRows);
 }
 
 .table tbody tr {
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .table tbody tr:hover {
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: rgba(138, 43, 226, 0.1);
 }
 
-.table td {
-    color: rgba(255, 255, 255, 0.9);
-}
-
-/* Navigation and Buttons */
+/* Pagination */
 .buttons {
     display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+    justify-content: center;
+    gap: 15px;
     margin-top: 20px;
 }
 
 .buttons button {
-    background-color: #5d20a7;
+    background: #8A2BE2;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 12px 30px;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    font-size: 16px;
+    transition: all 0.3s ease;
 }
 
-.buttons button:hover {
-    background-color: #4a1a85;
+.buttons button:hover:not([disabled]) {
+    background: #6B1FB3;
+    transform: translateY(-2px);
+}
+
+.buttons button[disabled] {
+    background-color: #cccccc;
+    cursor: not-allowed;
 }
 
 .page-info {
-    color: white;
     text-align: center;
     margin: 20px 0;
-    font-size: 0.9em;
-}
-
-.no-data {
     color: #cecece;
-    text-align: center;
-    grid-column: 1 / -1;
-    padding: 20px;
 }
 
-/* Animations */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* No Data Message */
+.no-data {
+    text-align: center;
+    padding: 20px;
+    color: #cecece;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    font-style: italic;
 }
 
 /* Responsive Design */
@@ -323,62 +342,65 @@ $totalPages = $game->ReadPages($maxRows);
         width: 100%;
         flex-direction: column;
         text-align: center;
-        background-color: rgba(93, 32, 167, 0.9);
+        background-color: rgba(0, 0, 0, 0.95);
         position: absolute;
         top: 100%;
         left: 0;
         padding: 20px 0;
-        z-index: 1000;
+        backdrop-filter: blur(10px);
+    }
+    .nav-section li a:hover {
+    color: #5d20a7;
     }
 
-    .nav-section.active {
+    .nav-section li a.active {
+        background: #5d20a7;
+        color: white;
+    }
+
+    .nav-button {
         display: flex;
+        gap: 10px;
     }
 
-    .nav-section li a {
-        margin: 10px 0;
-        display: block;
+    .nav-button button {
+        padding: 8px 15px;
+        font-size: 14px;
+        margin-left: 0;
     }
 
-    .container {
-        padding: 15px;
+    .game-header {
+        flex-direction: column;
+        text-align: center;
     }
 
     .teams-grid {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    }
-
-    .team-item img {
-        width: 60px;
-        height: 60px;
-    }
-
-    .game-card {
-        padding: 15px;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     }
 
     .table {
         display: block;
         overflow-x: auto;
-        white-spa
+        white-space: nowrap;
     }
 }
+
     </style>
 </head>
 <body>
-    <nav class="navbar">
+<nav class="navbar">
         <div class="menu-toggle">
             <span></span>
             <span></span>
             <span></span>
         </div>
-        <div class="logo">
-            <img src="resource/img/hiksrotIcon.png" alt="Hiksrot Logo">
+        <a href="index.php" class="logo">
+            <img src="resource/img/hiksrotIcon.png" alt="HIKSROT">
             HIKSROT
-        </div>
+        </a>
         <ul class="nav-section">
             <li><a href="index.php">Home</a></li>
-            <li><a href="gameDetail.php"><u>Game Detail</u></a></li>
+            <li><a href="gameDetail.php" ><u>Game Detail</u></a></li>
             <li><a href="teamDetail.php">Team Detail</a></li>
         </ul>
         <div class="nav-button">
@@ -386,7 +408,25 @@ $totalPages = $game->ReadPages($maxRows);
             <button class="login-button"><a href="resource/view/login.php">Login</a></button>
         </div>
     </nav>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navSection = document.querySelector('.nav-section');
 
+            menuToggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+                navSection.classList.toggle('active');
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!menuToggle.contains(e.target) && !navSection.contains(e.target)) {
+                    menuToggle.classList.remove('active');
+                    navSection.classList.remove('active');
+                }
+            });
+        });
+    </script>
     <div class="container">
     <?php foreach($games as $gameData): ?>
         <div class="game-card">

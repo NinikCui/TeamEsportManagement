@@ -34,7 +34,7 @@ $totalPages = $team->ReadPages($maxRows);
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <style>
-     body {
+        body {
     margin: 0;
     padding: 0;
     font-family: "Poppins", sans-serif;
@@ -56,6 +56,7 @@ $totalPages = $team->ReadPages($maxRows);
     position: relative;
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(5px);
+    z-index: 1000;
 }
 
 .logo {
@@ -86,6 +87,18 @@ $totalPages = $team->ReadPages($maxRows);
     transition: 0.4s;
 }
 
+.menu-toggle.active span:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-toggle.active span:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -6px);
+}
+
 .nav-section {
     list-style: none;
     display: flex;
@@ -100,11 +113,17 @@ $totalPages = $team->ReadPages($maxRows);
     color: white;
     font-size: 18px;
     padding: 5px 15px;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
+    border-radius: 5px;
 }
 
 .nav-section li a:hover {
     color: #5d20a7;
+}
+
+.nav-section li a.active {
+    background: #5d20a7;
+    color: white;
 }
 
 .nav-button button {
@@ -124,6 +143,7 @@ $totalPages = $team->ReadPages($maxRows);
 
 .login-button:hover {
     background-color: #4a1a85;
+    transform: translateY(-2px);
 }
 
 .nav-button .sign-up-button {
@@ -135,6 +155,7 @@ $totalPages = $team->ReadPages($maxRows);
 .nav-button .sign-up-button:hover {
     background-color: white;
     color: #5d20a7;
+    transform: translateY(-2px);
 }
 
 .nav-button a {
@@ -154,7 +175,8 @@ $totalPages = $team->ReadPages($maxRows);
     border-radius: 15px;
     padding: 25px;
     margin-bottom: 30px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.5s ease forwards;
 }
 
 .team-card h2 {
@@ -163,17 +185,23 @@ $totalPages = $team->ReadPages($maxRows);
     padding-bottom: 15px;
     border-bottom: 2px solid rgba(255, 255, 255, 0.1);
     font-size: 24px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
 .section {
     margin-bottom: 30px;
+    animation: slideUp 0.5s ease forwards;
 }
 
 .section h3 {
-    color: white;
+    color: #5d20a7;
     margin: 0 0 15px 0;
     font-size: 20px;
     font-weight: 600;
+    padding-left: 10px;
+    border-left: 3px solid #5d20a7;
 }
 
 /* Table Styles */
@@ -182,7 +210,7 @@ $totalPages = $team->ReadPages($maxRows);
     border-collapse: separate;
     border-spacing: 0;
     margin-bottom: 20px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 8px;
     overflow: hidden;
 }
@@ -208,35 +236,38 @@ $totalPages = $team->ReadPages($maxRows);
 }
 
 .table tbody tr {
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .table tbody tr:hover {
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: rgba(93, 32, 167, 0.2);
+    transform: translateX(5px);
 }
 
 .table td {
     color: rgba(255, 255, 255, 0.9);
 }
 
-/* Status badge styles if needed */
-.status-badge {
-    padding: 5px 10px;
-    border-radius: 15px;
-    font-size: 12px;
-    font-weight: 500;
-    text-transform: uppercase;
-    display: inline-block;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.status-upcoming {
-    background-color: #5d20a7;
-    color: white;
-}
-
-.status-completed {
-    background-color: #28a745;
-    color: white;
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Responsive Design */
@@ -250,12 +281,12 @@ $totalPages = $team->ReadPages($maxRows);
         width: 100%;
         flex-direction: column;
         text-align: center;
-        background-color: rgba(93, 32, 167, 0.9);
+        background-color:  rgba(0, 0, 0, 0.95);
         position: absolute;
         top: 100%;
         left: 0;
         padding: 20px 0;
-        z-index: 1000;
+        backdrop-filter: blur(10px);
     }
 
     .nav-section.active {
@@ -265,6 +296,7 @@ $totalPages = $team->ReadPages($maxRows);
     .nav-section li a {
         margin: 10px 0;
         display: block;
+        padding: 10px 20px;
     }
 
     .nav-button {
@@ -284,6 +316,9 @@ $totalPages = $team->ReadPages($maxRows);
 
     .team-card h2 {
         font-size: 20px;
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
     }
 
     .section h3 {
@@ -322,6 +357,7 @@ $totalPages = $team->ReadPages($maxRows);
 
     .team-card {
         padding: 12px;
+        margin-bottom: 20px;
     }
 
     .team-card h2 {
@@ -338,27 +374,41 @@ $totalPages = $team->ReadPages($maxRows);
         padding: 8px;
         font-size: 13px;
     }
-
-    .status-badge {
-        padding: 3px 8px;
-        font-size: 11px;
-    }
 }
 
-/* Animation */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* Additional Utilities */
+.text-center {
+    text-align: center;
 }
 
-.team-card {
-    animation: fadeIn 0.5s ease forwards;
+.no-data {
+    text-align: center;
+    padding: 20px;
+    color: #cecece;
+    font-style: italic;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+/* Status Badges if needed */
+.status-badge {
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+.status-upcoming {
+    background-color: #5d20a7;
+    color: white;
+}
+
+.status-completed {
+    background-color: #28a745;
+    color: white;
 }
     </style>
 </head>
