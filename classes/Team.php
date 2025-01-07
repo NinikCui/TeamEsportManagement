@@ -77,6 +77,41 @@ class Team{
         return ceil($totalRows / $maxRows);
     }
 
+
+
+    public function getTeamMembers($teamId) {
+        $query = "SELECT m.fname, m.lname, tm.description 
+                FROM team_members tm
+                JOIN member m ON tm.idmember = m.idmember
+                WHERE tm.idteam = ?";
+        $stmt = $this->dbCon->prepare($query);
+        $stmt->bind_param("i", $teamId);
+        $stmt->execute();
+        return $stmt->get_result();
+    }
+
+    public function getTeamAchievements($teamId) {
+        $query = "SELECT name, date, description 
+                FROM achievement 
+                WHERE idteam = ? 
+                ORDER BY date DESC";
+        $stmt = $this->dbCon->prepare($query);
+        $stmt->bind_param("i", $teamId);
+        $stmt->execute();
+        return $stmt->get_result();
+    }
+
+    public function getTeamEvents($teamId) {
+        $query = "SELECT e.name, e.date, e.description 
+                FROM event e
+                JOIN event_teams et ON e.idevent = et.idevent
+                WHERE et.idteam = ? AND e.date >= CURDATE()
+                ORDER BY e.date ASC";
+        $stmt = $this->dbCon->prepare($query);
+        $stmt->bind_param("i", $teamId);
+        $stmt->execute();
+        return $stmt->get_result();
+    }
 }
 
 

@@ -50,6 +50,49 @@ class Game{
         $totalRows = $rcount["totalRows"];
         return ceil($totalRows / $maxRows);
     }
+
+    public function getTeamsByGame($gameId) {
+        $query = "SELECT t.idteam, t.name as teamName 
+                 FROM team t
+                 WHERE t.idgame = ?";
+        $stmt = $this->dbCon->prepare($query);
+        $stmt->bind_param("i", $gameId);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        
+        $teams = [];
+        if ($res->num_rows > 0) {
+            while ($row = $res->fetch_assoc()) {
+                $teams[] = $row;
+            }
+        }
+        $stmt->close();
+        return $teams;
+    }
+
+    public function getGameEvents($gameId) {
+        $query = "SELECT DISTINCT e.name as eventName, e.date, e.description,
+                        GROUP_CONCAT(t.name) as participatingTeams
+                 FROM event e
+                 JOIN event_teams et ON e.idevent = et.idevent
+                 JOIN team t ON et.idteam = t.idteam
+                 WHERE t.idgame = ?
+                 GROUP BY e.idevent
+                 ORDER BY e.date DESC";
+        $stmt = $this->dbCon->prepare($query);
+        $stmt->bind_param("i", $gameId);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        
+        $events = [];
+        if ($res->num_rows > 0) {
+            while ($row = $res->fetch_assoc()) {
+                $events[] = $row;
+            }
+        }
+        $stmt->close();
+        return $events;
+    }
 }
 
 ?>
