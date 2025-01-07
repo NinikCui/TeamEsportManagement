@@ -58,26 +58,29 @@ $pageStart = ($page - 1) * $maxRows;
     <style>
         body {
             background-image: url("../../img/BG.png");
+            margin: 0;
+            font-family: Arial, sans-serif;
         }
+
         .container {
-            width: 80%;
+            width: 90%;
             max-width: 1200px;
             margin: 20px auto;
             padding: 20px;
         }
+
         .table {
             width: 100%;
             margin-bottom: 20px;
             border-collapse: collapse;
-            font-size: 18px;
+            font-size: 16px;
         }
 
         .table th, .table td {
-            padding: 15px;
+            padding: 10px;
             background-color: rgba(255, 255, 255, 0.2);
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            
         }
 
         .table th {
@@ -99,11 +102,13 @@ $pageStart = ($page - 1) * $maxRows;
             color: red;
             cursor: pointer;
         }
+
         .buttons {
             display: flex;
-            justify-content: space-between;
-            float: right;
-            margin-left: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
         }
 
         .buttons button {
@@ -113,14 +118,19 @@ $pageStart = ($page - 1) * $maxRows;
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
-            margin-right: 20px;
-            
         }
-        .desc{
+
+        .buttons button:hover {
+            background-color: #55004d;
+            color: #fff;
+        }
+
+        .desc {
             cursor: pointer;
         }
+
         .frmNew {
-            display: none; 
+            display: none;
             position: fixed;
             z-index: 1;
             left: 0;
@@ -135,7 +145,8 @@ $pageStart = ($page - 1) * $maxRows;
             margin: 10% auto;
             padding: 20px;
             border-radius: 10px;
-            width: 30%;
+            width: 80%;
+            max-width: 500px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
@@ -152,7 +163,8 @@ $pageStart = ($page - 1) * $maxRows;
             text-decoration: none;
             cursor: pointer;
         }
-        .formNew-Group{
+
+        .formNew-Group {
             margin-bottom: 15px;
             color: black;
         }
@@ -162,19 +174,20 @@ $pageStart = ($page - 1) * $maxRows;
             font-size: 16px;
             margin-bottom: 5px;
             color: black;
-            padding-bottom: 20px;
         }
 
         .formNew-Group input, .formNew-Group textarea {
-            width: 80%;
+            width: 100%;
             padding: 10px;
             font-size: 16px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+
         textarea {
             resize: vertical;
         }
+
         .formNew-btnAdd {
             padding: 10px 20px;
             background-color: #3c0036;
@@ -182,17 +195,187 @@ $pageStart = ($page - 1) * $maxRows;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            float: right;
         }
 
         .formNew-btnAdd:hover {
             background-color: #55004d;
         }
+
         .formNew-btnAddContainer {
             display: flex;
+            justify-content: flex-end;
         }
-        .formNew-Team{
+
+        .formNew-Team {
             padding: 5px;
+        }
+
+        .search-form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px; /* Spasi antara input dan button */
+            margin-bottom: 20px; /* Jarak dari elemen lainnya */
+            flex-wrap: wrap; /* Agar responsif pada layar kecil */
+        }
+
+        .search-input {
+            padding: 10px 15px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 300px; /* Batas maksimum lebar */
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #3c0036;
+            box-shadow: 0 0 8px rgba(60, 0, 54, 0.3);
+        }
+
+        .search-button {
+            padding: 10px 20px;
+            background-color: #3c0036;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .search-button:hover {
+            background-color: #55004d;
+            box-shadow: 0 4px 8px rgba(85, 0, 77, 0.2);
+        }
+
+        /* Media query untuk layar tablet (maksimal 768px) */
+        @media screen and (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 10px;
+            }
+            
+            .table {
+                font-size: 14px;
+            }
+            
+            .table th, .table td {
+                padding: 8px;
+            }
+            
+            .frm-content {
+                width: 95%;
+            }
+            
+            .formNew-Group label {
+                font-size: 14px;
+                padding-bottom: 10px;
+            }
+            
+            .formNew-Group input,
+            .formNew-Group textarea {
+                font-size: 14px;
+            }
+            
+            .buttons button {
+                padding: 8px 15px;
+            }
+            .search-form {
+                gap: 8px;
+                margin-bottom: 15px;
+            }
+
+            .search-input {
+                font-size: 14px;
+                max-width: 250px;
+            }
+
+            .search-button {
+                font-size: 14px;
+                padding: 8px 15px;
+            }
+        }
+
+        /* Media query untuk layar ponsel (maksimal 480px) */
+        @media screen and (max-width: 480px) {
+            .container {
+                width: 100%;
+                padding: 5px;
+            }
+            
+            .table {
+                font-size: 12px;
+            }
+            
+            .table th, .table td {
+                padding: 6px;
+            }
+            
+            .actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .frm-content {
+                margin: 2% auto;
+                padding: 15px;
+            }
+            
+            .formNew-Group label {
+                padding-bottom: 8px;
+            }
+            
+            .formNew-Group input,
+            .formNew-Group textarea {
+                width: 100%;
+                padding: 8px;
+            }
+            
+            .formNew-btnAdd {
+                width: 100%;
+                margin-top: 10px;
+            }
+            .frm-content {
+                margin: 15% auto; /* Lebih banyak margin atas untuk layar kecil */
+                padding: 10px; /* Padding lebih kecil */
+                width: 90%; /* Kurangi ukuran untuk layar HP */
+                font-size: 14px; /* Ukuran font lebih kecil */
+            }
+            .search-form {
+                flex-direction: column; /* Tumpuk elemen secara vertikal */
+                align-items: stretch; /* Isi seluruh lebar */
+                gap: 5px;
+            }
+
+            .search-input {
+                width: 100%; /* Isi seluruh lebar */
+                font-size: 14px;
+            }
+
+            .search-button {
+                width: 100%; /* Isi seluruh lebar */
+                font-size: 14px;
+                padding: 10px;
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            .table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            .frm-content {
+                margin: 5% auto;
+            }
+            .buttons {
+                display: flex;
+                justify-content: flex-end;
+            }
         }
     </style>
 </head>
@@ -225,64 +408,63 @@ $pageStart = ($page - 1) * $maxRows;
         }
         </script>
     </nav>
-    <script>
-    function openFrmNew() {
-        document.getElementById('formNew').style.display = "block";
-        document.getElementById('name').value = ""; 
-        document.getElementById('description').value = ""; 
-        document.getElementById('actionButton').value = "add"; 
-        document.getElementById('actionButtonText').innerText = "Add new"; 
-        document.getElementById('idachievement').value = ""; 
-        document.getElementById('cbteam').selectedIndex = 0; // Reset combo box
-    }
-        function openFrmEdit(idachievement, name, team, date, description) {
-        document.getElementById('formNew').style.display = "block";
-        document.getElementById('idachievement').value = idachievement; // ID achievement untuk edit
-        document.getElementById('name').value = name;
-        document.getElementById('cbteam').value = team;
-        document.getElementById('date').value = date;
-        document.getElementById('description').value = description;
 
-        // Ubah tombol submit menjadi 'edit'
-        document.getElementById('actionButton').value = "edit";
-        document.getElementById('actionButtonText').innerText = "Update Achievement";
-        
-        // Set selected team in combo box
-        var cbteam = document.getElementById('cbteam');
-        for (var i = 0; i < cbteam.options.length; i++) {
-            if (cbteam.options[i].text === teamName) {
-                cbteam.selectedIndex = i;
-                break;
+    <script>
+        function openFrmNew() {
+            document.getElementById('formNew').style.display = "block";
+            document.getElementById('name').value = ""; 
+            document.getElementById('description').value = ""; 
+            document.getElementById('actionButton').value = "add"; 
+            document.getElementById('actionButtonText').innerText = "Add new"; 
+            document.getElementById('idachievement').value = ""; 
+            document.getElementById('cbteam').selectedIndex = 0; // Reset combo box
+        }
+            function openFrmEdit(idachievement, name, team, date, description) {
+            document.getElementById('formNew').style.display = "block";
+            document.getElementById('idachievement').value = idachievement; // ID achievement untuk edit
+            document.getElementById('name').value = name;
+            document.getElementById('cbteam').value = team;
+            document.getElementById('date').value = date;
+            document.getElementById('description').value = description;
+
+            // Ubah tombol submit menjadi 'edit'
+            document.getElementById('actionButton').value = "edit";
+            document.getElementById('actionButtonText').innerText = "Update Achievement";
+            
+            // Set selected team in combo box
+            var cbteam = document.getElementById('cbteam');
+            for (var i = 0; i < cbteam.options.length; i++) {
+                if (cbteam.options[i].text === teamName) {
+                    cbteam.selectedIndex = i;
+                    break;
+                }
             }
         }
-    }
 
-    function closeFrmNew() {
-        document.getElementById('formNew').style.display = "none";
-    }
-
-    window.onclick = function(event) {
-        var frmNew = document.getElementById('formNew');
-        if (event.target == frmNew) {
-            frmNew.style.display = "none";
+        function closeFrmNew() {
+            document.getElementById('formNew').style.display = "none";
         }
-    }
-</script>
 
-<script>
-    function filterTeams() {
-        const input = document.getElementById("search-team").value.toLowerCase();
-        const rows = document.querySelectorAll("#achievement-table tbody tr");
+        window.onclick = function(event) {
+            var frmNew = document.getElementById('formNew');
+            if (event.target == frmNew) {
+                frmNew.style.display = "none";
+            }
+        }
+    </script>
+    <script>
+        function filterTeams() {
+            const input = document.getElementById("search-team").value.toLowerCase();
+            const rows = document.querySelectorAll("#achievement-table tbody tr");
 
-        rows.forEach(row => {
-            const teamName = row.querySelector(".team-name").textContent.toLowerCase();
-            row.style.display = teamName.includes(input) ? "" : "none";
-        });
-    }
-</script>
+            rows.forEach(row => {
+                const teamName = row.querySelector(".team-name").textContent.toLowerCase();
+                row.style.display = teamName.includes(input) ? "" : "none";
+            });
+        }
+    </script>
 
 <div class="container">
-    
     <form method="POST" action="">
         <a onclick="openFrmNew()" style="padding: 10px 20px; background-color: #fff; color: #3c0036; text-decoration: none; border-radius: 5px; border: none; margin-bottom: 10px; cursor: pointer; float: right;">+ New</a>
 

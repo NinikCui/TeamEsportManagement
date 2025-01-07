@@ -53,26 +53,29 @@ $pageStart = ($page - 1) * $maxRows;
     <style>
         body {
             background-image: url("../../img/BG.png");
+            background-size: cover;
+            background-attachment: fixed;
         }
+
         .container {
-            width: 80%;
+            width: 90%;
             max-width: 1200px;
             margin: 20px auto;
-            padding: 20px;
+            padding: 15px;
         }
+
         .table {
             width: 100%;
             margin-bottom: 20px;
             border-collapse: collapse;
-            font-size: 18px;
+            font-size: 16px;
         }
 
         .table th, .table td {
-            padding: 15px;
+            padding: 12px;
             background-color: rgba(255, 255, 255, 0.2);
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            
         }
 
         .table th {
@@ -81,8 +84,9 @@ $pageStart = ($page - 1) * $maxRows;
 
         .actions {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
         .actions .approve {
@@ -94,11 +98,13 @@ $pageStart = ($page - 1) * $maxRows;
             color: red;
             cursor: pointer;
         }
+
         .buttons {
             display: flex;
-            justify-content: space-between;
-            float: right;
-            margin-left: 10px;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
         }
 
         .buttons button {
@@ -108,11 +114,11 @@ $pageStart = ($page - 1) * $maxRows;
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
-            margin-right: 20px;
-            
         }
+
+        /* Form Modal Styles */
         .frmNew {
-            display: none; 
+            display: none;
             position: fixed;
             z-index: 1;
             left: 0;
@@ -120,14 +126,16 @@ $pageStart = ($page - 1) * $maxRows;
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
+            overflow-y: auto;
         }
 
         .frm-content {
             background-color: #fefefe;
-            margin: 10% auto;
+            margin: 5% auto;
             padding: 20px;
             border-radius: 10px;
-            width: 30%;
+            width: 90%;
+            max-width: 500px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
@@ -136,15 +144,15 @@ $pageStart = ($page - 1) * $maxRows;
             float: right;
             font-size: 28px;
             font-weight: bold;
+            cursor: pointer;
         }
 
         .close:hover,
         .close:focus {
             color: black;
-            text-decoration: none;
-            cursor: pointer;
         }
-        .formNew-Group{
+
+        .formNew-Group {
             margin-bottom: 15px;
             color: black;
         }
@@ -154,19 +162,24 @@ $pageStart = ($page - 1) * $maxRows;
             font-size: 16px;
             margin-bottom: 5px;
             color: black;
-            padding-bottom: 20px;
+            padding-bottom: 15px;
         }
 
-        .formNew-Group input, .formNew-Group textarea {
-            width: 80%;
+        .formNew-Group input,
+        .formNew-Group textarea {
+            width: 100%;
             padding: 10px;
             font-size: 16px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            box-sizing: border-box;
         }
+
         textarea {
             resize: vertical;
+            min-height: 100px;
         }
+
         .formNew-btnAdd {
             padding: 10px 20px;
             background-color: #3c0036;
@@ -174,17 +187,104 @@ $pageStart = ($page - 1) * $maxRows;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            float: right;
+            width: auto;
+            min-width: 120px;
         }
 
         .formNew-btnAdd:hover {
             background-color: #55004d;
         }
+
         .formNew-btnAddContainer {
             display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
         }
-        .formNew-Team{
+
+        .formNew-Team {
             padding: 5px;
+        }
+
+        /* Media Queries */
+        @media screen and (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 10px;
+            }
+            
+            .table {
+                font-size: 14px;
+            }
+            
+            .table th, .table td {
+                padding: 8px;
+            }
+            
+            .frm-content {
+                width: 95%;
+            }
+            
+            .formNew-Group label {
+                font-size: 14px;
+                padding-bottom: 10px;
+            }
+            
+            .formNew-Group input,
+            .formNew-Group textarea {
+                font-size: 14px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .container {
+                width: 100%;
+                padding: 5px;
+            }
+            
+            .table {
+                font-size: 12px;
+            }
+            
+            .table th, .table td {
+                padding: 6px;
+            }
+            
+            .actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .frm-content {
+                margin: 2% auto;
+            }
+            
+            .formNew-Group input,
+            .formNew-Group textarea {
+                width: 100%;
+            }
+            
+            .formNew-btnAdd {
+                width: 100%;
+            }
+            .frm-content {
+                margin: 15% auto; /* Lebih banyak margin atas untuk layar kecil */
+                padding: 10px; /* Padding lebih kecil */
+                width: 90%; /* Kurangi ukuran untuk layar HP */
+                font-size: 14px; /* Ukuran font lebih kecil */
+            }
+        }
+
+        /* Untuk tampilan tabel pada perangkat mobile */
+        @media screen and (max-width: 600px) {
+            .table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            .buttons {
+                display: flex;
+                justify-content: flex-end;
+            }
         }
     </style>
 </head>

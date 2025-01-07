@@ -73,26 +73,31 @@ $pageStart = ($page - 1) * $maxRows;
     <style>
         body {
             background-image: url("../../img/BG.png");
+            background-size: cover;
+            margin: 0;
+            font-family: Arial, sans-serif;
         }
+
         .container {
-            width: 80%;
+            width: 90%;
             max-width: 1200px;
             margin: 20px auto;
             padding: 20px;
         }
+
         .table {
             width: 100%;
             margin-bottom: 20px;
             border-collapse: collapse;
-            font-size: 18px;
+            font-size: 16px;
         }
 
-        .table th, .table td {
-            padding: 15px;
+        .table th, 
+        .table td {
+            padding: 10px;
             background-color: rgba(255, 255, 255, 0.2);
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            
         }
 
         .table th {
@@ -114,11 +119,12 @@ $pageStart = ($page - 1) * $maxRows;
             color: red;
             cursor: pointer;
         }
+
         .buttons {
             display: flex;
-            justify-content: space-between;
-            float: right;
-            margin-left: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 10px;
         }
 
         .buttons button {
@@ -128,11 +134,15 @@ $pageStart = ($page - 1) * $maxRows;
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
-            margin-right: 20px;
-            
         }
+
+        .buttons button:hover {
+            background-color: #55004d;
+            color: #fff;
+        }
+
         .frmNew {
-            display: none; 
+            display: none;
             position: fixed;
             z-index: 1;
             left: 0;
@@ -147,7 +157,8 @@ $pageStart = ($page - 1) * $maxRows;
             margin: 10% auto;
             padding: 20px;
             border-radius: 10px;
-            width: 30%;
+            width: 80%;
+            max-width: 500px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
@@ -164,7 +175,8 @@ $pageStart = ($page - 1) * $maxRows;
             text-decoration: none;
             cursor: pointer;
         }
-        .formNew-Group{
+
+        .formNew-Group {
             margin-bottom: 15px;
             color: black;
         }
@@ -174,19 +186,21 @@ $pageStart = ($page - 1) * $maxRows;
             font-size: 16px;
             margin-bottom: 5px;
             color: black;
-            padding-bottom: 20px;
         }
 
-        .formNew-Group input, .formNew-Group textarea {
-            width: 80%;
+        .formNew-Group input, 
+        .formNew-Group textarea {
+            width: 100%;
             padding: 10px;
             font-size: 16px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+
         textarea {
             resize: vertical;
         }
+
         .formNew-btnAdd {
             padding: 10px 20px;
             background-color: #3c0036;
@@ -194,17 +208,81 @@ $pageStart = ($page - 1) * $maxRows;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            float: right;
         }
 
         .formNew-btnAdd:hover {
             background-color: #55004d;
         }
+
         .formNew-btnAddContainer {
             display: flex;
+            justify-content: flex-end;
         }
-        .formNew-Team{
+
+        .formNew-Team {
             padding: 5px;
+        }
+
+        /* Tambahkan media query untuk layar kecil */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+                margin: 10px auto;
+            }
+
+            .table {
+                font-size: 14px;
+            }
+
+            .table th, 
+            .table td {
+                padding: 8px;
+            }
+
+            .actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .frm-content {
+                margin: 20% auto;
+                padding: 15px;
+            }
+
+            .formNew-Group input, 
+            .formNew-Group textarea {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 5px;
+            }
+
+            .table {
+                font-size: 12px;
+            }
+
+            .table th, 
+            .table td {
+                padding: 5px;
+            }
+
+            .actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
         }
     </style>
 </head>

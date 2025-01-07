@@ -46,36 +46,41 @@ $pageStart = ($page - 1) * $maxRows;
     <style>
         body {
             background-image: url("../../img/BG.png");
+            background-size: cover;
+            background-attachment: fixed;
         }
+
         .container {
-            width: 80%;
+            width: 90%;
             max-width: 1200px;
             margin: 20px auto;
-            padding: 20px;
+            padding: 15px;
         }
+
         .table {
             width: 100%;
             margin-bottom: 20px;
             border-collapse: collapse;
-            font-size: 18px;
+            font-size: 16px;
         }
 
         .table th, .table td {
-            padding: 15px;
+            padding: 12px;
             background-color: rgba(255, 255, 255, 0.2);
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            
         }
 
         .table th {
             background-color: rgba(255, 255, 255, 0.3);
         }
+
         .buttons {
             display: flex;
-            justify-content: space-between;
-            float: right;
-            margin-left: 10px;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
         }
 
         .buttons button {
@@ -85,8 +90,63 @@ $pageStart = ($page - 1) * $maxRows;
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
-            margin-right: 20px;
-        }   
+        }
+
+        /* Media Queries */
+        @media screen and (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 10px;
+            }
+            
+            .table {
+                font-size: 14px;
+            }
+            
+            .table th, .table td {
+                padding: 8px;
+            }
+            
+            .buttons button {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .container {
+                width: 100%;
+                padding: 5px;
+            }
+            
+            .table {
+                font-size: 12px;
+            }
+            
+            .table th, .table td {
+                padding: 6px;
+            }
+            
+            .buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .buttons button {
+                width: 100%;
+                margin: 5px 0;
+                font-size: 14px;
+            }
+        }
+
+        /* Untuk tampilan tabel pada perangkat mobile */
+        @media screen and (max-width: 600px) {
+            .table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
     </style>
 </head>
 <body>

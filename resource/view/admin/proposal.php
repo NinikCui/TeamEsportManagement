@@ -44,26 +44,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <style>
         body {
             background-image: url("../../img/BG.png");
+            background-size: cover;
+            background-attachment: fixed;
         }
+
         .container {
-            width: 80%;
+            width: 90%;
             max-width: 1200px;
             margin: 20px auto;
-            padding: 20px;
+            padding: 15px;
         }
+
         .table {
             width: 100%;
             margin-bottom: 20px;
             border-collapse: collapse;
-            font-size: 18px;
+            font-size: 16px;
         }
 
         .table th, .table td {
-            padding: 15px;
+            padding: 12px;
             background-color: rgba(255, 255, 255, 0.2);
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            
         }
 
         .table th {
@@ -72,8 +75,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         .actions {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
         .actions .approve {
@@ -85,31 +89,97 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             color: red;
             cursor: pointer;
         }
+
         .buttons {
             display: flex;
-            justify-content: space-between;
-            float: right;
-            margin-left: 10px;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
         }
 
-        .buttons button {
+        .buttons button, .filter {
             background-color: #fff;
             color: #3c0036;
             border: none;
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
-            margin-right: 20px;
-        }   
-        .filter{
-            background-color: #fff;
-            color: #3c0036;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-right: 20px;
             margin-bottom: 10px;
+        }
+
+        /* Media Queries untuk Responsivitas */
+        @media screen and (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 10px;
+            }
+            
+            .table {
+                font-size: 14px;
+            }
+            
+            .table th, .table td {
+                padding: 8px;
+            }
+            
+            .buttons {
+                justify-content: center;
+            }
+            
+            .buttons button, .filter {
+                padding: 8px 15px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .container {
+                width: 100%;
+                padding: 5px;
+            }
+            
+            .table {
+                font-size: 12px;
+            }
+            
+            .table th, .table td {
+                padding: 6px;
+            }
+            
+            .buttons button, .filter {
+                width: 100%;
+                margin-right: 0;
+            }
+            
+            .actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+
+        /* Untuk tampilan tabel pada perangkat mobile */
+        @media screen and (max-width: 600px) {
+            .table {
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            .table th, .table td {
+                padding: 6px;
+                text-align: left;
+            }
+            
+            .frm-content {
+                margin: 10% auto;
+            }
+            
+            .buttons {
+            display: flex;
+            justify-content: flex-end;
+            }
         }
     </style>
 </head>
@@ -119,6 +189,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <img src="../../img/hiksrotIcon.png" alt="Hiksrot Logo">
             HIKSROT
         </div>
+        
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
         <ul class="nav-section">
             <li><a href="proposal.php"><u>Proposal</u></a></li>
             <li><a href="team.php">Team</a></li>
@@ -126,25 +203,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <li><a href="event.php">Event</a></li>
             <li><a href="achievement.php">Achivement</a></li>
         </ul>
+
         <div class="photo-profile">
             <img src="../../img/fotoProfile.png" alt="Foto Profil">
-            <h5>Hello, 
-                <?php echo $_SESSION['active_user']->fname;
-                ?>
-            </h5>
-            <div  class="btn-logout">
-                <button  class="logout" onclick="confirmLogout()">Log Out</button>
+            <h5>Hello, <?php echo $_SESSION['active_user']->fname; ?></h5>
+            <div class="btn-logout">
+                <button class="logout" onclick="confirmLogout()">Log Out</button>
             </div>
         </div>
-        <script>
-            function confirmLogout() {
+    </nav>
+
+    <script>
+        // Hamburger Menu Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.querySelector('.hamburger');
+            const navSection = document.querySelector('.nav-section');
+
+            hamburger.addEventListener('click', function() {
+                this.classList.toggle('active');
+                navSection.classList.toggle('active');
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.navbar')) {
+                    hamburger.classList.remove('active');
+                    navSection.classList.remove('active');
+                }
+            });
+
+            // Close menu when clicking a link
+            document.querySelectorAll('.nav-section li a').forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    navSection.classList.remove('active');
+                });
+            });
+        });
+
+        // Logout confirmation
+        function confirmLogout() {
             var result = confirm("Apakah Anda yakin ingin logout?");
             if (result) {
-                window.location.href = "../logout.php"; 
-            } 
+                window.location.href = "../logout.php";
+            }
         }
-        </script>
-    </nav>
+    </script>
+
     <div class="container">
         <!-- Form Filter -->
         <form method="GET" action="proposal.php">

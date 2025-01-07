@@ -287,17 +287,6 @@ $pageStart = ($page - 1) * $maxRows;
                 padding: 8px;
             }
 
-            .buttons {
-                flex-direction: column;
-                align-items: center;
-                gap: 10px;
-            }
-
-            .buttons button {
-                width: 100%;
-                font-size: 12px;
-            }
-
             .container {
                 margin: 10px;
                 padding: 10px;
@@ -311,6 +300,18 @@ $pageStart = ($page - 1) * $maxRows;
 
             .info {
                 font-size: 24px;
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            .table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            .buttons {
+                display: flex;
+                justify-content: flex-end;
             }
         }
     </style>
