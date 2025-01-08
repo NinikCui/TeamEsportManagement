@@ -185,16 +185,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <nav class="navbar">
-        <div class="logo">
-            <img src="../../img/hiksrotIcon.png" alt="Hiksrot Logo">
-            HIKSROT
-        </div>
-        
         <div class="hamburger">
             <span></span>
             <span></span>
             <span></span>
         </div>
+        <div class="logo">
+            <img src="../../img/hiksrotIcon.png" alt="Hiksrot Logo">
+            HIKSROT
+        </div>
+        
+        
 
         <ul class="nav-section">
             <li><a href="proposal.php"><u>Proposal</u></a></li>

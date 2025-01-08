@@ -87,17 +87,6 @@ $totalPages = $team->ReadPages($maxRows);
     transition: 0.4s;
 }
 
-.menu-toggle.active span:nth-child(1) {
-    transform: rotate(-45deg) translate(-5px, 6px);
-}
-
-.menu-toggle.active span:nth-child(2) {
-    opacity: 0;
-}
-
-.menu-toggle.active span:nth-child(3) {
-    transform: rotate(45deg) translate(-5px, -6px);
-}
 
 .nav-section {
     list-style: none;
@@ -133,7 +122,6 @@ $totalPages = $team->ReadPages($maxRows);
     cursor: pointer;
     border-radius: 5px;
     font-size: 16px;
-    transition: all 0.3s ease;
 }
 
 .login-button {
@@ -143,7 +131,6 @@ $totalPages = $team->ReadPages($maxRows);
 
 .login-button:hover {
     background-color: #4a1a85;
-    transform: translateY(-2px);
 }
 
 .nav-button .sign-up-button {

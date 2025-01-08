@@ -288,6 +288,11 @@ $pageStart = ($page - 1) * $maxRows;
 </head>
 <body>
 <nav class="navbar">
+    <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
         <div class="logo">
             <img src="../../img/hiksrotIcon.png" alt="Hiksrot Logo">
             HIKSROT
@@ -307,6 +312,31 @@ $pageStart = ($page - 1) * $maxRows;
             </div>
         </div>
         <script>
+            document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.querySelector('.hamburger');
+            const navSection = document.querySelector('.nav-section');
+
+            hamburger.addEventListener('click', function() {
+                this.classList.toggle('active');
+                navSection.classList.toggle('active');
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.navbar')) {
+                    hamburger.classList.remove('active');
+                    navSection.classList.remove('active');
+                }
+            });
+
+            // Close menu when clicking a link
+            document.querySelectorAll('.nav-section li a').forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    navSection.classList.remove('active');
+                });
+            });
+        });
             function confirmLogout() {
             var result = confirm("Apakah Anda yakin ingin logout?");
             if (result) {

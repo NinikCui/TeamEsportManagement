@@ -9,32 +9,33 @@ body {
   background-attachment: fixed;
 }
 
+/* Navbar Styles */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  position: relative;
-  background-color: rgba(93, 32, 167, 0.9);
+  padding: 8px 24px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
 }
 
 .logo {
   display: flex;
   align-items: center;
+  gap: 12px;
   font-size: 24px;
   font-weight: bold;
 }
 
 .logo img {
-  width: 50px;
+  width: 42px;
   height: auto;
-  margin-right: 10px;
 }
 
 .nav-section {
   list-style: none;
   display: flex;
-  gap: 20px;
+  gap: 40px;
   align-items: center;
   margin: 0;
   padding: 0;
@@ -42,153 +43,133 @@ body {
 
 .nav-section li a {
   text-decoration: none;
-  color: white;
-  font-size: 18px;
-  padding: 5px 15px;
+  color: #8b8b8b;
+  font-size: 16px;
+  padding: 8px 16px;
   transition: color 0.3s ease;
 }
 
 .nav-section li a:hover {
-  color: rgba(255, 255, 255, 0.8);
+  color: white;
 }
 
+.nav-section li a u {
+  color: white;
+  text-decoration: none;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.8);
+  padding-bottom: 4px;
+}
+
+/* Profile Section */
 .photo-profile {
   display: flex;
   align-items: center;
-  font-size: 28px;
-  font-weight: bold;
-  margin-right: 20px;
+  gap: 12px;
 }
 
 .photo-profile img {
   width: 40px;
-  height: auto;
-  margin-right: 10px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .photo-profile h5 {
-  margin: 0 10px;
-  font-size: 16px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
 }
 
+/* Logout Button */
 .btn-logout {
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
-  text-align: center;
-  margin-left: 10px;
+  margin-left: 12px;
 }
 
 .logout {
-  background-color: purple;
-  color: white;
+  background: white;
+  color: rgba(9, 6, 20, 0.95);
   border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
+  padding: 8px 24px;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 16px;
-  width: 100%;
-  transition: background-color 0.3s ease;
+  font-size: 14px;
+  transition: all 0.3s ease;
 }
 
 .logout:hover {
-  background-color: blueviolet;
+  background: rgba(255, 255, 255, 0.9);
 }
 
 /* Hamburger Menu */
 .hamburger {
   display: none;
   cursor: pointer;
-  padding: 10px;
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 1000;
+  border: none;
+  background: transparent;
+  padding: 8px;
 }
 
 .hamburger span {
   display: block;
-  width: 25px;
-  height: 3px;
+  width: 24px;
+  height: 2px;
   background-color: white;
-  margin: 5px 0;
-  transition: all 0.3s ease;
-}
-
-/* Hamburger Animation */
-.hamburger.active span:nth-child(1) {
-  transform: rotate(-45deg) translate(-5px, 6px);
-}
-
-.hamburger.active span:nth-child(2) {
-  opacity: 0;
-}
-
-.hamburger.active span:nth-child(3) {
-  transform: rotate(45deg) translate(-5px, -6px);
+  margin: 4px 0;
+  transition: 0.3s;
 }
 
 /* Media Queries */
 @media screen and (max-width: 868px) {
   .hamburger {
-      display: block;
+    display: block;
   }
 
   .nav-section {
-      display: none;
-      width: 100%;
-      position: absolute;
-      top: 100%;
-      left: 0;
-      background-color: rgba(93, 32, 167, 0.9);
-      flex-direction: column;
-      padding: 20px 0;
-      z-index: 999;
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    flex-direction: column;
+    background: rgba(9, 6, 20, 0.98);
+    padding: 16px 0;
+    z-index: 999;
   }
 
   .nav-section.active {
-      display: flex;
-  }
-
-  .nav-section li {
-      width: 100%;
-      text-align: center;
+    display: flex;
   }
 
   .nav-section li a {
-      display: block;
-      padding: 15px 0;
+    display: block;
+    padding: 12px 24px;
   }
 
-  .photo-profile {
-      margin-right: 70px;
-      font-size: 20px;
+  .photo-profile h5 {
+    display: none;
   }
 }
 
 @media screen and (max-width: 480px) {
   .navbar {
-      padding: 15px;
+    padding: 8px 16px;
   }
 
   .logo {
-      font-size: 20px;
+    font-size: 20px;
   }
 
   .logo img {
-      width: 40px;
+    width: 32px;
   }
 
   .photo-profile img {
-      width: 30px;
-  }
-
-  .photo-profile h5 {
-      font-size: 14px;
+    width: 32px;
+    height: 32px;
   }
 
   .logout {
-      padding: 8px 15px;
-      font-size: 14px;
+    padding: 6px 16px;
+    font-size: 12px;
   }
 }

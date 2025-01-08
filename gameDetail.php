@@ -52,7 +52,7 @@ $totalPages = $game->ReadPages($maxRows);
     justify-content: space-between;
     align-items: center;
     padding: 20px;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.5);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -91,6 +91,7 @@ $totalPages = $game->ReadPages($maxRows);
 
 .nav-section a:hover {
     color: #8A2BE2;
+    
 }
 
 .nav-button {
@@ -112,13 +113,26 @@ $totalPages = $game->ReadPages($maxRows);
     border: 2px solid white !important;
     color: white;
 }
+.sign-up-button a{
+    color: white;
+    text-decoration: none;
 
+}
+.login-button a {
+    background: #8A2BE2;
+    color: white;
+    text-decoration: none;
+
+}
 .login-button {
     background: #8A2BE2;
     color: white;
 }
 
 .sign-up-button:hover {
+    a{
+        color: #8A2BE2;
+    }
     background: white;
     color: #8A2BE2;
 }
@@ -351,12 +365,12 @@ $totalPages = $game->ReadPages($maxRows);
     }
     .nav-section li a:hover {
     color: #5d20a7;
-    }
+}
 
-    .nav-section li a.active {
-        background: #5d20a7;
-        color: white;
-    }
+.nav-section li a.active {
+    background: #5d20a7;
+    color: white;
+}
 
     .nav-button {
         display: flex;
