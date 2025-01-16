@@ -53,7 +53,7 @@ body {
   .nav-section {
     list-style: none;
     display: flex;
-    gap: 20px;
+    gap: 50px;
     align-items: center;
     margin: 0;
     padding: 0;
@@ -80,29 +80,35 @@ body {
 
   .nav-button button {
     margin-left: 15px;
-    padding: 8px 18px;
-    border: 2px solid #4834d4;
+    padding: 8px 20px;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 16px;
+    font-weight: 500;
+    border: 2px solid transparent;
     transition: all 0.3s ease;
   }
 
   .login-button {
-    background-color: white;
-    color: #4834d4;
+    background-color: #4834d4;
+    color: white;
+    border: none;
   }
 
   .login-button:hover {
-    background-color: #4834d4;
-    color: white;
-    border: 2px solid transparent;
+    background-color: #3a2bb0;
   }
 
   .nav-button .sign-up-button {
     background-color: white;
     color: #4834d4;
-    border: 2px solid transparent;
+    border: 2px solid #4834d4;
+  }
+
+  .nav-button .sign-up-button {
+    background-color: white;
+    color: #4834d4;
+    border: 2px solid #4834d4;
   }
 
   .nav-button .sign-up-button:hover {
@@ -114,21 +120,36 @@ body {
     color: inherit;
     text-decoration: none;
   }
-  @media screen and (max-width: 768px) {
+
+  .menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 10px;
+  }
+
+  .menu-toggle span {
+    width: 25px;
+    height: 3px;
+    background-color: #4834d4;
+    margin: 3px 0;
+    transition: 0.4s;
+  }
+  @media screen and (max-width: 868px) {
     .menu-toggle {
       display: flex;
     }
 
     .nav-section {
       display: none;
-      width: 100%;
-      flex-direction: column;
-      text-align: center;
-      background-color: rgba(0, 0, 0, 0.95);
       position: absolute;
       top: 100%;
       left: 0;
-      padding: 20px 0;
+      width: 100%;
+      flex-direction: column;
+      background: rgba(202, 200, 202, 0.98);
+      z-index: 999;
+      padding: 10px 0;
     }
 
     .nav-section.active {
@@ -136,22 +157,51 @@ body {
     }
 
     .nav-section li a {
-      margin: 10px 0;
       display: block;
+      padding: 12px 24px;
+    }
+
+    .nav-button {
+      display: none;
+    }
+
+    .nav-button.active {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .nav-button button {
+      width: 90%;
+      margin: 5px 0;
+    }
+    .nav-button .login-button,
+    .nav-button .sign-up-button {
+      min-width: unset;
+      margin-left: 0;
     }
   }
 
   @media screen and (max-width: 480px) {
-    .navbar {
-      padding: 10px;
-    }
-
     .logo {
-      font-size: 18px;
+      display: none;
     }
 
-    .logo img {
-      width: 30px;
+    .menu-toggle {
+      margin-left: auto;
+    }
+
+    .nav-section li {
+      width: 100%;
+      text-align: center;
+    }
+
+    .nav-button button {
+      width: 80%;
+      padding: 8px 0;
+      font-size: 14px;
     }
   }
 }

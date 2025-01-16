@@ -62,43 +62,33 @@ $pageStart = ($page - 1) * $maxRows;
         </div>
     </nav>
     <script>
-        //HAMBURGER MENU
         document.addEventListener('DOMContentLoaded', function() {
             const menuToggle = document.querySelector('.menu-toggle');
             const navSection = document.querySelector('.nav-section');
+            const navButton = document.querySelector('.nav-button');
 
             menuToggle.addEventListener('click', function() {
                 this.classList.toggle('active');
                 navSection.classList.toggle('active');
+                navButton.classList.toggle('active');
             });
 
-            // Close menu when clicking outside
+            // Menutup menu saat mengklik di luar
             document.addEventListener('click', function(event) {
-                if (!event.target.closest('.menu-toggle') && !event.target.closest('.nav-section')) {
+                if (!event.target.closest('.menu-toggle') && 
+                    !event.target.closest('.nav-section') && 
+                    !event.target.closest('.nav-button')) {
                     menuToggle.classList.remove('active');
                     navSection.classList.remove('active');
+                    navButton.classList.remove('active');
                 }
             });
 
-            // Prevent menu from closing when clicking inside nav
+            // Mencegah menu tertutup saat mengklik di dalam nav
             navSection.addEventListener('click', function(event) {
                 event.stopPropagation();
             });
-
-            // Add active class to current page tab
-            const currentPage = window.location.pathname.split('/').pop() || 'index.php';
-            const navLinks = document.querySelectorAll('.nav-section a');
-            navLinks.forEach(link => {
-                if (link.getAttribute('href') === currentPage) {
-                    link.classList.add('active');
-                }
-            });
         });
-
-
-
-
-
     </script>
 
 
@@ -109,26 +99,30 @@ $pageStart = ($page - 1) * $maxRows;
                 <p>HIKSROT is a professional esports organization committed to excellence in competitive gaming. Our teams compete at the highest levels across multiple game titles, representing the pinnacle of esports achievement.</p>
             </div>
             <div class="main-image">
-                <img src="resource/img/hiksrotIcon.png">
+                <img src="resource/img/imgHome.png">
             </div>
         </div>
 
         <div class="desc">
-            <div class="desc-card">
-                <img src="https://cdn-icons-png.flaticon.com/128/4292/4292793.png" alt="Achievement Icon" class="desc-icon">
-                <h3>Professional Teams</h3>
-                <p>Home to world-class teams competing in various esports titles including VALORANT, Mobile Legends, and PUBG Mobile.</p>
+            <h2>How We <span class="esport">Work</span> </h2>
+            <div class="desc-list">
+                <div class="desc-card">
+                    <img src="https://cdn-icons-png.flaticon.com/128/4292/4292793.png" alt="Achievement Icon" class="desc-icon">
+                    <h3>Professional Teams</h3>
+                    <p>Home to world-class teams competing in various esports titles including VALORANT, Mobile Legends, and PUBG Mobile.</p>
+                </div>
+                <div class="desc-card">
+                    <img src="https://cdn-icons-png.flaticon.com/128/1436/1436664.png" alt="Training Icon" class="desc-icon">
+                    <h3>Elite Training</h3>
+                    <p>State-of-the-art training facilities and professional coaching staff to develop player potential.</p>
+                </div>
+                <div class="desc-card">
+                    <img src="https://cdn-icons-png.flaticon.com/128/10764/10764993.png" alt="Community Icon" class="desc-icon">
+                    <h3>Community Events</h3>
+                    <p>Regular fan engagement through tournaments, meet & greets, and exclusive content.</p>
+                </div>
             </div>
-            <div class="desc-card">
-                <img src="https://cdn-icons-png.flaticon.com/128/1436/1436664.png" alt="Training Icon" class="desc-icon">
-                <h3>Elite Training</h3>
-                <p>State-of-the-art training facilities and professional coaching staff to develop player potential.</p>
-            </div>
-            <div class="desc-card">
-                <img src="https://cdn-icons-png.flaticon.com/128/10764/10764993.png" alt="Community Icon" class="desc-icon">
-                <h3>Community Events</h3>
-                <p>Regular fan engagement through tournaments, meet & greets, and exclusive content.</p>
-            </div>
+            
 
         </div>
 
@@ -138,12 +132,16 @@ $pageStart = ($page - 1) * $maxRows;
                 <?php 
                 $achievements = $achie->ReadNewAchie();
                 if (!empty($achievements)):
-                    $icons = [
+                    $icons2 = [
                         'https://cdn-icons-png.flaticon.com/128/940/940543.png',
                         'https://cdn-icons-png.flaticon.com/128/3770/3770295.png',
                         'https://cdn-icons-png.flaticon.com/128/7340/7340754.png'
                     ];
-                    
+                    $icons = [
+                        'resource/img/assets/achie_1.png',
+                        'resource/img/assets/achie_2.png',
+                        'resource/img/assets/achie_3.png'
+                    ];
                     foreach($achievements as $index => $achievement): 
                 ?>
                     <div class="achie-detail">
@@ -167,19 +165,16 @@ $pageStart = ($page - 1) * $maxRows;
 
 
     <hr class="garis-abu">
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <img src="resource/img/hiksrotIcon.png">
-                    <h3>HIKSROT</h3>
-                </div>
-                <div class="contact-info">
-                    <p>📍 UNIVERSITAS SURABAYA</p>
-                    <p>📞 +62 812345678</p>
-                </div>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="resource/img/hiksrotIcon.png" >
+                <h3>HIKSROT</h3>
             </div>
-            
+            <div class="contact-info">
+                <p>📍 Universitas Surabaya</p>
+                <p>📞 +62 896725960</p>
+            </div>
         </div>
     </footer>
 </body>
