@@ -1,0 +1,157 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+  background-color: white;
+}
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  position: relative;
+  background: white;
+  backdrop-filter: blur(5px);
+  z-index: 1000;
+  border-bottom: 1px solid #e0e0e0;
+
+  .logo {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #4834d4;
+  }
+  .logo img {
+    width: 50px;
+    height: auto;
+    margin-right: 10px;
+  }
+
+  .menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 10px;
+  }
+
+  .menu-toggle span {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    margin: 3px 0;
+    transition: 0.4s;
+  }
+
+  .nav-section {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-section li a {
+    text-decoration: none;
+    color: black;
+    font-size: 18px;
+    padding: 5px 15px;
+    transition: color 0.3s ease;
+    font-weight: 200;
+  }
+  .sec-hov:hover {
+    border-radius: 40px;
+    background-color: #715eec;
+    a {
+      color: white;
+    }
+  }
+  .nav-section li a:hover {
+    font-weight: 700;
+  }
+
+  .nav-button button {
+    margin-left: 15px;
+    padding: 8px 18px;
+    border: 2px solid #4834d4;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+  }
+
+  .login-button {
+    background-color: white;
+    color: #4834d4;
+  }
+
+  .login-button:hover {
+    background-color: #4834d4;
+    color: white;
+    border: 2px solid transparent;
+  }
+
+  .nav-button .sign-up-button {
+    background-color: white;
+    color: #4834d4;
+    border: 2px solid transparent;
+  }
+
+  .nav-button .sign-up-button:hover {
+    background-color: #4834d4;
+    color: white;
+    border: 2px solid transparent;
+  }
+  .nav-button a {
+    color: inherit;
+    text-decoration: none;
+  }
+  @media screen and (max-width: 768px) {
+    .menu-toggle {
+      display: flex;
+    }
+
+    .nav-section {
+      display: none;
+      width: 100%;
+      flex-direction: column;
+      text-align: center;
+      background-color: rgba(0, 0, 0, 0.95);
+      position: absolute;
+      top: 100%;
+      left: 0;
+      padding: 20px 0;
+    }
+
+    .nav-section.active {
+      display: flex;
+    }
+
+    .nav-section li a {
+      margin: 10px 0;
+      display: block;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .navbar {
+      padding: 10px;
+    }
+
+    .logo {
+      font-size: 18px;
+    }
+
+    .logo img {
+      width: 30px;
+    }
+  }
+}

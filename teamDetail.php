@@ -30,125 +30,12 @@ $totalPages = $team->ReadPages($maxRows);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome</title>
-    <link href="resource/css/nav.css" rel="stylesheet">
+    <link href="resource/css/menu/navMenu.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <style>
-        body {
-    margin: 0;
-    padding: 0;
-    font-family: "Poppins", sans-serif;
-    color: white;
-    background-image: url("resource/img/BG.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    min-height: 100vh;
-}
+   
 
-/* Navbar Styles */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    position: relative;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(5px);
-    z-index: 1000;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.logo img {
-    width: 50px;
-    height: auto;
-    margin-right: 10px;
-}
-
-.menu-toggle {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    padding: 10px;
-}
-
-.menu-toggle span {
-    width: 25px;
-    height: 3px;
-    background-color: white;
-    margin: 3px 0;
-    transition: 0.4s;
-}
-
-
-.nav-section {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-}
-
-.nav-section li a {
-    text-decoration: none;
-    color: white;
-    font-size: 18px;
-    padding: 5px 15px;
-    transition: all 0.3s ease;
-    border-radius: 5px;
-}
-
-.nav-section li a:hover {
-    color: #5d20a7;
-}
-
-.nav-section li a.active {
-    background: #5d20a7;
-    color: white;
-}
-
-.nav-button button {
-    margin-left: 15px;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
-}
-
-.login-button {
-    background-color: #5d20a7;
-    color: white;
-}
-
-.login-button:hover {
-    background-color: #4a1a85;
-}
-
-.nav-button .sign-up-button {
-    background-color: transparent;
-    color: white;
-    border: 2px solid white;
-}
-
-.nav-button .sign-up-button:hover {
-    background-color: white;
-    color: #5d20a7;
-    transform: translateY(-2px);
-}
-
-.nav-button a {
-    color: inherit;
-    text-decoration: none;
-}
 
 /* Container and Content Styles */
 .container {
@@ -235,68 +122,11 @@ $totalPages = $team->ReadPages($maxRows);
     color: rgba(255, 255, 255, 0.9);
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
 /* Responsive Design */
 @media screen and (max-width: 768px) {
-    .menu-toggle {
-        display: flex;
-    }
-
-    .nav-section {
-        display: none;
-        width: 100%;
-        flex-direction: column;
-        text-align: center;
-        background-color:  rgba(0, 0, 0, 0.95);
-        position: absolute;
-        top: 100%;
-        left: 0;
-        padding: 20px 0;
-        backdrop-filter: blur(10px);
-    }
-
-    .nav-section.active {
-        display: flex;
-    }
-
-    .nav-section li a {
-        margin: 10px 0;
-        display: block;
-        padding: 10px 20px;
-    }
-
-    .nav-button {
-        display: flex;
-        gap: 10px;
-    }
-
-    .nav-button button {
-        padding: 8px 15px;
-        font-size: 14px;
-        margin-left: 0;
-    }
-
+    
     .team-card {
         padding: 15px;
     }
@@ -326,17 +156,7 @@ $totalPages = $team->ReadPages($maxRows);
 }
 
 @media screen and (max-width: 480px) {
-    .navbar {
-        padding: 10px;
-    }
-
-    .logo {
-        font-size: 18px;
-    }
-
-    .logo img {
-        width: 30px;
-    }
+    
 
     .container {
         padding: 10px;
@@ -406,14 +226,21 @@ $totalPages = $team->ReadPages($maxRows);
             <span></span>
             <span></span>
         </div>
-        <div class="logo">
-            <img src="resource/img/hiksrotIcon.png" alt="Hiksrot Logo">
+        <a href="index.php" class="logo">
+            <img src="resource/img/hiksrotIcon.png" alt="HIKSROT">
             HIKSROT
-        </div>
+        </a>
         <ul class="nav-section">
-            <li><a href="index.php">Home</a></li>
-            <li><a href="gameDetail.php">Game Detail</a></li>
-            <li><a href="teamDetail.php"><u>Team Detail</u></a></li>
+            <div class="sec-hov">
+                <li><a href="index.php">Home</a></li>
+            </div>
+            
+
+            <div class="sec-hov">
+                <li><a href="gameDetail.php">Game Detail</a></li>
+            </div>
+
+            <li><a href="teamDetail.php" style="color:#4834D4;"><b>Team Detail</b></a></li>
         </ul>
         <div class="nav-button">
             <button class="sign-up-button"><a href="resource/view/signUp.php">Sign Up</a></button>
@@ -432,6 +259,9 @@ $totalPages = $team->ReadPages($maxRows);
                 navSection.classList.toggle('active');
             });
         });
+
+
+
     </script>
 
 <!-- Dalam section container, ganti pemanggilan fungsi -->
