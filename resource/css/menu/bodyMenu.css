@@ -252,6 +252,7 @@ body {
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(72, 52, 212, 0.1);
     animation: slideUp 1.3s ease-out;
+    border: 2px solid #4834d4;
   }
 
   .table th,
@@ -341,7 +342,7 @@ body {
   }
 
   .team-title {
-    color: #4834d4;
+    color: black;
     font-size: 24px;
     margin: 0;
   }
@@ -370,8 +371,9 @@ body {
     background: white;
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(72, 52, 212, 0.1);
+    box-shadow: 0 6px 8px rgba(72, 52, 212, 0.1);
     animation: slideUp 1.3s ease-out;
+    border: 2px solid #4834d4;
   }
 
   .table th,
