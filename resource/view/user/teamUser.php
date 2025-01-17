@@ -90,6 +90,65 @@ $pageStart = ($page - 1) * $maxRows;
             cursor: pointer;
 
         }
+
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .table {
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+            font-size: 18px;
+        }
+
+        .table th, .table td {
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            
+        }
+
+        .table th {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .actions .approve {
+            color: green;
+            cursor: pointer;
+        }
+
+        .actions .decline {
+            color: red;
+            cursor: pointer;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            float: right;
+            margin-left: 10px;
+        }
+
+        .buttons button {
+            background-color: #fff;
+            color: #3c0036;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 20px;
+            
+        }
+
     </style>
 </head>
 <body>
