@@ -286,7 +286,6 @@ body {
     animation: slideUp 1s ease-out;
   }
 
-  /* Pagination */
   .buttons {
     justify-self: center;
   }

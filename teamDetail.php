@@ -225,7 +225,7 @@ $totalPages = $team->ReadPages($maxRows);
                     </div>
                 </div>
                 
-            </div>
+        </div>
     </div>
 
 </body>

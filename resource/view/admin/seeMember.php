@@ -39,176 +39,125 @@ $pageStart = ($page - 1) * $maxRows;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <title>See Member</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-    <link href="../../css/nav.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <link href="../../css/menu/navMenu.css" rel="stylesheet">
+    <link href="../../css/menu/bodyMenu.css" rel="stylesheet">    
     <style>
-        body {
-            background-image: url("../../img/BG.png");
-            background-size: cover;
-            background-attachment: fixed;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 15px;
-        }
-
-        .table {
-            width: 100%;
-            margin-bottom: 20px;
-            border-collapse: collapse;
-            font-size: 16px;
-        }
-
-        .table th, .table td {
-            padding: 12px;
-            background-color: rgba(255, 255, 255, 0.2);
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .table th {
-            background-color: rgba(255, 255, 255, 0.3);
-        }
-
-        .buttons {
+        .navbar .photo-profile {
             display: flex;
-            justify-content: flex-end;
+            align-items: center;
             gap: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
+            
         }
 
-        .buttons button {
-            background-color: #fff;
-            color: #3c0036;
-            border: none;
-            padding: 10px 20px;
+        .navbar .photo-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .navbar .btn-logout button {
+            background-color: white;
+            color: #4834d4;
+            padding: 8px 20px;
             border-radius: 5px;
             cursor: pointer;
-        }
+            font-size: 16px;
+            width: 100%;
+            border: 2px solid #4834d4;
 
-        /* Media Queries */
-        @media screen and (max-width: 768px) {
-            .container {
-                width: 95%;
-                padding: 10px;
-            }
-            
-            .table {
-                font-size: 14px;
-            }
-            
-            .table th, .table td {
-                padding: 8px;
-            }
-            
-            .buttons button {
-                padding: 8px 15px;
-                font-size: 14px;
-            }
-        }
 
-        @media screen and (max-width: 480px) {
-            .container {
-                width: 100%;
-                padding: 5px;
-            }
-            
-            .table {
-                font-size: 12px;
-            }
-            
-            .table th, .table td {
-                padding: 6px;
-            }
-            
-            .buttons {
-                flex-direction: column;
-                width: 100%;
-            }
-            
-            .buttons button {
-                width: 100%;
-                margin: 5px 0;
-                font-size: 14px;
-            }
         }
+        .navbar .btn-logout button:hover {
+            background-color: #4834d4;
+            color: white;
+            border: 2px solid transparent;
+            border-radius: 5px;
+            cursor: pointer;
 
-        /* Untuk tampilan tabel pada perangkat mobile */
-        @media screen and (max-width: 600px) {
-            .table {
-                display: block;
-                overflow-x: auto;
-                white-space: nowrap;
-            }
         }
     </style>
 </head>
 <body>
-<nav class="navbar">
-        <div class="hamburger">
+    <nav class="navbar">
+        <div class="menu-toggle">
             <span></span>
             <span></span>
             <span></span>
         </div>
-        <div class="logo">
-            <img src="../../img/hiksrotIcon.png" alt="Hiksrot Logo">
+        <a  class="logo">
+            <img src="../../img/hiksrotIcon.png" alt="HIKSROT">
             HIKSROT
-        </div>
+        </a>
         <ul class="nav-section">
-            <li><a href="proposal.php">Proposal</a></li>
-            <li><a href="team.php"><u>Team</u></a></li>
-            <li><a href="game.php">Game</a></li>
-            <li><a href="event.php">Event</a></li>
-            <li><a href="achievement.php">Achivement</a></li>
-        </ul>
+            <div class="sec-hov">
+                <li><a href="proposal.php">Proposal</a></li>
+            </div>
+
+            
+                <li><a href="team.php" style="color:#4834D4;"><b>Team</b></a></li>
+            
+
+            <div class="sec-hov">
+                <li><a href="game.php">Game</a></li>
+            </div>
+
+            <div class="sec-hov">
+                <li><a href="event.php"  >Event</a></li>
+            </div>
+            <div class="sec-hov">
+                <li><a href="achievement.php" >Achivement</a></li>
+            </div>
+            </ul>
         <div class="photo-profile">
             <img src="../../img/fotoProfile.png" alt="Foto Profil">
-            <h5>Hello, <?php  echo $_SESSION['active_user']->fname;?></h5>
-            <div  class="btn-logout">
-                <button  class="logout" onclick="confirmLogout()">Log Out</button>
+            <h3>Hello, <?php echo $_SESSION['active_user']->fname; ?></h3>
+            <div class="btn-logout">
+                <button class="logout" onclick="confirmLogout()">Log Out</button>
             </div>
         </div>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-            const hamburger = document.querySelector('.hamburger');
-            const navSection = document.querySelector('.nav-section');
+        
+    </nav>
 
-            hamburger.addEventListener('click', function() {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navSection = document.querySelector('.nav-section');
+            const navButton = document.querySelector('.photo-profile');
+
+            menuToggle.addEventListener('click', function() {
                 this.classList.toggle('active');
                 navSection.classList.toggle('active');
+                navButton.classList.toggle('active');
             });
 
-            // Close menu when clicking outside
+            // Menutup menu saat mengklik di luar
             document.addEventListener('click', function(event) {
-                if (!event.target.closest('.navbar')) {
-                    hamburger.classList.remove('active');
+                if (!event.target.closest('.menu-toggle') && 
+                    !event.target.closest('.nav-section') && 
+                    !event.target.closest('.photo-profile')) {
+                    menuToggle.classList.remove('active');
                     navSection.classList.remove('active');
+                    navButton.classList.remove('active');
                 }
             });
 
-            // Close menu when clicking a link
-            document.querySelectorAll('.nav-section li a').forEach(link => {
-                link.addEventListener('click', () => {
-                    hamburger.classList.remove('active');
-                    navSection.classList.remove('active');
-                });
+            // Mencegah menu tertutup saat mengklik di dalam nav
+            navSection.addEventListener('click', function(event) {
+                event.stopPropagation();
             });
         });
-            function confirmLogout() {
+
+
+        function confirmLogout() {
             var result = confirm("Apakah Anda yakin ingin logout?");
             if (result) {
-                window.location.href = "../logout.php"; 
-            } 
+                window.location.href = "../logout.php";
+            }
         }
-        </script>
-    </nav>
-    
+    </script>
     <div class="container">
     <table class="table">
             <thead>

@@ -1,6 +1,8 @@
 <?php
 require_once('../../../classes/member.php');
 require_once('../../../classes/Team.php');
+require_once('../../../classes/Join_Proposal.php');
+
 session_start();
 if (!isset($_SESSION['active_user'])) {
     header('Location: ../login.php');
@@ -16,14 +18,22 @@ else{
 $idmember=  $_SESSION['active_user']->idmember;
 $conn = new mysqli('localhost', 'root', '', 'fullstack');
 $t = new Team($conn);
+$cekTeam = false;
 
-
+$jp = new Join_Proposal($conn);
+$teamUser = $jp ->CekTeamUser($idmember);
+if(count($teamUser) == 2 ){
+    $cekTeam = true;
+    $idTeamUser = $teamUser[0];
+    $namaTeamUser = $teamUser[1];
+}
 
 
 
 $maxRows = 5;
 $page = (isset($_GET["page"]) && is_numeric($_GET["page"])) ? ($_GET["page"]) :1;
 $pageStart = ($page - 1) * $maxRows;
+$totalPages = $t->ReadPages($maxRows);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,7 +42,7 @@ $pageStart = ($page - 1) * $maxRows;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome</title>
     <link href="../../css/menu/navMenu.css" rel="stylesheet">
-    <link href="../../css/menu/bodyMenu.css" rel="stylesheet">
+    <link href="../../css/menu/bodyUser.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <style>
@@ -70,175 +80,9 @@ $pageStart = ($page - 1) * $maxRows;
 
         }
 
+        
 
-        .container {
-            width: 80%;
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-        }
-        .table {
-            width: 100%;
-            margin-bottom: 20px;
-            border-collapse: collapse;
-            font-size: 18px;
-        }
-
-        .table th, .table td {
-            padding: 15px;
-            background-color: rgba(255, 255, 255, 0.2);
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            
-        }
-
-        .table th {
-            background-color: rgba(255, 255, 255, 0.3);
-        }
-
-        .actions {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        .actions .approve {
-            color: green;
-            cursor: pointer;
-        }
-
-        .actions .decline {
-            color: red;
-            cursor: pointer;
-        }
-        .buttons {
-            display: flex;
-            justify-content: space-between;
-            float: right;
-            margin-left: 10px;
-        }
-
-        .buttons button {
-            background-color: #fff;
-            color: #3c0036;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-right: 20px;
-            
-        }
-        .frmNew {
-            display: none; 
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        .frm-content {
-            background-color: #fefefe;
-            margin: 10% auto;
-            padding: 20px;
-            border-radius: 10px;
-            width: 30%;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        .formNew-Group{
-            margin-bottom: 15px;
-        }
-
-        .formNew-Group label {
-            display: block;
-            margin-bottom: 5px;
-            color: black;
-        }
-        .formNew-Group input[type="file"] {
-            width: calc(100% - 120px);
-        }
-        .formNew-Group small {
-            color: #666;
-            font-size: 12px;
-        }
-        .table img {
-            max-width: 100px;
-            max-height: 100px;
-            object-fit: contain;
-        }
-        .formNew-input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .formNew-Group input, .formNew-Group textarea {
-            width: 80%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        textarea {
-            resize: vertical;
-        }
-        .formNew-btnAdd {
-            padding: 10px 20px;
-            background-color: #3c0036;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            float: right;
-        }
-
-        .formNew-btnAdd:hover {
-            background-color: #55004d;
-        }
-        .formNew-btnAddContainer {
-            display: flex;
-        }
-        .formNew-Team{
-            padding: 5px;
-        }
-        .image-upload-container {
-            display: flex;
-            align-items: start;
-            gap: 20px;
-        }
-
-        .image-preview {
-            width: 100px;
-            height: 100px;
-            border: 1px dashed #ccc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        .image-preview img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-    </style>
+        </style>
 </head>
 <body>
     <nav class="navbar">
@@ -252,14 +96,23 @@ $pageStart = ($page - 1) * $maxRows;
             HIKSROT
         </a>
         <ul class="nav-section">
-            <li><a href="welcome.php" >Home</a></li>
+           
             
             <div class="sec-hov">
-                <li><a href="seeAllTeam.php" style="color:#4834D4;"><b>Team List</b></a></li>
+                <li><a href="welcome.php" >Home</a></li>
             </div>
-            
+                <li><a href="seeAllTeam.php" style="color:#4834D4;"><b>Team List</b></a></li>
+
             <div class="sec-hov">
-                <li><a href="teamUser.php">Apply Team</a></li>
+            <?php
+                if($cekTeam){
+                    echo"<li><a href=\"teamUser.php\">Your Team</a></li>";
+                }
+                else{
+                    echo"<li><a href=\"teamUser.php\">Apply Team</a></li>";
+                }
+            ?>
+                
             </div>
         </ul>
         <div class="photo-profile">
@@ -311,51 +164,66 @@ $pageStart = ($page - 1) * $maxRows;
         }
     </script>
 
-    <div class="container">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Game Name</th>
-                    <th>team Name</th>
-                    <th>Logo</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                $teams =  $t->ReadDataTeam($pageStart, $maxRows);
-                if (!empty($teams)) {
-                    foreach ($teams as $team) {
-                        echo "<tr>";
-                        echo "<td>" . $team["gameName"] . "</td>";
-                        echo "<td>" . $team["teamName"] . "</td>";
-                        $idTeamGambar = $team["idteam"];
-                        echo "
-                               <td>
-                                    <img src=\"../../img/teamImg/$idTeamGambar.jpg?v=" . time() . "\">
-                                </td>";
-                       
-                        echo "</tr>";
+    <div class="container-user">
+        <div class="table-wrapper">
+            <table class="team-table">
+                <thead>
+                    <tr>
+                        <th>Game Name</th>
+                        <th>Team Name</th>
+                        <th>Logo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $teams = $t->ReadDataTeam($pageStart, $maxRows);
+                    if (!empty($teams)) {
+                        foreach ($teams as $team) {
+                            echo "<tr>";
+                            echo "<td class='game-name'>" . $team["gameName"] . "</td>";
+                            echo "<td class='team-name'>" . $team["teamName"] . "</td>";
+                            echo "<td><img src='../../img/teamImg/{$team['idteam']}.jpg?v=" . time() . "' class='team-logo' alt='{$team['teamName']} Logo'></td>";
+                            echo "</tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='3' class='no-teams'>No teams available at the moment</td></tr>";
                     }
-                } else {
-                    echo "<tar>";
-                    echo "<td colspan='6' style='text-align: center;'>None</td>";
-                    echo "</tar>";
-                }
-                
-                $totalPages = $t->ReadPages($maxRows);
-                ?>
-            </tbody>
-        </table>
-        <div>
-            <?php 
-                echo("Showing Data " . $pageStart + 1 . " to  " . $pageStart + $maxRows);
-            ?>
+                    ?>
+                </tbody>
+            </table>
         </div>
-        <!-- Navigation Buttons -->
-        <div class="buttons">
-            <a href="<?php if($page <= 1){echo " # ";} else {echo "seeAllTeam.php?page=". $page - 1;} ?>"><button>Back</button></a>
-            <a href="<?php if($page >= $totalPages){echo"#";} else{echo"seeAllTeam.php?page=".$page + 1 ;} ?>"><button>Next</button></a>
+
+
+        <div class="pagination" aria-label="Page navigation">
+                <div class="buttons">
+                    <a href="<?php echo ($page <= 1) ? '#' : "seeAllTeam.php?page=".($page-1); ?>" >
+                        <button <?php echo ($page <= 1) ? 'disabled' : ''; ?>>Previous</button>
+                    </a>
+                    <a href="<?php echo ($page >= $totalPages) ? '#' : "seeAllTeam.php?page=".($page+1); ?>">
+                        <button <?php echo ($page >= $totalPages) ? 'disabled' : ''; ?>>Next</button>
+                    </a>
+                    <div class="page-info">
+                    <?php 
+                        echo("Showing Data " . $pageStart + 1 . " to  " . $pageStart + $maxRows);
+                    ?>
+                    </div>
+                </div>
+                
         </div>
     </div>
+    
+    <hr class="garis-abu">
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="../../img/hiksrotIcon.png" >
+                <h3>HIKSROT</h3>
+            </div>
+            <div class="contact-info">
+                <p>📍 Universitas Surabaya</p>
+                <p>📞 +62 896725960</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

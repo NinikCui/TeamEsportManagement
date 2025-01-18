@@ -44,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $maxRows = 5;
 $page = (isset($_GET["page"]) && is_numeric($_GET["page"])) ? ($_GET["page"]) :1;
 $pageStart = ($page - 1) * $maxRows;
-
+$totalPages = $a->ReadPages($maxRows);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -54,81 +54,85 @@ $pageStart = ($page - 1) * $maxRows;
     <title>Achivement</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <link href="../../css/nav.css" rel="stylesheet">
+    <link href="../../css/menu/navMenu.css" rel="stylesheet">
+    <link href="../../css/menu/bodyUser.css" rel="stylesheet">    
     <style>
-        body {
-            background-image: url("../../img/BG.png");
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-        }
-
-        .table {
-            width: 100%;
-            margin-bottom: 20px;
-            border-collapse: collapse;
-            font-size: 16px;
-        }
-
-        .table th, .table td {
-            padding: 10px;
-            background-color: rgba(255, 255, 255, 0.2);
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .table th {
-            background-color: rgba(255, 255, 255, 0.3);
-        }
-
-        .actions {
+        .navbar .photo-profile {
             display: flex;
+            align-items: center;
             gap: 10px;
-            justify-content: center;
+            
         }
 
-        .actions .approve {
-            color: green;
-            cursor: pointer;
+        .navbar .photo-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
         }
 
-        .actions .decline {
-            color: red;
-            cursor: pointer;
-        }
-
-        .buttons {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .buttons button {
-            background-color: #fff;
-            color: #3c0036;
-            border: none;
-            padding: 10px 20px;
+        .navbar .btn-logout button {
+            background-color: white;
+            color: #4834d4;
+            padding: 8px 20px;
             border-radius: 5px;
             cursor: pointer;
-        }
+            font-size: 16px;
+            width: 100%;
+            border: 2px solid #4834d4;
 
-        .buttons button:hover {
-            background-color: #55004d;
-            color: #fff;
-        }
 
-        .desc {
+        }
+        .navbar .btn-logout button:hover {
+            background-color: #4834d4;
+            color: white;
+            border: 2px solid transparent;
+            border-radius: 5px;
             cursor: pointer;
+
         }
 
+
+        .action-buttons button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 5px 10px;
+        }
+
+        .edit-btn {
+            color: #A0D683;
+        }
+
+        .delete-btn {
+            color: #FF474D;
+        }
+
+        .header-actions {
+            margin-bottom: 20px;
+            animation: slideUp 0.5s ease-out;
+
+        }
+        .detail-btn {
+            color: #FFD700;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 5px 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .action-buttons form {
+            margin: 0;
+        }
+
+        /* Form Modal Styling */
         .frmNew {
             display: none;
             position: fixed;
@@ -137,309 +141,117 @@ $pageStart = ($page - 1) * $maxRows;
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0,0,0,0.4);
         }
 
         .frm-content {
             background-color: #fefefe;
-            margin: 10% auto;
+            margin: 15% auto;
             padding: 20px;
-            border-radius: 10px;
+            border: 1px solid #888;
             width: 80%;
             max-width: 500px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
+            border-radius: 10px;
         }
 
         .formNew-Group {
             margin-bottom: 15px;
-            color: black;
         }
 
         .formNew-Group label {
             display: block;
-            font-size: 16px;
             margin-bottom: 5px;
-            color: black;
         }
 
-        .formNew-Group input, .formNew-Group textarea {
+        .formNew-Group input,
+        .formNew-Group select,
+        .formNew-Group textarea {
             width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        textarea {
-            resize: vertical;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
         }
 
         .formNew-btnAdd {
+            background: #4834d4;
+            color: white;
             padding: 10px 20px;
-            background-color: #3c0036;
-            color: #fff;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-        }
-
-        .formNew-btnAdd:hover {
-            background-color: #55004d;
-        }
-
-        .formNew-btnAddContainer {
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .formNew-Team {
-            padding: 5px;
-        }
-
-        .search-form {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px; /* Spasi antara input dan button */
-            margin-bottom: 20px; /* Jarak dari elemen lainnya */
-            flex-wrap: wrap; /* Agar responsif pada layar kecil */
-        }
-
-        .search-input {
-            padding: 10px 15px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 100%;
-            max-width: 300px; /* Batas maksimum lebar */
-            transition: all 0.3s ease-in-out;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: #3c0036;
-            box-shadow: 0 0 8px rgba(60, 0, 54, 0.3);
-        }
-
-        .search-button {
-            padding: 10px 20px;
-            background-color: #3c0036;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s ease-in-out;
-        }
-
-        .search-button:hover {
-            background-color: #55004d;
-            box-shadow: 0 4px 8px rgba(85, 0, 77, 0.2);
-        }
-
-        /* Media query untuk layar tablet (maksimal 768px) */
-        @media screen and (max-width: 768px) {
-            .container {
-                width: 95%;
-                padding: 10px;
-            }
-            
-            .table {
-                font-size: 14px;
-            }
-            
-            .table th, .table td {
-                padding: 8px;
-            }
-            
-            .frm-content {
-                width: 95%;
-            }
-            
-            .formNew-Group label {
-                font-size: 14px;
-                padding-bottom: 10px;
-            }
-            
-            .formNew-Group input,
-            .formNew-Group textarea {
-                font-size: 14px;
-            }
-            
-            .buttons button {
-                padding: 8px 15px;
-            }
-            .search-form {
-                gap: 8px;
-                margin-bottom: 15px;
-            }
-
-            .search-input {
-                font-size: 14px;
-                max-width: 250px;
-            }
-
-            .search-button {
-                font-size: 14px;
-                padding: 8px 15px;
-            }
-        }
-
-        /* Media query untuk layar ponsel (maksimal 480px) */
-        @media screen and (max-width: 480px) {
-            .container {
-                width: 100%;
-                padding: 5px;
-            }
-            
-            .table {
-                font-size: 12px;
-            }
-            
-            .table th, .table td {
-                padding: 6px;
-            }
-            
-            .actions {
-                flex-direction: column;
-                gap: 5px;
-            }
-            
-            .frm-content {
-                margin: 2% auto;
-                padding: 15px;
-            }
-            
-            .formNew-Group label {
-                padding-bottom: 8px;
-            }
-            
-            .formNew-Group input,
-            .formNew-Group textarea {
-                width: 100%;
-                padding: 8px;
-            }
-            
-            .formNew-btnAdd {
-                width: 100%;
-                margin-top: 10px;
-            }
-            .frm-content {
-                margin: 15% auto; /* Lebih banyak margin atas untuk layar kecil */
-                padding: 10px; /* Padding lebih kecil */
-                width: 90%; /* Kurangi ukuran untuk layar HP */
-                font-size: 14px; /* Ukuran font lebih kecil */
-            }
-            .search-form {
-                flex-direction: column; /* Tumpuk elemen secara vertikal */
-                align-items: stretch; /* Isi seluruh lebar */
-                gap: 5px;
-            }
-
-            .search-input {
-                width: 100%; /* Isi seluruh lebar */
-                font-size: 14px;
-            }
-
-            .search-button {
-                width: 100%; /* Isi seluruh lebar */
-                font-size: 14px;
-                padding: 10px;
-            }
-        }
-
-        @media screen and (max-width: 600px) {
-            .table {
-                display: block;
-                overflow-x: auto;
-                white-space: nowrap;
-            }
-            .frm-content {
-                margin: 5% auto;
-            }
-            .buttons {
-                display: flex;
-                justify-content: flex-end;
-            }
         }
     </style>
 </head>
 <body>
     <nav class="navbar">
-    <div class="hamburger">
+        <div class="menu-toggle">
             <span></span>
             <span></span>
             <span></span>
         </div>
-        <div class="logo">
-            <img src="../../img/hiksrotIcon.png" alt="Hiksrot Logo">
+        <a  class="logo">
+            <img src="../../img/hiksrotIcon.png" alt="HIKSROT">
             HIKSROT
-        </div>
+        </a>
         <ul class="nav-section">
-            <li><a href="proposal.php">Proposal</a></li>
-            <li><a href="team.php">Team</a></li>
-            <li><a href="game.php">Game</a></li>
-            <li><a href="event.php">Event</a></li>
-            <li><a href="achievement.php"><u>Achievement</u></a></li>
+            <div class="sec-hov">
+                <li><a href="proposal.php">Proposal</a></li>
+            </div>
+
+            <div class="sec-hov">
+                <li><a href="team.php">Team</a></li>
+            </div>
+
+            <div class="sec-hov">
+                <li><a href="game.php">Game</a></li>
+            </div>
+
+            <div class="sec-hov">
+                <li><a href="event.php">Event</a></li>
+            </div>
+
+            <li><a href="achievement.php"  style="color:#4834D4;"><b>Achivement</b></a></li>
         </ul>
         <div class="photo-profile">
             <img src="../../img/fotoProfile.png" alt="Foto Profil">
-            <h5>Hello, <?php  echo $_SESSION['active_user']->fname;?></h5>
-            <div  class="btn-logout">
-                <button  class="logout" onclick="confirmLogout()">Log Out</button>
+            <h3>Hello, <?php echo $_SESSION['active_user']->fname; ?></h3>
+            <div class="btn-logout">
+                <button class="logout" onclick="confirmLogout()">Log Out</button>
             </div>
         </div>
-        <script>
-            function confirmLogout() {
-            var result = confirm("Apakah Anda yakin ingin logout?");
-            if (result) {
-                window.location.href = "../logout.php"; 
-            } 
-        }
-        </script>
+        
     </nav>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const hamburger = document.querySelector('.hamburger');
+            const menuToggle = document.querySelector('.menu-toggle');
             const navSection = document.querySelector('.nav-section');
+            const navButton = document.querySelector('.photo-profile');
 
-            hamburger.addEventListener('click', function() {
+            menuToggle.addEventListener('click', function() {
                 this.classList.toggle('active');
                 navSection.classList.toggle('active');
+                navButton.classList.toggle('active');
             });
 
-            // Close menu when clicking outside
+            // Menutup menu saat mengklik di luar
             document.addEventListener('click', function(event) {
-                if (!event.target.closest('.navbar')) {
-                    hamburger.classList.remove('active');
+                if (!event.target.closest('.menu-toggle') && 
+                    !event.target.closest('.nav-section') && 
+                    !event.target.closest('.photo-profile')) {
+                    menuToggle.classList.remove('active');
                     navSection.classList.remove('active');
+                    navButton.classList.remove('active');
                 }
             });
 
-            // Close menu when clicking a link
-            document.querySelectorAll('.nav-section li a').forEach(link => {
-                link.addEventListener('click', () => {
-                    hamburger.classList.remove('active');
-                    navSection.classList.remove('active');
-                });
+            // Mencegah menu tertutup saat mengklik di dalam nav
+            navSection.addEventListener('click', function(event) {
+                event.stopPropagation();
             });
         });
+
+
         function openFrmNew() {
             document.getElementById('formNew').style.display = "block";
             document.getElementById('name').value = ""; 
@@ -481,8 +293,13 @@ $pageStart = ($page - 1) * $maxRows;
                 frmNew.style.display = "none";
             }
         }
-    </script>
-    <script>
+        function confirmLogout() {
+            var result = confirm("Apakah Anda yakin ingin logout?");
+            if (result) {
+                window.location.href = "../logout.php";
+            }
+        }
+    
         function filterTeams() {
             const input = document.getElementById("search-team").value.toLowerCase();
             const rows = document.querySelectorAll("#achievement-table tbody tr");
@@ -494,15 +311,99 @@ $pageStart = ($page - 1) * $maxRows;
         }
     </script>
 
-<div class="container">
-    <form method="POST" action="">
-        <a onclick="openFrmNew()" style="padding: 10px 20px; background-color: #fff; color: #3c0036; text-decoration: none; border-radius: 5px; border: none; margin-bottom: 10px; cursor: pointer; float: right;">+ New</a>
+<div class="container-user">
+    <!-- Header Actions -->
+    <div class="header-actions" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+        <!-- Button New -->
+        <button onclick="openFrmNew()" class="add-button" style="background: #4834d4; color: white; padding: 12px 24px; border: none; border-radius: 5px; cursor: pointer;">
+            + New Achievement
+        </button>
 
-        <div id="formNew" class="frmNew">
-            <div class="frm-content">
-                <span class="close" onclick="closeFrmNew()">&times;</span>
-                <h2><span id="actionButtonText">Add a new Achievement</span></h2>
-                <input type="hidden" id="idachievement" name="idachievement"> 
+        <!-- Search Form -->
+        <form method="GET" action="" style="display: flex; gap: 10px;">
+            <input type="text" 
+                   name="team_name" 
+                   placeholder="Search by team name..." 
+                   value="<?php echo isset($_GET['team_name']) ? $_GET['team_name'] : ''; ?>"
+                   style="padding: 10px; border: 1px solid #eee; border-radius: 5px;">
+            <button type="submit" 
+                    style="background: #4834d4; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+                Search
+            </button>
+        </form>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrapper">
+        <table class="team-table">
+            <thead>
+                <tr>
+                    <th>Id Achievement</th>
+                    <th>Team</th>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $teamNameFilter = isset($_GET['team_name']) ? $_GET['team_name'] : '';
+                $achievements = $a->ReadDataAchievement($teamNameFilter, $pageStart, $maxRows);
+                if(!empty($achievements)) {
+                    foreach($achievements as $achiee) {
+                        echo "<tr>";
+                        echo "<td>{$achiee['idachievement']}</td>";
+                        echo "<td class='team-name'>{$achiee['team']}</td>";
+                        echo "<td>{$achiee['name']}</td>";
+                        echo "<td>{$achiee['date']}</td>";
+                        echo "<td>{$achiee['description']}</td>";
+                        echo "<td class='action-buttons'>
+                                <button type='button' 
+                                        onclick=\"openFrmEdit('{$achiee['idachievement']}', '{$achiee['name']}', '{$achiee['team']}', '{$achiee['date']}', '{$achiee['description']}')\"
+                                        class='edit-btn'>
+                                    ✔ Edit
+                                </button>
+                                <form method='POST' action='' style='display:inline;'>
+                                    <input type='hidden' name='idachievement' value='{$achiee['idachievement']}'>
+                                    <button type='submit' name='action' value='delete' class='delete-btn'>
+                                        &#x1F5D1; Delete
+                                    </button>
+                                </form>
+                            </td>";
+                        echo "</tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='6' class='no-data'>No achievements found</td></tr>";
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" aria-label="Page navigation">
+        <div class="buttons">
+            <a href="<?php echo ($page <= 1) ? '#' : "achievement.php?page=".($page-1); ?>" >
+                <button <?php echo ($page <= 1) ? 'disabled' : ''; ?>>Previous</button>
+            </a>
+            <a href="<?php echo ($page >= $totalPages) ? '#' : "achievement.php?page=".($page+1); ?>">
+                <button <?php echo ($page >= $totalPages) ? 'disabled' : ''; ?>>Next</button>
+            </a>
+            <div class="page-info">
+                <?php echo("Showing Data " . ($pageStart + 1) . " to " . ($pageStart + $maxRows)); ?>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Form -->
+    <div id="formNew" class="frmNew">
+        <div class="frm-content">
+            <span class="close" onclick="closeFrmNew()">&times;</span>
+            <h2><span id="actionButtonText">Add a new Achievement</span></h2>
+            <form method="POST" action="">
+                <input type="hidden" id="idachievement" name="idachievement">
+                
                 <div class="formNew-Group">
                     <label for="name">Name</label>
                     <input type="text" id="name" name="nameAchi" placeholder="Enter achievement name" required>
@@ -513,12 +414,11 @@ $pageStart = ($page - 1) * $maxRows;
                     <select id="cbteam" class="formNew-Team" name="idteam" required>
                         <option value="">--- SELECT TEAM ---</option>
                         <?php
-                            $conn = new mysqli('localhost', 'root', '', 'fullstack');
                             $stmt = $conn->prepare("SELECT idteam, name FROM team;");
                             $stmt->execute();
                             $res = $stmt->get_result();
-                            while($rteam = $res->fetch_array()){
-                                echo "<option value='".$rteam["idteam"]."'>".$rteam["name"]."</option>";
+                            while($rteam = $res->fetch_array()) {
+                                echo "<option value='{$rteam["idteam"]}'>{$rteam["name"]}</option>";
                             }
                         ?>
                     </select>
@@ -533,69 +433,26 @@ $pageStart = ($page - 1) * $maxRows;
                     <label for="description">Description</label>
                     <textarea id="description" name="descriptionAchi" placeholder="Enter achievement description" rows="4" required></textarea>
                 </div>
+
                 <div class="formNew-btnAddContainer">
                     <button type="submit" id="actionButton" name='action' value='add' class="formNew-btnAdd">Add new</button>
                 </div>
-            </div>
+            </form>
         </div>
-    </form>
-     <!-- Search Form -->
-     <form method="GET" action="">
-        <input type="text" name="team_name" placeholder="Search by team name..." value="<?php echo isset($_GET['team_name']) ? $_GET['team_name'] : ''; ?>">
-        <button type="submit">Search</button>
-    </form>
-    <!-- Table -->
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id Achievement</th>
-                <th>Team</th>
-                <th>Name</th>
-                <th>Date</th>
-                <th>Description</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-                $teamNameFilter = isset($_GET['team_name']) ? $_GET['team_name'] : '';
-                $achievements = $a->ReadDataAchievement($teamNameFilter,$pageStart,$maxRows);
-                if(!empty($achievements)){
-                    foreach($achievements as $achiee){
-                        echo "<tr>";
-                        echo "<td>" . $achiee["idachievement"] . "</td>";
-                        echo "<td>" . $achiee["team"] . "</td>";
-                        echo "<td>" . $achiee["name"] . "</td>";
-                        echo "<td>" . $achiee["date"] . "</td>";
-                        echo "<td class='desc'>" . $achiee["description"] . "</td>";
-                        echo "<td>
-                                <button type='button' onclick=\"openFrmEdit('".$achiee["idachievement"]."', '".$achiee["name"]."', '".$achiee["team"]."', '".$achiee["date"]."', '".$achiee["description"]."')\" style='color: #A0D683; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Edit</button>
-                                <form method='POST' action='' style='display:inline;'>
-                                    <input type='hidden' name='idachievement' value='" . $achiee["idachievement"] . "'>
-                                    <button type='submit' name='action' value='delete' style='color: #FF474D; border: none; background: none; cursor: pointer; font-size: 18px;'><span>&#x1F5D1;</span> Delete</button>
-                                </form>
-                              </td>";
-                        echo "</tr>"; 
-                    }
-                } else {
-                    echo "<tr><td colspan='6' style='text-align: center;'>None</td></tr>";
-                }
-                
-                
-                $totalPages = $a->ReadPages($maxRows);
-            ?>
-        </tbody>
-    </table>
-
-    <div>
-        <?php 
-            echo("Showing Data " . $pageStart + 1 . " to  " . $pageStart + $maxRows);      
-        ?>
-    </div>
-    <div class="buttons">
-        <a href="<?php echo ($page <= 1) ? "#" : "achievement.php?page=" . ($page - 1); ?>"><button>Back</button></a>
-        <a href="<?php echo ($page >= $totalPages) ? "#" : "achievement.php?page=" . ($page + 1); ?>"><button>Next</button></a>
     </div>
 </div>
+    <hr class="garis-abu">
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="../../img/hiksrotIcon.png" >
+                <h3>HIKSROT</h3>
+            </div>
+            <div class="contact-info">
+                <p>📍 Universitas Surabaya</p>
+                <p>📞 +62 896725960</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

@@ -68,284 +68,115 @@ $pageStart = ($page - 1) * $maxRows;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detail Event</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-    <link href="../../css/nav.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <link href="../../css/menu/navMenu.css" rel="stylesheet">
+    <link href="../../css/menu/bodyMenu.css" rel="stylesheet">    
     <style>
-        body {
-            background-image: url("../../img/BG.png");
-            background-size: cover;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-        }
-
-        .table {
-            width: 100%;
-            margin-bottom: 20px;
-            border-collapse: collapse;
-            font-size: 16px;
-        }
-
-        .table th, 
-        .table td {
-            padding: 10px;
-            background-color: rgba(255, 255, 255, 0.2);
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .table th {
-            background-color: rgba(255, 255, 255, 0.3);
-        }
-
-        .actions {
+        .navbar .photo-profile {
             display: flex;
+            align-items: center;
             gap: 10px;
-            justify-content: center;
+            
         }
 
-        .actions .approve {
-            color: green;
-            cursor: pointer;
+        .navbar .photo-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
         }
 
-        .actions .decline {
-            color: red;
-            cursor: pointer;
-        }
-
-        .buttons {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-
-        .buttons button {
-            background-color: #fff;
-            color: #3c0036;
-            border: none;
-            padding: 10px 20px;
+        .navbar .btn-logout button {
+            background-color: white;
+            color: #4834d4;
+            padding: 8px 20px;
             border-radius: 5px;
             cursor: pointer;
-        }
-
-        .buttons button:hover {
-            background-color: #55004d;
-            color: #fff;
-        }
-
-        .frmNew {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        .frm-content {
-            background-color: #fefefe;
-            margin: 10% auto;
-            padding: 20px;
-            border-radius: 10px;
-            width: 80%;
-            max-width: 500px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .formNew-Group {
-            margin-bottom: 15px;
-            color: black;
-        }
-
-        .formNew-Group label {
-            display: block;
             font-size: 16px;
-            margin-bottom: 5px;
-            color: black;
-        }
-
-        .formNew-Group input, 
-        .formNew-Group textarea {
             width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
+            border: 2px solid #4834d4;
 
-        textarea {
-            resize: vertical;
-        }
 
-        .formNew-btnAdd {
-            padding: 10px 20px;
-            background-color: #3c0036;
-            color: #fff;
-            border: none;
+        }
+        .navbar .btn-logout button:hover {
+            background-color: #4834d4;
+            color: white;
+            border: 2px solid transparent;
             border-radius: 5px;
             cursor: pointer;
-        }
 
-        .formNew-btnAdd:hover {
-            background-color: #55004d;
-        }
-
-        .formNew-btnAddContainer {
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .formNew-Team {
-            padding: 5px;
-        }
-
-        /* Tambahkan media query untuk layar kecil */
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-                margin: 10px auto;
-            }
-
-            .table {
-                font-size: 14px;
-            }
-
-            .table th, 
-            .table td {
-                padding: 8px;
-            }
-
-            .actions {
-                flex-direction: column;
-                gap: 5px;
-            }
-
-            .buttons {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .frm-content {
-                margin: 20% auto;
-                padding: 15px;
-            }
-
-            .formNew-Group input, 
-            .formNew-Group textarea {
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 5px;
-            }
-
-            .table {
-                font-size: 12px;
-            }
-
-            .table th, 
-            .table td {
-                padding: 5px;
-            }
-
-            .actions {
-                flex-direction: column;
-                gap: 5px;
-            }
-
-            .buttons {
-                flex-direction: column;
-                align-items: stretch;
-            }
         }
     </style>
 </head>
 <body>
-<nav class="navbar">
-    <div class="hamburger">
+    <nav class="navbar">
+        <div class="menu-toggle">
             <span></span>
             <span></span>
             <span></span>
         </div>
-        <div class="logo">
-            <img src="../../img/hiksrotIcon.png" alt="Hiksrot Logo">
+        <a  class="logo">
+            <img src="../../img/hiksrotIcon.png" alt="HIKSROT">
             HIKSROT
-        </div>
+        </a>
         <ul class="nav-section">
-            <li><a href="proposal.php">Proposal</a></li>
-            <li><a href="team.php">Team</a></li>
-            <li><a href="game.php">Game</a></li>
-            <li><a href="event.php"><u>Event</u></a></li>
-            <li><a href="achievement.php">Achivement</a></li>
-        </ul>
+            <div class="sec-hov">
+                <li><a href="proposal.php">Proposal</a></li>
+            </div>
+
+            <div class="sec-hov">
+                <li><a href="team.php">Team</a></li>
+            </div>
+
+            <div class="sec-hov">
+                <li><a href="game.php">Game</a></li>
+            </div>
+
+            
+                <li><a href="event.php"  style="color:#4834D4;"><b>Event</b></a></li>
+            
+            <div class="sec-hov">
+                <li><a href="achievement.php" >Achivement</a></li>
+            </div>
+            </ul>
         <div class="photo-profile">
             <img src="../../img/fotoProfile.png" alt="Foto Profil">
-            <h5>Hello, <?php  echo $_SESSION['active_user']->fname;?></h5>
-            <div  class="btn-logout">
-                <button  class="logout" onclick="confirmLogout()">Log Out</button>
+            <h3>Hello, <?php echo $_SESSION['active_user']->fname; ?></h3>
+            <div class="btn-logout">
+                <button class="logout" onclick="confirmLogout()">Log Out</button>
             </div>
         </div>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-            const hamburger = document.querySelector('.hamburger');
+        
+    </nav>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.querySelector('.menu-toggle');
             const navSection = document.querySelector('.nav-section');
+            const navButton = document.querySelector('.photo-profile');
 
-            hamburger.addEventListener('click', function() {
+            menuToggle.addEventListener('click', function() {
                 this.classList.toggle('active');
                 navSection.classList.toggle('active');
+                navButton.classList.toggle('active');
             });
 
-            // Close menu when clicking outside
+            // Menutup menu saat mengklik di luar
             document.addEventListener('click', function(event) {
-                if (!event.target.closest('.navbar')) {
-                    hamburger.classList.remove('active');
+                if (!event.target.closest('.menu-toggle') && 
+                    !event.target.closest('.nav-section') && 
+                    !event.target.closest('.photo-profile')) {
+                    menuToggle.classList.remove('active');
                     navSection.classList.remove('active');
+                    navButton.classList.remove('active');
                 }
             });
 
-            // Close menu when clicking a link
-            document.querySelectorAll('.nav-section li a').forEach(link => {
-                link.addEventListener('click', () => {
-                    hamburger.classList.remove('active');
-                    navSection.classList.remove('active');
-                });
+            // Mencegah menu tertutup saat mengklik di dalam nav
+            navSection.addEventListener('click', function(event) {
+                event.stopPropagation();
             });
         });
-            function confirmLogout() {
-            var result = confirm("Apakah Anda yakin ingin logout?");
-            if (result) {
-                window.location.href = "../logout.php"; 
-            } 
-        }
-        </script>
-    </nav>
-    <script>
+
+
         function openFrmNew() {
             document.getElementById('formNew').style.display = "block";
             document.getElementById('cbteam').value = ""; 
@@ -371,6 +202,13 @@ $pageStart = ($page - 1) * $maxRows;
             var frmNew = document.getElementById('formNew');
             if (event.target == frmNew) {
                 frmNew.style.display = "none";
+            }
+        }
+
+        function confirmLogout() {
+            var result = confirm("Apakah Anda yakin ingin logout?");
+            if (result) {
+                window.location.href = "../logout.php";
             }
         }
     </script>

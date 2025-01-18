@@ -45,6 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $maxRows = 5;
 $page = (isset($_GET["page"]) && is_numeric($_GET["page"])) ? ($_GET["page"]) :1;
 $pageStart = ($page - 1) * $maxRows;
+$totalPages = $jp->totPagesUser($maxRows);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -53,7 +54,7 @@ $pageStart = ($page - 1) * $maxRows;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome</title>
     <link href="../../css/menu/navMenu.css" rel="stylesheet">
-    <link href="../../css/menu/bodyMenu.css" rel="stylesheet">
+    <link href="../../css/menu/bodyUser.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <style>
@@ -91,64 +92,80 @@ $pageStart = ($page - 1) * $maxRows;
 
         }
 
-        .container {
-            width: 80%;
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-        }
-        .table {
-            width: 100%;
-            margin-bottom: 20px;
-            border-collapse: collapse;
-            font-size: 18px;
-        }
-
-        .table th, .table td {
-            padding: 15px;
-            background-color: rgba(255, 255, 255, 0.2);
+        .team-header {
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            
+            margin-bottom: 30px;
+            padding: 20px;
+            width: 100%;      
+            animation: slideUp 0.8s ease-out;
+
+        }
+        
+        .team-logo {
+            width: 400px; 
+            height: auto;
+            box-shadow: 0 4px 15px rgba(72, 52, 212, 0.1);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            max-width: 100%; 
+            object-fit: contain; 
         }
 
-        .table th {
-            background-color: rgba(255, 255, 255, 0.3);
+        .team-title {
+            color: #4834d4;
+            font-size: 56px;
+            font-weight: 800;
+            margin-top: 20px;
         }
 
-        .actions {
+
+        .tab-navigation {
             display: flex;
-            gap: 10px;
             justify-content: center;
-        }
-
-        .actions .approve {
-            color: green;
-            cursor: pointer;
-        }
-
-        .actions .decline {
-            color: red;
-            cursor: pointer;
-        }
-        .buttons {
-            display: flex;
-            justify-content: space-between;
-            float: right;
-            margin-left: 10px;
-        }
-
-        .buttons button {
-            background-color: #fff;
-            color: #3c0036;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-right: 20px;
+            gap: 20px;
+            margin-bottom: 30px;
+            animation: slideUp 0.8s ease-out;
             
         }
 
+        .tab-button {
+            padding: 12px 24px;
+            border: none;
+            background: #f8f9fa;
+            color: #666;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button:hover {
+            background: #eee;
+        }
+
+        .tab-button.active {
+            background: #4834d4;
+            color: white;
+        }
+        @media screen and (max-width: 768px) {
+            .team-logo {
+                width: 300px; 
+            }
+            
+            .team-title {
+                font-size: 42px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .team-logo {
+                width: 250px; 
+            }
+            
+            .team-title {
+                font-size: 32px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -163,15 +180,23 @@ $pageStart = ($page - 1) * $maxRows;
             HIKSROT
         </a>
         <ul class="nav-section">
-            <li><a href="welcome.php" >Home</a></li>
-            
+            <div class="sec-hov">
+                <li><a href="welcome.php" >Home</a></li>
+            </div>
             <div class="sec-hov">
                 <li><a href="seeAllTeam.php">Team List</a></li>
             </div>
+            <?php
+                if($cekTeam){
+                    echo"<li><a href=\"teamUser.php\" style=\"color:#4834D4;\"><b>Your Team</b></a></li>";
+                }
+                else{
+                    echo"<li><a href=\"teamUser.php\" style=\"color:#4834D4;\"><b>Apply Team</b></a></li>";
+                }
+            ?>
             
-            <div class="sec-hov">
-                <li><a href="teamUser.php" style="color:#4834D4;"><b>Apply Team</b></a></li>
-            </div>
+                
+            
         </ul>
         <div class="photo-profile">
             <img src="../../img/fotoProfile.png" alt="Foto Profil">
@@ -221,41 +246,49 @@ $pageStart = ($page - 1) * $maxRows;
             }
         }
     </script>
-    <div class="container">
+    <div class="container-user">
         <?php 
-            if($cekTeam)
-            {
+            if($cekTeam) {
                 $currentTab = isset($_GET['tab']) ? $_GET['tab'] : 'member';
                 $page = (isset($_GET["page"]) && is_numeric($_GET["page"])) ? $_GET["page"] : 1;
                 $maxRows = 5;
                 $pageStart = ($page - 1) * $maxRows;
                 $timestamp = time();
-
+            
                 echo "
-               <table class=\"table\">  
-                    <thead>
-                        <tr>
-                            <th colspan=\"2\" > 
-                                <img src=\"../../img/teamImg/$idTeamUser.jpg?v=$timestamp\" width=\"400\" 
-                                    onerror=\"this.onerror=null; this.src='../../img/default-team.jpg';\" 
-                                    onload=\"this.style.display='block';\"> 
-                            </th>
-                            <th >  $namaTeamUser Team's</th>
-                        </tr>
-                        <tr>
-                            <th id=\"memberTab\" class=\"tab-link " . ($currentTab == 'member' ? 'active' : '') . "\" onclick=\"showContent('member')\">Member Team</th>
-                            <th id=\"achievementTab\" class=\"tab-link " . ($currentTab == 'achievement' ? 'active' : '') . "\" onclick=\"showContent('achievement')\">Achievement Team</th>
-                            <th id=\"eventTab\" class=\"tab-link " . ($currentTab == 'event' ? 'active' : '') . "\" onclick=\"showContent('event')\">Event Team</th>
-                        </tr>
-                    </thead> 
-                </table>";
+                <div class='container-user'>
+                    <div class='team-header'>
+                        <img src='../../img/teamImg/$idTeamUser.jpg?v=$timestamp' 
+                            class='team-logo'
+                            \">
+                        <h2 class='team-title'>$namaTeamUser Team's</h2>
+                    </div>
+            
+                    <div class='tab-navigation'>
+                        <button id='memberTab' 
+                            class='tab-button " . ($currentTab == 'member' ? 'active' : '') . "' 
+                            onclick=\"showContent('member')\">Member Team</button>
+                        <button id='achievementTab' 
+                            class='tab-button " . ($currentTab == 'achievement' ? 'active' : '') . "' 
+                            onclick=\"showContent('achievement')\">Achievement Team</button>
+                        <button id='eventTab' 
+                            class='tab-button " . ($currentTab == 'event' ? 'active' : '') . "' 
+                            onclick=\"showContent('event')\">Event Team</button>
+                    </div>";
+            
+                // Member Tab Content
                 if($currentTab == 'member') {
-                    echo "<table class='table'>
-                        <tr>
-                            <th>ID Member</th>
-                            <th>Nama Member</th>
-                        </tr>";
-                        
+                    echo "
+                    <div class='table-wrapper'>
+                        <table class='team-table'>
+                            <thead>
+                                <tr>
+                                    <th>ID Member</th>
+                                    <th>Nama Member</th>
+                                </tr>
+                            </thead>
+                            <tbody>";
+                            
                     $members = $jp->getTeamMembers($idTeamUser, $pageStart, $maxRows);
                     $totalMembers = $jp->getTotalMembers($idTeamUser);
                     $totalPages = ceil($totalMembers / $maxRows);
@@ -268,31 +301,42 @@ $pageStart = ($page - 1) * $maxRows;
                                 </tr>";
                         }
                     } else {
-                        echo "<tr><td colspan='2'>No members found</td></tr>";
+                        echo "<tr><td colspan='2' class='no-data'>No members found</td></tr>";
                     }
-                    echo "</table>";
+                    echo "</tbody></table></div>";
                     
                     if ($totalMembers > 0) {
-                        echo "<div class='buttons'>";
-                        if($page > 1) {
-                            echo "<a href='teamUser.php?tab=member&page=" . ($page - 1) . "'><button>Previous</button></a>";
-                        }
-                        if($page < $totalPages) {
-                            echo "<a href='teamUser.php?tab=member&page=" . ($page + 1) . "'><button>Next</button></a>";
-                        }
-                        echo "</div>";
+                        echo "
+                        <div class='pagination' aria-label='Page navigation'>
+                            <div class='buttons'>
+                                <a href='" . ($page <= 1 ? '#' : "teamUser.php?tab=member&page=" . ($page-1)) . "'>
+                                    <button " . ($page <= 1 ? 'disabled' : '') . ">Previous</button>
+                                </a>
+                                <a href='" . ($page >= $totalPages ? '#' : "teamUser.php?tab=member&page=" . ($page+1)) . "'>
+                                    <button " . ($page >= $totalPages ? 'disabled' : '') . ">Next</button>
+                                </a>
+                                <div class='page-info'>
+                                    Showing Data " . ($pageStart + 1) . " to " . ($pageStart + $maxRows) . "
+                                </div>
+                            </div>
+                        </div>";
                     }
                 }
                 
-                // Achievement tab
+                // Achievement Tab Content
                 if($currentTab == 'achievement') {
-                    echo "<table class='table'>
-                        <tr>
-                            <th>Nama Achievement</th>
-                            <th>Tanggal</th>
-                            <th>Description</th>
-                        </tr>";
-                        
+                    echo "
+                    <div class='table-wrapper'>
+                        <table class='team-table'>
+                            <thead>
+                                <tr>
+                                    <th>Nama Achievement</th>
+                                    <th>Tanggal</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>";
+                            
                     $achievements = $jp->getTeamAchievements($idTeamUser, $pageStart, $maxRows);
                     $totalAchievements = $jp->getTotalAchievements($idTeamUser);
                     $totalPages = ceil($totalAchievements / $maxRows);
@@ -306,30 +350,41 @@ $pageStart = ($page - 1) * $maxRows;
                                 </tr>";
                         }
                     } else {
-                        echo "<tr><td colspan='3'>No achievements found</td></tr>";
+                        echo "<tr><td colspan='3' class='no-data'>No achievements found</td></tr>";
                     }
-                    echo "</table>";
+                    echo "</tbody></table></div>";
                     
                     if ($totalAchievements > 0) {
-                        echo "<div class='buttons'>";
-                        if($page > 1) {
-                            echo "<a href='teamUser.php?tab=achievement&page=" . ($page - 1) . "'><button>Previous</button></a>";
-                        }
-                        if($page < $totalPages) {
-                            echo "<a href='teamUser.php?tab=achievement&page=" . ($page + 1) . "'><button>Next</button></a>";
-                        }
-                        echo "</div>";
+                        echo "
+                        <div class='pagination' aria-label='Page navigation'>
+                            <div class='buttons'>
+                                <a href='" . ($page <= 1 ? '#' : "teamUser.php?tab=achievement&page=" . ($page-1)) . "'>
+                                    <button " . ($page <= 1 ? 'disabled' : '') . ">Previous</button>
+                                </a>
+                                <a href='" . ($page >= $totalPages ? '#' : "teamUser.php?tab=achievement&page=" . ($page+1)) . "'>
+                                    <button " . ($page >= $totalPages ? 'disabled' : '') . ">Next</button>
+                                </a>
+                                <div class='page-info'>
+                                    Showing Data " . ($pageStart + 1) . " to " . ($pageStart + $maxRows) . "
+                                </div>
+                            </div>
+                        </div>";
                     }
                 }
                 
-                // Event tab
+                // Event Tab Content
                 if($currentTab == 'event') {
-                    echo "<table class='table'>
-                        <tr>
-                            <th>Nama Event</th>
-                            <th>Tanggal</th>
-                        </tr>";
-                        
+                    echo "
+                    <div class='table-wrapper'>
+                        <table class='team-table'>
+                            <thead>
+                                <tr>
+                                    <th>Nama Event</th>
+                                    <th>Tanggal</th>
+                                </tr>
+                            </thead>
+                            <tbody>";
+                            
                     $events = $jp->getTeamEvents($idTeamUser, $pageStart, $maxRows);
                     $totalEvents = $jp->getTotalEvents($idTeamUser);
                     $totalPages = ceil($totalEvents / $maxRows);
@@ -342,76 +397,113 @@ $pageStart = ($page - 1) * $maxRows;
                                 </tr>";
                         }
                     } else {
-                        echo "<tr><td colspan='2'>No events found</td></tr>";
+                        echo "<tr><td colspan='2' class='no-data'>No events found</td></tr>";
                     }
-                    echo "</table>";
+                    echo "</tbody></table></div>";
                     
                     if ($totalEvents > 0) {
-                        echo "<div class='buttons'>";
-                        if($page > 1) {
-                            echo "<a href='teamUser.php?tab=event&page=" . ($page - 1) . "'><button>Previous</button></a>";
-                        }
-                        if($page < $totalPages) {
-                            echo "<a href='teamUser.php?tab=event&page=" . ($page + 1) . "'><button>Next</button></a>";
-                        }
-                        echo "</div>";
+                        echo "
+                        <div class='pagination' aria-label='Page navigation'>
+                            <div class='buttons'>
+                                <a href='" . ($page <= 1 ? '#' : "teamUser.php?tab=event&page=" . ($page-1)) . "'>
+                                    <button " . ($page <= 1 ? 'disabled' : '') . ">Previous</button>
+                                </a>
+                                <a href='" . ($page >= $totalPages ? '#' : "teamUser.php?tab=event&page=" . ($page+1)) . "'>
+                                    <button " . ($page >= $totalPages ? 'disabled' : '') . ">Next</button>
+                                </a>
+                                <div class='page-info'>
+                                    Showing Data " . ($pageStart + 1) . " to " . ($pageStart + $maxRows) . "
+                                </div>
+                            </div>
+                        </div>";
                     }
                 }
-
+                echo "</div>";
                 
+                echo "
+                <script>
+                    function showContent(tab) {
+                        window.location.href = 'teamUser.php?tab=' + tab;
+                    }
+                </script>
+                ";
             }else{
-               echo " <table class=\"table\">
-               <thead>
-                <tr>
-                    <th>Id Team</th>
-                    <th>Game Name</th>
-                    <th>team Name</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody>";
+               echo " 
+               <div class=\"container-user\">
+                    <div class=\"table-wrapper\">
+                        <table class=\"team-table\">
+                            <thead>
+                                <tr>
+                                    <th>Id Team</th>
+                                    <th>Game Name</th>
+                                    <th>team Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>";
+                                $teams = $jp ->GetProposalUser($pageStart,$maxRows);
+                                if (!empty($teams)) {
+                                    foreach ($teams as $team) {
+                                        echo "<tr>
+                                                <td>" .($team['idteam']) . "</td>
+                                                <td>" . ($team['gameName']) . "</td>
+                                                <td>" . ($team['teamName']) . "</td>
+                                                <td>
+                                                    <form method='POST' action='' style='display:inline;'>
+                                                        <input type='hidden' name='idteam' value='" . ($team['idteam']) . "'>
+                                                        <button type='submit' onclick='alrt()' name='action' value='join' 
+                                                                style='color: #A0D683; border: none; background: none; cursor: pointer; font-size: 18px;'>
+                                                            ✔ Join
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>";
+                                    }
+                                } else {
+                                    echo'<tr>
+                                                <td colspan="4" style="text-align: center;">None</td>
+                                            </tr>';
+                                }
+                                
+                echo  "     </tbody>
+                        </table>
+                    </div>
+                    <div class='pagination' aria-label='Page navigation'>
+                        <div class='buttons'>
+                            <a href='" . ($page <= 1 ? '#' : "teamUser.php?page=" . ($page-1)) . "'>
+                                <button " . ($page <= 1 ? 'disabled' : '') . ">Previous</button>
+                            </a>
+                            <a href='" . ($page >= $totalPages ? '#' : "teamUser.php?page=" . ($page+1)) . "'>
+                                <button " . ($page >= $totalPages ? 'disabled' : '') . ">Next</button>
+                            </a>
+                            <div class='page-info'>
+                                Showing Data " . ($pageStart + 1) . " to " . ($pageStart + $maxRows) . "
+                            </div>
+                        </div>
+                    </div>
+               </div>";
             
-                $teams = $jp ->GetProposalUser($pageStart,$maxRows);
-                if (!empty($teams)) {
-                    foreach ($teams as $team) {
-                        echo "<tr>
-                                <td>" .($team['idteam']) . "</td>
-                                <td>" . ($team['gameName']) . "</td>
-                                <td>" . ($team['teamName']) . "</td>
-                                <td>
-                                    <form method='POST' action='' style='display:inline;'>
-                                        <input type='hidden' name='idteam' value='" . ($team['idteam']) . "'>
-                                        <button type='submit' onclick='alrt()' name='action' value='join' 
-                                                style='color: #A0D683; border: none; background: none; cursor: pointer; font-size: 18px;'>
-                                            ✔ Join
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>";
-                    }
-                } else {
-                    echo'<tr>
-                                <td colspan="4" style="text-align: center;">None</td>
-                            </tr>';
-                }
                 
-                $totalPages = $jp->totPagesUser($maxRows);
-                
-                echo " </tbody>
-                </table>";
-
-                echo "<div>";
-                echo "Showing data " . $pageStart + 1 . " to  " . $pageStart + $maxRows;
-                echo "</div>
-                      <div class =\"buttons\">
-                      <a href=\"";if($page <= 1){echo " # ";} else {echo "teamUser.php?page=". $page - 1;} echo "\"><button>Back</button></a>";
-                      echo "<a href=\"";if($page >= $totalPages){echo"#";} else{echo"teamUser.php?page=".$page + 1 ;} echo "\"><button>Next</button></a>";
-                      
             }
+                
+               
 
         ?>
         
 
+        <hr class="garis-abu">
+        <footer>
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="../../img/hiksrotIcon.png" >
+                    <h3>HIKSROT</h3>
+                </div>
+                <div class="contact-info">
+                    <p>📍 Universitas Surabaya</p>
+                    <p>📞 +62 896725960</p>
+                </div>
+            </div>
+        </footer>
        
         <script>
             function alrt() {

@@ -1,6 +1,7 @@
 <?php
 require_once('../../../classes/member.php');
 require_once('../../../classes/Achievement.php');
+require_once('../../../classes/Join_Proposal.php');
 
 session_start();
 if (!isset($_SESSION['active_user'])) {
@@ -17,6 +18,17 @@ $achie = new Achievement($conn);
 $maxRows = 5;
 $page = (isset($_GET["page"]) && is_numeric($_GET["page"])) ? ($_GET["page"]) :1;
 $pageStart = ($page - 1) * $maxRows;
+
+$cekTeam = false;
+$idmember=  $_SESSION['active_user']->idmember;
+
+$jp = new Join_Proposal($conn);
+$teamUser = $jp ->CekTeamUser($idmember);
+if(count($teamUser) == 2 ){
+    $cekTeam = true;
+    $idTeamUser = $teamUser[0];
+    $namaTeamUser = $teamUser[1];
+}
 
 
 ?>
@@ -86,7 +98,15 @@ $pageStart = ($page - 1) * $maxRows;
             </div>
             
             <div class="sec-hov">
-                <li><a href="teamUser.php">Apply Team</a></li>
+            <?php
+                if($cekTeam){
+                    echo"<li><a href=\"teamUser.php\">Your Team</a></li>";
+                }
+                else{
+                    echo"<li><a href=\"teamUser.php\">Apply Team</a></li>";
+                }
+            ?>
+                
             </div>
         </ul>
         <div class="photo-profile">
