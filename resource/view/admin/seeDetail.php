@@ -68,79 +68,82 @@ $pageStart = ($page - 1) * $maxRows;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detail Event</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-    <link href="../../css/nav.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <link href="../../css/menu/navMenu.css" rel="stylesheet">
+    <link href="../../css/menu/bodyUser.css" rel="stylesheet">    
     <style>
-        body {
-            background-image: url("../../img/BG.png");
-            background-size: cover;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-        }
-
-        .table {
-            width: 100%;
-            margin-bottom: 20px;
-            border-collapse: collapse;
-            font-size: 16px;
-        }
-
-        .table th, 
-        .table td {
-            padding: 10px;
-            background-color: rgba(255, 255, 255, 0.2);
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .table th {
-            background-color: rgba(255, 255, 255, 0.3);
-        }
-
-        .actions {
+        .navbar .photo-profile {
             display: flex;
+            align-items: center;
             gap: 10px;
+            
+        }
+
+        .navbar .photo-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .navbar .btn-logout button {
+            background-color: white;
+            color: #4834d4;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            border: 2px solid #4834d4;
+        }
+        
+        .navbar .btn-logout button:hover {
+            background-color: #4834d4;
+            color: white;
+            border: 2px solid transparent;
+            border-radius: 5px;
+            cursor: pointer;
+
+        }
+
+        .event-header {
+            font-size: 24px;
+            color: #4834d4;
+            font-weight: 700;
+            padding: 20px !important;
+        }
+
+        .action-buttons {
+            display: flex;
             justify-content: center;
         }
 
-        .actions .approve {
-            color: green;
-            cursor: pointer;
-        }
-
-        .actions .decline {
-            color: red;
-            cursor: pointer;
-        }
-
-        .buttons {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-
-        .buttons button {
-            background-color: #fff;
-            color: #3c0036;
+        .delete-btn {
+            color: #FF474D;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            background: none;
             cursor: pointer;
+            font-size: 18px;
+            padding: 5px 10px;
         }
 
-        .buttons button:hover {
-            background-color: #55004d;
-            color: #fff;
+        .delete-btn:hover {
+            opacity: 0.8;
         }
 
+        .formNew-Team {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+
+        .formNew-btnAddContainer {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        /* Form Modal Styling */
         .frmNew {
             display: none;
             position: fixed;
@@ -149,203 +152,120 @@ $pageStart = ($page - 1) * $maxRows;
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0,0,0,0.4);
         }
 
         .frm-content {
             background-color: #fefefe;
-            margin: 10% auto;
+            margin: 15% auto;
             padding: 20px;
-            border-radius: 10px;
+            border: 1px solid #888;
             width: 80%;
             max-width: 500px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
+            border-radius: 10px;
         }
 
         .formNew-Group {
             margin-bottom: 15px;
-            color: black;
         }
 
         .formNew-Group label {
             display: block;
-            font-size: 16px;
             margin-bottom: 5px;
-            color: black;
         }
 
-        .formNew-Group input, 
+        .formNew-Group input,
+        .formNew-Group select,
         .formNew-Group textarea {
             width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        textarea {
-            resize: vertical;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
         }
 
         .formNew-btnAdd {
+            background: #4834d4;
+            color: white;
             padding: 10px 20px;
-            background-color: #3c0036;
-            color: #fff;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
-
-        .formNew-btnAdd:hover {
-            background-color: #55004d;
-        }
-
-        .formNew-btnAddContainer {
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .formNew-Team {
-            padding: 5px;
-        }
-
-        /* Tambahkan media query untuk layar kecil */
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-                margin: 10px auto;
-            }
-
-            .table {
-                font-size: 14px;
-            }
-
-            .table th, 
-            .table td {
-                padding: 8px;
-            }
-
-            .actions {
-                flex-direction: column;
-                gap: 5px;
-            }
-
-            .buttons {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .frm-content {
-                margin: 20% auto;
-                padding: 15px;
-            }
-
-            .formNew-Group input, 
-            .formNew-Group textarea {
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 5px;
-            }
-
-            .table {
-                font-size: 12px;
-            }
-
-            .table th, 
-            .table td {
-                padding: 5px;
-            }
-
-            .actions {
-                flex-direction: column;
-                gap: 5px;
-            }
-
-            .buttons {
-                flex-direction: column;
-                align-items: stretch;
-            }
+        .close{
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-<nav class="navbar">
-    <div class="hamburger">
+    <nav class="navbar">
+        <div class="menu-toggle">
             <span></span>
             <span></span>
             <span></span>
         </div>
-        <div class="logo">
-            <img src="../../img/hiksrotIcon.png" alt="Hiksrot Logo">
+        <a  class="logo">
+            <img src="../../img/hiksrotIcon.png" alt="HIKSROT">
             HIKSROT
-        </div>
+        </a>
         <ul class="nav-section">
-            <li><a href="proposal.php">Proposal</a></li>
-            <li><a href="team.php">Team</a></li>
-            <li><a href="game.php">Game</a></li>
-            <li><a href="event.php"><u>Event</u></a></li>
-            <li><a href="achievement.php">Achivement</a></li>
-        </ul>
+            <div class="sec-hov">
+                <li><a href="proposal.php">Proposal</a></li>
+            </div>
+
+            <div class="sec-hov">
+                <li><a href="team.php">Team</a></li>
+            </div>
+
+            <div class="sec-hov">
+                <li><a href="game.php">Game</a></li>
+            </div>
+
+            
+                <li><a href="event.php"  style="color:#4834D4;"><b>Event</b></a></li>
+            
+            <div class="sec-hov">
+                <li><a href="achievement.php" >Achivement</a></li>
+            </div>
+            </ul>
         <div class="photo-profile">
             <img src="../../img/fotoProfile.png" alt="Foto Profil">
-            <h5>Hello, <?php  echo $_SESSION['active_user']->fname;?></h5>
-            <div  class="btn-logout">
-                <button  class="logout" onclick="confirmLogout()">Log Out</button>
+            <h3>Hello, <?php echo $_SESSION['active_user']->fname; ?></h3>
+            <div class="btn-logout">
+                <button class="logout" onclick="confirmLogout()">Log Out</button>
             </div>
         </div>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-            const hamburger = document.querySelector('.hamburger');
+        
+    </nav>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.querySelector('.menu-toggle');
             const navSection = document.querySelector('.nav-section');
+            const navButton = document.querySelector('.photo-profile');
 
-            hamburger.addEventListener('click', function() {
+            menuToggle.addEventListener('click', function() {
                 this.classList.toggle('active');
                 navSection.classList.toggle('active');
+                navButton.classList.toggle('active');
             });
 
-            // Close menu when clicking outside
+            // Menutup menu saat mengklik di luar
             document.addEventListener('click', function(event) {
-                if (!event.target.closest('.navbar')) {
-                    hamburger.classList.remove('active');
+                if (!event.target.closest('.menu-toggle') && 
+                    !event.target.closest('.nav-section') && 
+                    !event.target.closest('.photo-profile')) {
+                    menuToggle.classList.remove('active');
                     navSection.classList.remove('active');
+                    navButton.classList.remove('active');
                 }
             });
 
-            // Close menu when clicking a link
-            document.querySelectorAll('.nav-section li a').forEach(link => {
-                link.addEventListener('click', () => {
-                    hamburger.classList.remove('active');
-                    navSection.classList.remove('active');
-                });
+            // Mencegah menu tertutup saat mengklik di dalam nav
+            navSection.addEventListener('click', function(event) {
+                event.stopPropagation();
             });
         });
-            function confirmLogout() {
-            var result = confirm("Apakah Anda yakin ingin logout?");
-            if (result) {
-                window.location.href = "../logout.php"; 
-            } 
-        }
-        </script>
-    </nav>
-    <script>
+
+
         function openFrmNew() {
             document.getElementById('formNew').style.display = "block";
             document.getElementById('cbteam').value = ""; 
@@ -373,75 +293,93 @@ $pageStart = ($page - 1) * $maxRows;
                 frmNew.style.display = "none";
             }
         }
-    </script>
-    <div class="container">
-        <form method="POST" action="">
-            <a onclick="openFrmNew()" style="margin-bottom: 15px; padding: 10px 20px; background-color: #fff; color: #3c0036; text-decoration: none; border-radius: 5px; border: none; cursor: pointer; float: right;">+ New</a>
 
-            <div id="formNew" class="frmNew">
-                <div class="frm-content">
-                    <span class="close" onclick="closeFrmNew()">&times;</span>
-                    <form method="POST" action="">
-                        <h2><span id="actionButtonText">Add a new Event</span></h2>
-                        <input type="hidden" id="idevent" name="idevent"> <!-- Hidden input untuk idevent saat update -->
-                        <div class="formNew-Group">
-                        <label for="team">Team</label>
-                        <select id="cbteam" class="formNew-Team" name="idteam">
-                            <option value="">--- SELECT TEAM ---</option>
-                            <?php
-                                $conn = new mysqli('localhost', 'root', '', 'fullstack');
-                                $stmt = $conn->prepare("SELECT idteam, name FROM team;");
-                                $stmt->execute();
-                                $res = $stmt->get_result();
-                                while($rteam = $res->fetch_array()){
-                                    echo "<option  value='".$rteam["idteam"]."'>".$rteam["name"]."</option>";
-                                }
-                            ?>
-                        </select>
-                    </div>
-                        <div class="formNew-btnAddContainer">
-                            <button type="submit" id="actionButton" name="action" value="add" class="formNew-btnAdd">Add new</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </form>
-        <table class="table">
-            
+        function confirmLogout() {
+            var result = confirm("Apakah Anda yakin ingin logout?");
+            if (result) {
+                window.location.href = "../logout.php";
+            }
+        }
+    </script>
+    <div class="container-user">
+    <!-- Header Actions -->
+    <div class="header-actions" style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+        <button onclick="openFrmNew()" class="add-button" style="background: #4834d4; color: white; padding: 12px 24px; border: none; border-radius: 5px; cursor: pointer;">
+            + Add Team to Event
+        </button>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrapper">
+        <table class="team-table">
             <thead>
                 <tr>
-                <th colspan="2"><?php echo  $namaEventDetail; ?></th>
+                    <th colspan="2" class="event-header">
+                        <?php echo $namaEventDetail; ?>
+                    </th>
                 </tr>
                 <tr>
-                    <th>Name</th>
+                    <th>Team Name</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
-                $teams = $et->ReadDataEventTeam($idEventDetail,$pageStart,$maxRows);
+                $teams = $et->ReadDataEventTeam($idEventDetail, $pageStart, $maxRows);
                 if (!empty($teams)) {
                     foreach($teams as $team) {
                         echo "<tr>";
-                        echo "<td>" . $team["name"] . "</td>";
-                        echo "<td>
-                                <form method='POST' action='' style='display:inline;'>
+                        echo "<td class='team-name'>" . $team["name"] . "</td>";
+                        echo "<td class='action-buttons'>
+                                <form method='POST' action=''>
                                     <input type='hidden' name='idevent' value='" . $team["idevent"] . "'>
                                     <input type='hidden' name='idteam' value='" . $team["idteam"] . "'>
-                                    <button type='submit' name='action' value='delete' style='color: #FF474D; border: none; background: none; cursor: pointer; font-size: 18px;'><span>&#x1F5D1;</span> Delete</button>
+                                    <button type='submit' name='action' value='delete' class='delete-btn'>
+                                        &#x1F5D1; Delete
+                                    </button>
                                 </form>
                               </td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr>";
-                    echo "<td colspan='4' style='text-align: center;'>None</td>";
-                    echo "</tr>";
+                    echo "<tr><td colspan='2' class='no-data'>No teams registered for this event</td></tr>";
                 }
                 ?>
             </tbody>
         </table>
-        
     </div>
+
+    <!-- Modal Form -->
+    <div id="formNew" class="frmNew">
+        <div class="frm-content">
+            <span class="close" onclick="closeFrmNew()">&times;</span>
+            <h2><span id="actionButtonText">Add Team to Event</span></h2>
+            <form method="POST" action="">
+                <input type="hidden" id="idevent" name="idevent">
+                
+                <div class="formNew-Group">
+                    <label for="team">Select Team</label>
+                    <select id="cbteam" class="formNew-Team" name="idteam" required>
+                        <option value="">--- SELECT TEAM ---</option>
+                        <?php
+                        $stmt = $conn->prepare("SELECT idteam, name FROM team;");
+                        $stmt->execute();
+                        $res = $stmt->get_result();
+                        while($rteam = $res->fetch_array()) {
+                            echo "<option value='{$rteam["idteam"]}'>{$rteam["name"]}</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+
+                <div class="formNew-btnAddContainer">
+                    <button type="submit" id="actionButton" name="action" value="add" class="formNew-btnAdd">
+                        Add Team
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>

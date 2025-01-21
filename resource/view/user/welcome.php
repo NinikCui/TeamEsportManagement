@@ -1,5 +1,8 @@
 <?php
 require_once('../../../classes/member.php');
+require_once('../../../classes/Achievement.php');
+require_once('../../../classes/Join_Proposal.php');
+
 session_start();
 if (!isset($_SESSION['active_user'])) {
     header('Location: ../login.php');
@@ -10,6 +13,23 @@ if (!isset($_SESSION['active_user'])) {
         exit;
     }
 }
+$conn = new mysqli('localhost', 'root', '', 'fullstack');
+$achie = new Achievement($conn);
+$maxRows = 5;
+$page = (isset($_GET["page"]) && is_numeric($_GET["page"])) ? ($_GET["page"]) :1;
+$pageStart = ($page - 1) * $maxRows;
+
+$cekTeam = false;
+$idmember=  $_SESSION['active_user']->idmember;
+
+$jp = new Join_Proposal($conn);
+$teamUser = $jp ->CekTeamUser($idmember);
+if(count($teamUser) == 2 ){
+    $cekTeam = true;
+    $idTeamUser = $teamUser[0];
+    $namaTeamUser = $teamUser[1];
+}
+
 
 ?>
 <!DOCTYPE html>
@@ -18,115 +38,16 @@ if (!isset($_SESSION['active_user'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome</title>
-    <link href="../../css/nav.css" rel="stylesheet">
+    <link href="../../css/menu/navMenu.css" rel="stylesheet">
+    <link href="../../css/menu/bodyMenu.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background-image: url("../../img/BG.png");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            min-height: 100vh;
-            font-family: 'Poppins', sans-serif;
-            color: #fff;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 5% auto;
-            padding: 0 20px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 50px;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .info {
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .info h1 {
-            font-size: clamp(24px, 5vw, 32px);
-            line-height: 1.3;
-            margin-bottom: 20px;
-        }
-
-        .info p {
-            font-size: clamp(14px, 3vw, 16px);
-            line-height: 1.6;
-            margin-top: 0;
-        }
-
-        .container-img {
-            flex: 1;
-            min-width: 300px;
-            max-width: 100%;
-        }
-
-        .container-img img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .navbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 20px;
-            color: white;
-        }
-
-        .navbar .hamburger {
-            display: none;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        .navbar .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .navbar .logo img {
-            height: 40px;
-        }
-
-        .navbar .nav-section {
-            display: flex;
-            gap: 20px;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .navbar .nav-section li a {
-            text-decoration: none;
-            color: white;
-            font-size: 18px;
-        }
-
-        .navbar .nav-section li a:hover {
-            text-decoration: underline;
-        }
-
         .navbar .photo-profile {
             display: flex;
             align-items: center;
             gap: 10px;
+            
         }
 
         .navbar .photo-profile img {
@@ -136,122 +57,192 @@ if (!isset($_SESSION['active_user'])) {
         }
 
         .navbar .btn-logout button {
-            background-color: purple;
-            color: white;
-            border: none;
-            padding: 10px 20px;
+            background-color: white;
+            color: #4834d4;
+            padding: 8px 20px;
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
             width: 100%;
+            border: 2px solid #4834d4;
+
+
         }
+        .navbar .btn-logout button:hover {
+            background-color: #4834d4;
+            color: white;
+            border: 2px solid transparent;
+            border-radius: 5px;
+            cursor: pointer;
 
-        /* Media Queries */
-        @media screen and (max-width: 768px) {
-            .navbar .hamburger {
-                display: block;
-            }
-
-            .navbar .nav-section {
-                display: none;
-                width: 100%;
-                flex-direction: column;
-                text-align: center;
-                background-color: rgba(93, 32, 167, 0.9);
-                position: absolute;
-                top: 100%;
-                left: 0;
-                padding: 20px 0;
-            }
-
-            .navbar .nav-section.active {
-                display: flex;
-            }
-
-            .container {
-                margin-top: 15%;
-                text-align: center;
-            }
-        }
-
-        @media screen and (max-width: 480px) {
-            .container {
-                gap: 30px;
-                margin-top: 20%;
-            }
-
-            .info h1 {
-                font-size: 24px;
-            }
-
-            .info p {
-                font-size: 14px;
-            }
         }
     </style>
 </head>
 <body>
-<nav class="navbar">
-        <!-- Hamburger Icon -->
-        <div class="hamburger" onclick="toggleMenu()">
-            &#9776; 
+
+    <nav class="navbar">
+        <div class="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
-        <div class="logo">
-            <img src="../../img/hiksrotIcon.png" alt="Hiksrot Logo">
+        <a href="welcome.php" class="logo">
+            <img src="../../img/hiksrotIcon.png" alt="HIKSROT">
             HIKSROT
-        </div>
+        </a>
         <ul class="nav-section">
-            <li><a href="welcome.php">Home</a></li>
-            <li><a href="seeAllTeam.php">Team Detail</a></li>
-            <li><a href="teamUser.php">Apply Team</a></li>
+            <li><a href="welcome.php" style="color:#4834D4;"><b>Home</b></a></li>
+            
+            <div class="sec-hov">
+                <li><a href="seeAllTeam.php">Team List</a></li>
+            </div>
+            
+            <div class="sec-hov">
+            <?php
+                if($cekTeam){
+                    echo"<li><a href=\"teamUser.php\">Your Team</a></li>";
+                }
+                else{
+                    echo"<li><a href=\"teamUser.php\">Apply Team</a></li>";
+                }
+            ?>
+                
+            </div>
         </ul>
         <div class="photo-profile">
             <img src="../../img/fotoProfile.png" alt="Foto Profil">
-            <h5>Hello, <?php echo $_SESSION['active_user']->fname; ?></h5>
+            <h3>Hello, <?php echo $_SESSION['active_user']->fname; ?></h3>
             <div class="btn-logout">
                 <button class="logout" onclick="confirmLogout()">Log Out</button>
             </div>
         </div>
+        
     </nav>
-
-    <div class="container">
-        <div class="info">
-            <h1>DISCOVER COLLECT<br>GAMES FROM US</h1>
-            <p>Welcome to HIKSROT, the ultimate hub for eSports enthusiasts!
-                Dive into the latest news, game strategies, and exclusive content
-                on your favorite competitive games. Join us to stay ahead in the
-                game and connect with a community of passionate gamers!</p>
-        </div>
-        <div class="container-img">
-            <img src="../../img/imgHome.png" alt="Home Image">
-        </div>
-    </div>
-
     <script>
-        // Close menu when clicking outside
-        document.addEventListener('click', function(event) {
-            const hamburger = document.querySelector('.hamburger');
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.querySelector('.menu-toggle');
             const navSection = document.querySelector('.nav-section');
-            const photoProfile = document.querySelector('.photo-profile');
-            
-            if (!event.target.closest('.navbar')) {
-                hamburger.classList.remove('active');
-                navSection.classList.remove('active');
-                photoProfile.classList.remove('active');
-            }
+            const navButton = document.querySelector('.photo-profile');
+
+            menuToggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+                navSection.classList.toggle('active');
+                navButton.classList.toggle('active');
+            });
+
+            // Menutup menu saat mengklik di luar
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.menu-toggle') && 
+                    !event.target.closest('.nav-section') && 
+                    !event.target.closest('.photo-profile')) {
+                    menuToggle.classList.remove('active');
+                    navSection.classList.remove('active');
+                    navButton.classList.remove('active');
+                }
+            });
+
+            // Mencegah menu tertutup saat mengklik di dalam nav
+            navSection.addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
         });
 
+
+
+        
         function confirmLogout() {
             var result = confirm("Apakah Anda yakin ingin logout?");
             if (result) {
                 window.location.href = "../logout.php";
             }
         }
-
-        function toggleMenu() {
-                const navSection = document.querySelector('.nav-section');
-                navSection.classList.toggle('active');
-            }
     </script>
+    <div class="container-index">
+        <div class="main">
+            <div class="main-content">
+                <h1>Welcome to <span class="esport">HIKSROT</span></h1>
+                <p>HIKSROT is a professional esports organization committed to excellence in competitive gaming. Our teams compete at the highest levels across multiple game titles, representing the pinnacle of esports achievement.</p>
+            </div>
+            <div class="main-image">
+                <img src="../../img/imgHome.png">
+            </div>
+        </div>
+
+        <div class="desc">
+            <h2>How We <span class="esport">Work</span> </h2>
+            <div class="desc-list">
+                <div class="desc-card">
+                    <img src="https://cdn-icons-png.flaticon.com/128/4292/4292793.png" alt="Achievement Icon" class="desc-icon">
+                    <h3>Professional Teams</h3>
+                    <p>Home to world-class teams competing in various esports titles including VALORANT, Mobile Legends, and PUBG Mobile.</p>
+                </div>
+                <div class="desc-card">
+                    <img src="https://cdn-icons-png.flaticon.com/128/1436/1436664.png" alt="Training Icon" class="desc-icon">
+                    <h3>Elite Training</h3>
+                    <p>State-of-the-art training facilities and professional coaching staff to develop player potential.</p>
+                </div>
+                <div class="desc-card">
+                    <img src="https://cdn-icons-png.flaticon.com/128/10764/10764993.png" alt="Community Icon" class="desc-icon">
+                    <h3>Community Events</h3>
+                    <p>Regular fan engagement through tournaments, meet & greets, and exclusive content.</p>
+                </div>
+            </div>
+            
+
+        </div>
+
+        <div class="achie">
+            <h2>Our <span class="esport">Achievement</span></h2>
+            <div class="achie-list">
+                <?php 
+                $achievements = $achie->ReadNewAchie();
+                if (!empty($achievements)):
+                    $icons2 = [
+                        'https://cdn-icons-png.flaticon.com/128/940/940543.png',
+                        'https://cdn-icons-png.flaticon.com/128/3770/3770295.png',
+                        'https://cdn-icons-png.flaticon.com/128/7340/7340754.png'
+                    ];
+                    $icons = [
+                        '../../img/assets/achie_1.png',
+                        '../../img/assets/achie_2.png',
+                        '../../img/assets/achie_3.png'
+                    ];
+                    foreach($achievements as $index => $achievement): 
+                ?>
+                    <div class="achie-detail">
+                        <img src="<?php echo $icons[$index]; ?>" >
+                        <h3><?php echo $achievement['name']; ?></h3>
+                        <p><?php echo $achievement['description']; ?></p>
+                        <span><?php echo date('d M Y', strtotime($achievement['date'])); ?></span>
+                    </div>
+                <?php 
+                    endforeach;
+                else:
+                ?>
+                    <div class="no-achievement">
+                        <p>No achievements available</p>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+        
+    </div>
+
+
+    <hr class="garis-abu">
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="../../img/hiksrotIcon.png" >
+                <h3>HIKSROT</h3>
+            </div>
+            <div class="contact-info">
+                <p>📍 Universitas Surabaya</p>
+                <p>📞 +62 896725960</p>
+            </div>
+        </div>
+    </footer>
+
+    
 </body>
 </html>

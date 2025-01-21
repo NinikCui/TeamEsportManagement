@@ -57,7 +57,28 @@ class Achievement{
         $stmt->close();
         return $achievements;
     }
+    
+    public function ReadNewAchie(){
+        
+            $stmt = $this->dbCon->prepare("SELECT name, date, description  
+                                    FROM achievement 
+                                    ORDER BY idachievement desc 
+                                    LIMIT 3");
+        
+            
+        $stmt->execute();
+        $res = $stmt->get_result();
 
+        $achievements = [];
+        if ($res->num_rows > 0) {
+            while ($row = $res->fetch_assoc()) {
+                $achievements[] = $row;
+            }
+        }
+        
+        $stmt->close();
+        return $achievements;
+    }
     public function ReadPages($maxRows){
         $q = "SELECT COUNT(*) as totalRows FROM achievement";
         $resCount = $this->dbCon->query($q);
