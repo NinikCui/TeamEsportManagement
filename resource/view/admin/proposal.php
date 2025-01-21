@@ -134,26 +134,51 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         @media screen and (max-width: 480px) {
             .container {
-                width: 100%;
                 padding: 5px;
             }
             
             .table {
+                width: 85%;
                 font-size: 12px;
             }
             
             .table th, .table td {
                 padding: 6px;
+                min-width: 70px;
+            }
+            
+            .actions {
+                flex-direction: row;
+                gap: 15px;
             }
             
             .buttons button, .filter {
                 width: 100%;
-                margin-right: 0;
+                margin: 5px 0;
+                padding: 8px 15px;
+                font-size: 14px;
             }
-            
-            .actions {
-                flex-direction: column;
-                gap: 5px;
+
+            .filter-section {
+                width: 85%;
+            }
+
+            .filter-section select {
+                padding: 6px;
+                font-size: 14px;
+            }
+
+            /* Pagination buttons */
+            .pagination {
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+                margin-top: 15px;
+            }
+
+            .pagination button {
+                padding: 6px 12px;
+                font-size: 14px;
             }
         }
 

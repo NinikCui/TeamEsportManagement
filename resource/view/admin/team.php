@@ -175,6 +175,23 @@ $pageStart = ($page - 1) * $maxRows;
             cursor: pointer;
         }
 
+        .btn-new {
+            padding: 10px 20px;
+            background-color: #fff;
+            color: #3c0036;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            margin-bottom: 10px;
+            cursor: pointer;
+            float: right;
+        }
+
+        .btn-new:hover {
+            background-color: #3c0036;
+            color: #fff;
+        }
+
         /* Form Modal Styles */
         .frmNew {
             display: none;
@@ -305,15 +322,21 @@ $pageStart = ($page - 1) * $maxRows;
             
             .table {
                 font-size: 14px;
+                display: block;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
             }
             
             .table th, .table td {
                 padding: 8px;
+                white-space: normal;
+                min-width: 100px;
             }
             
             .frm-content {
                 width: 95%;
-                margin: 10% auto;
+                margin: 5% auto;
+                padding: 15px;
             }
             
             .formNew-Group input,
@@ -341,9 +364,33 @@ $pageStart = ($page - 1) * $maxRows;
                 flex-direction: column;
                 gap: 5px;
             }
+
+            .btn-new {
+                text-align: center; /* Pusatkan teks */
+                float: right; /* Hilangkan float */
+            }
             
             .image-upload-container {
                 gap: 5px;
+            }
+            .frm-content {
+                margin: 2% auto;
+                padding: 15px;
+            }
+            
+            .formNew-Group label {
+                padding-bottom: 8px;
+            }
+            
+            .formNew-Group input,
+            .formNew-Group textarea {
+                width: 100%;
+                padding: 8px;
+            }
+            
+            .formNew-btnAdd {
+                width: 100%;
+                margin-top: 10px;
             }
             .frm-content {
                 margin: 15% auto; /* Lebih banyak margin atas untuk layar kecil */
@@ -512,7 +559,7 @@ $pageStart = ($page - 1) * $maxRows;
     </script>
 
     <div class="container">
-        <a onclick="openFrmNew()" style="margin-bottom: 15px; padding: 10px 20px; background-color: #fff; color: #3c0036; text-decoration: none; border-radius: 5px; border: none; cursor: pointer; float: right;">+ New</a>
+        <a onclick="openFrmNew()" class="btn-new">+ New</a>
 
     <!-- Form modal untuk add/edit -->
         <div id="formNew" class="frmNew">

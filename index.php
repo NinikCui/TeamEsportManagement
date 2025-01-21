@@ -391,6 +391,16 @@ $pageStart = ($page - 1) * $maxRows;
         padding: 10px;
     }
 
+    .nav-button button {
+        padding: 8px 15px;  /* Mengurangi padding */
+        font-size: 14px;    /* Mengurangi ukuran font */
+    }
+
+    .nav-button {
+        display: flex;
+        gap: 8px;          /* Memberikan jarak antar tombol */
+    }
+
     .logo {
         font-size: 18px;
     }
