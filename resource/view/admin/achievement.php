@@ -125,23 +125,6 @@ $pageStart = ($page - 1) * $maxRows;
             color: #fff;
         }
 
-        .btn-new {
-            padding: 10px 20px;
-            background-color: #fff;
-            color: #3c0036;
-            text-decoration: none;
-            border-radius: 5px;
-            border: none;
-            margin-bottom: 10px;
-            cursor: pointer;
-            float: right;
-        }
-
-        .btn-new:hover {
-            background-color: #3c0036;
-            color: #fff;
-        }
-
         .desc {
             cursor: pointer;
         }
@@ -319,69 +302,64 @@ $pageStart = ($page - 1) * $maxRows;
 
         /* Media query untuk layar ponsel (maksimal 480px) */
         @media screen and (max-width: 480px) {
+            .container {
+                width: 100%;
+                padding: 5px;
+            }
+            
             .table {
-                font-size: 11px; /* Ukuran font lebih kecil */
+                font-size: 12px;
             }
-
-            .table th, 
-            .table td {
-                padding: 5px; /* Padding lebih kecil */
+            
+            .table th, .table td {
+                padding: 6px;
             }
-
-            .buttons button {
-                padding: 6px 8px;
+            
+            .actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .frm-content {
+                margin: 2% auto;
+                padding: 15px;
+            }
+            
+            .formNew-Group label {
+                padding-bottom: 8px;
+            }
+            
+            .formNew-Group input,
+            .formNew-Group textarea {
+                width: 100%;
+                padding: 8px;
+            }
+            
+            .formNew-btnAdd {
+                width: 100%;
+                margin-top: 10px;
+            }
+            .frm-content {
+                margin: 15% auto; /* Lebih banyak margin atas untuk layar kecil */
+                padding: 10px; /* Padding lebih kecil */
+                width: 90%; /* Kurangi ukuran untuk layar HP */
+                font-size: 14px; /* Ukuran font lebih kecil */
+            }
+            .search-form {
+                flex-direction: column; /* Tumpuk elemen secara vertikal */
+                align-items: stretch; /* Isi seluruh lebar */
+                gap: 5px;
             }
 
             .search-input {
-                font-size: 12px;
+                width: 100%; /* Isi seluruh lebar */
+                font-size: 14px;
             }
 
             .search-button {
-                font-size: 12px;
-                padding: 6px 8px;
-            }
-
-            .btn-new {
-                text-align: center; /* Pusatkan teks */
-                float: right; /* Hilangkan float */
-            }
-
-            .frm-content {
-                width: 90%;
-                margin: 10% auto;
-                padding: 15px;
+                width: 100%; /* Isi seluruh lebar */
                 font-size: 14px;
-                box-sizing: border-box;
-            }
-
-            .formNew-Group input,
-            .formNew-Group textarea,
-            .formNew-Group select {
-                width: 100%;
-                max-width: 100%;
                 padding: 10px;
-                font-size: 14px;
-                box-sizing: border-box;
-            }
-
-            textarea {
-                resize: none; /* Menghapus resize agar tidak melebihi modal */
-            }
-
-            .formNew-Group label {
-                font-size: 14px;
-                margin-bottom: 5px;
-            }
-
-            .formNew-btnAdd:hover {
-                background-color: #55004d;
-            }
-
-            .close {
-                font-size: 24px;
-                color: #aaa;
-                cursor: pointer;
-                text-align: right;
             }
         }
 
@@ -516,108 +494,108 @@ $pageStart = ($page - 1) * $maxRows;
         }
     </script>
 
-    <div class="container">
-        <form method="POST" action="">
-            <a onclick="openFrmNew()" class="btn-new">+ New</a>
+<div class="container">
+    <form method="POST" action="">
+        <a onclick="openFrmNew()" style="padding: 10px 20px; background-color: #fff; color: #3c0036; text-decoration: none; border-radius: 5px; border: none; margin-bottom: 10px; cursor: pointer; float: right;">+ New</a>
 
-            <div id="formNew" class="frmNew">
-                <div class="frm-content">
-                    <span class="close" onclick="closeFrmNew()">&times;</span>
-                    <h2><span id="actionButtonText">Add a new Achievement</span></h2>
-                    <input type="hidden" id="idachievement" name="idachievement"> 
-                    <div class="formNew-Group">
-                        <label for="name">Name</label>
-                        <input type="text" id="name" name="nameAchi" placeholder="Enter achievement name" required>
-                    </div>
+        <div id="formNew" class="frmNew">
+            <div class="frm-content">
+                <span class="close" onclick="closeFrmNew()">&times;</span>
+                <h2><span id="actionButtonText">Add a new Achievement</span></h2>
+                <input type="hidden" id="idachievement" name="idachievement"> 
+                <div class="formNew-Group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="nameAchi" placeholder="Enter achievement name" required>
+                </div>
 
-                    <div class="formNew-Group">
-                        <label for="team">Team</label>
-                        <select id="cbteam" class="formNew-Team" name="idteam" required>
-                            <option value="">--- SELECT TEAM ---</option>
-                            <?php
-                                $conn = new mysqli('localhost', 'root', '', 'fullstack');
-                                $stmt = $conn->prepare("SELECT idteam, name FROM team;");
-                                $stmt->execute();
-                                $res = $stmt->get_result();
-                                while($rteam = $res->fetch_array()){
-                                    echo "<option value='".$rteam["idteam"]."'>".$rteam["name"]."</option>";
-                                }
-                            ?>
-                        </select>
-                    </div>
+                <div class="formNew-Group">
+                    <label for="team">Team</label>
+                    <select id="cbteam" class="formNew-Team" name="idteam" required>
+                        <option value="">--- SELECT TEAM ---</option>
+                        <?php
+                            $conn = new mysqli('localhost', 'root', '', 'fullstack');
+                            $stmt = $conn->prepare("SELECT idteam, name FROM team;");
+                            $stmt->execute();
+                            $res = $stmt->get_result();
+                            while($rteam = $res->fetch_array()){
+                                echo "<option value='".$rteam["idteam"]."'>".$rteam["name"]."</option>";
+                            }
+                        ?>
+                    </select>
+                </div>
 
-                    <div class="formNew-Group">
-                        <label for="date">Date</label>
-                        <input type="date" id="date" name="date" required>
-                    </div>
+                <div class="formNew-Group">
+                    <label for="date">Date</label>
+                    <input type="date" id="date" name="date" required>
+                </div>
 
-                    <div class="formNew-Group">
-                        <label for="description">Description</label>
-                        <textarea id="description" name="descriptionAchi" placeholder="Enter achievement description" rows="4" required></textarea>
-                    </div>
-                    <div class="formNew-btnAddContainer">
-                        <button type="submit" id="actionButton" name='action' value='add' class="formNew-btnAdd">Add new</button>
-                    </div>
+                <div class="formNew-Group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="descriptionAchi" placeholder="Enter achievement description" rows="4" required></textarea>
+                </div>
+                <div class="formNew-btnAddContainer">
+                    <button type="submit" id="actionButton" name='action' value='add' class="formNew-btnAdd">Add new</button>
                 </div>
             </div>
-        </form>
-        <!-- Search Form -->
-        <form method="GET" action="">
-            <input type="text" name="team_name" placeholder="Search by team name..." value="<?php echo isset($_GET['team_name']) ? $_GET['team_name'] : ''; ?>">
-            <button type="submit">Search</button>
-        </form>
-        <!-- Table -->
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Id Achievement</th>
-                    <th>Team</th>
-                    <th>Name</th>
-                    <th>Date</th>
-                    <th>Description</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                    $teamNameFilter = isset($_GET['team_name']) ? $_GET['team_name'] : '';
-                    $achievements = $a->ReadDataAchievement($teamNameFilter,$pageStart,$maxRows);
-                    if(!empty($achievements)){
-                        foreach($achievements as $achiee){
-                            echo "<tr>";
-                            echo "<td>" . $achiee["idachievement"] . "</td>";
-                            echo "<td>" . $achiee["team"] . "</td>";
-                            echo "<td>" . $achiee["name"] . "</td>";
-                            echo "<td>" . $achiee["date"] . "</td>";
-                            echo "<td class='desc'>" . $achiee["description"] . "</td>";
-                            echo "<td>
-                                    <button type='button' onclick=\"openFrmEdit('".$achiee["idachievement"]."', '".$achiee["name"]."', '".$achiee["team"]."', '".$achiee["date"]."', '".$achiee["description"]."')\" style='color: #A0D683; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Edit</button>
-                                    <form method='POST' action='' style='display:inline;'>
-                                        <input type='hidden' name='idachievement' value='" . $achiee["idachievement"] . "'>
-                                        <button type='submit' name='action' value='delete' style='color: #FF474D; border: none; background: none; cursor: pointer; font-size: 18px;'><span>&#x1F5D1;</span> Delete</button>
-                                    </form>
-                                </td>";
-                            echo "</tr>"; 
-                        }
-                    } else {
-                        echo "<tr><td colspan='6' style='text-align: center;'>None</td></tr>";
+        </div>
+    </form>
+     <!-- Search Form -->
+     <form method="GET" action="">
+        <input type="text" name="team_name" placeholder="Search by team name..." value="<?php echo isset($_GET['team_name']) ? $_GET['team_name'] : ''; ?>">
+        <button type="submit">Search</button>
+    </form>
+    <!-- Table -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id Achievement</th>
+                <th>Team</th>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+                $teamNameFilter = isset($_GET['team_name']) ? $_GET['team_name'] : '';
+                $achievements = $a->ReadDataAchievement($teamNameFilter,$pageStart,$maxRows);
+                if(!empty($achievements)){
+                    foreach($achievements as $achiee){
+                        echo "<tr>";
+                        echo "<td>" . $achiee["idachievement"] . "</td>";
+                        echo "<td>" . $achiee["team"] . "</td>";
+                        echo "<td>" . $achiee["name"] . "</td>";
+                        echo "<td>" . $achiee["date"] . "</td>";
+                        echo "<td class='desc'>" . $achiee["description"] . "</td>";
+                        echo "<td>
+                                <button type='button' onclick=\"openFrmEdit('".$achiee["idachievement"]."', '".$achiee["name"]."', '".$achiee["team"]."', '".$achiee["date"]."', '".$achiee["description"]."')\" style='color: #A0D683; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Edit</button>
+                                <form method='POST' action='' style='display:inline;'>
+                                    <input type='hidden' name='idachievement' value='" . $achiee["idachievement"] . "'>
+                                    <button type='submit' name='action' value='delete' style='color: #FF474D; border: none; background: none; cursor: pointer; font-size: 18px;'><span>&#x1F5D1;</span> Delete</button>
+                                </form>
+                              </td>";
+                        echo "</tr>"; 
                     }
-                    
-                    
-                    $totalPages = $a->ReadPages($maxRows);
-                ?>
-            </tbody>
-        </table>
-
-        <div>
-            <?php 
-                echo("Showing Data " . $pageStart + 1 . " to  " . $pageStart + $maxRows);      
+                } else {
+                    echo "<tr><td colspan='6' style='text-align: center;'>None</td></tr>";
+                }
+                
+                
+                $totalPages = $a->ReadPages($maxRows);
             ?>
-        </div>
-        <div class="buttons">
-            <a href="<?php echo ($page <= 1) ? "#" : "achievement.php?page=" . ($page - 1); ?>"><button>Back</button></a>
-            <a href="<?php echo ($page >= $totalPages) ? "#" : "achievement.php?page=" . ($page + 1); ?>"><button>Next</button></a>
-        </div>
+        </tbody>
+    </table>
+
+    <div>
+        <?php 
+            echo("Showing Data " . $pageStart + 1 . " to  " . $pageStart + $maxRows);      
+        ?>
     </div>
+    <div class="buttons">
+        <a href="<?php echo ($page <= 1) ? "#" : "achievement.php?page=" . ($page - 1); ?>"><button>Back</button></a>
+        <a href="<?php echo ($page >= $totalPages) ? "#" : "achievement.php?page=" . ($page + 1); ?>"><button>Next</button></a>
+    </div>
+</div>
 </body>
 </html>

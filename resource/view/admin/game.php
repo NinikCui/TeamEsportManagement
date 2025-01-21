@@ -116,23 +116,6 @@ $pageStart = ($page - 1) * $maxRows;
             cursor: pointer;
         }
 
-        .btn-new {
-            padding: 10px 20px;
-            background-color: #fff;
-            color: #3c0036;
-            text-decoration: none;
-            border-radius: 5px;
-            border: none;
-            margin-bottom: 10px;
-            cursor: pointer;
-            float: right;
-        }
-
-        .btn-new:hover {
-            background-color: #3c0036;
-            color: #fff;
-        }
-
         /* Form Modal Styles */
         .frmNew {
             display: none;
@@ -225,16 +208,16 @@ $pageStart = ($page - 1) * $maxRows;
         /* Media Queries */
         @media screen and (max-width: 768px) {
             .container {
-                width: 80%;
-                margin: 30px auto;
+                width: 95%;
+                padding: 10px;
             }
             
             .table {
-                table-layout: fixed;
+                font-size: 14px;
             }
             
             .table th, .table td {
-                word-wrap: break-word;
+                padding: 8px;
             }
             
             .frm-content {
@@ -254,11 +237,12 @@ $pageStart = ($page - 1) * $maxRows;
 
         @media screen and (max-width: 480px) {
             .container {
-                width: 85%;
+                width: 100%;
+                padding: 5px;
             }
             
             .table {
-                table-layout: fixed;
+                font-size: 12px;
             }
             
             .table th, .table td {
@@ -269,30 +253,18 @@ $pageStart = ($page - 1) * $maxRows;
                 flex-direction: column;
                 gap: 5px;
             }
-
-            .btn-new {
-                text-align: center; /* Pusatkan teks */
-                float: right; /* Hilangkan float */
-            }
             
             .frm-content {
                 margin: 2% auto;
-                padding: 15px;
-            }
-            
-            .formNew-Group label {
-                padding-bottom: 8px;
             }
             
             .formNew-Group input,
             .formNew-Group textarea {
                 width: 100%;
-                padding: 8px;
             }
             
             .formNew-btnAdd {
                 width: 100%;
-                margin-top: 10px;
             }
             .frm-content {
                 margin: 15% auto; /* Lebih banyak margin atas untuk layar kecil */
@@ -303,23 +275,16 @@ $pageStart = ($page - 1) * $maxRows;
         }
 
         /* Untuk tampilan tabel pada perangkat mobile */
-        @media screen and (max-width: 480px) {
+        @media screen and (max-width: 600px) {
             .table {
-                font-size: 12px;
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
             }
-            .table th, .table td {
-                padding: 6px;
-                text-align: left; /* Menyesuaikan teks di layar kecil */
+            .buttons {
+                display: flex;
+                justify-content: flex-end;
             }
-        }
-
-        /* Tambahkan container untuk mengatur overflow pada layar kecil */
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 15px;
-            overflow-x: auto; /* Scroll horizontal jika tabel terlalu lebar */
         }
     </style>
 </head>
@@ -416,7 +381,7 @@ $pageStart = ($page - 1) * $maxRows;
 
     <div class="container">
         <form method="POST" action="">
-            <a onclick="openFrmNew()" class="btn-new">+ New</a>
+            <a onclick="openFrmNew()" style="margin-bottom: 15px; padding: 10px 20px; background-color: #fff; color: #3c0036; text-decoration: none; border-radius: 5px; border: none; cursor: pointer; float: right;">+ New</a>
 
             <div id="formNew" class="frmNew">
                 <div class="frm-content">

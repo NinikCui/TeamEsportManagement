@@ -51,23 +51,17 @@ $pageStart = ($page - 1) * $maxRows;
         }
 
         .container {
-            width: 100%;
+            width: 90%;
             max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            margin: 20px auto;
+            padding: 15px;
         }
 
         .table {
             width: 100%;
-            max-width: 800px; /* Membatasi lebar maksimal tabel */
-            margin: 0 auto;
+            margin-bottom: 20px;
             border-collapse: collapse;
             font-size: 16px;
-            background-color: rgba(255, 255, 255, 0.1);
         }
 
         .table th, .table td {
@@ -82,8 +76,6 @@ $pageStart = ($page - 1) * $maxRows;
         }
 
         .buttons {
-            width: 100%;
-            max-width: 800px; /* Menyamakan dengan lebar maksimal tabel */
             display: flex;
             justify-content: flex-end;
             gap: 10px;
@@ -103,65 +95,56 @@ $pageStart = ($page - 1) * $maxRows;
         /* Media Queries */
         @media screen and (max-width: 768px) {
             .container {
-                padding: 15px;
+                width: 95%;
+                padding: 10px;
             }
             
             .table {
                 font-size: 14px;
-                width: 90%;
             }
-        }
-
-        @media screen and (max-width: 600px) {
-            .container {
-                padding: 10px;
-            }
-
-            .table-wrapper {
-                width: 100%;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                margin: 0 auto;
-            }
-
-            .table {
-                width: 100%;
-                min-width: 300px;
-                font-size: 13px;
-                margin: 0 auto;
-            }
-
+            
             .table th, .table td {
-                padding: 10px;
-                min-width: 100px;
+                padding: 8px;
+            }
+            
+            .buttons button {
+                padding: 8px 15px;
+                font-size: 14px;
             }
         }
 
         @media screen and (max-width: 480px) {
             .container {
-                padding: 8px;
+                width: 100%;
+                padding: 5px;
             }
             
             .table {
-                width: 85%;
                 font-size: 12px;
             }
             
             .table th, .table td {
                 padding: 6px;
-                min-width: 70px;
             }
             
             .buttons {
                 flex-direction: column;
-                width: 85%;
-                margin: 0 auto 15px auto;
+                width: 100%;
             }
             
             .buttons button {
                 width: 100%;
                 margin: 5px 0;
-                padding: 8px 15px;
+                font-size: 14px;
+            }
+        }
+
+        /* Untuk tampilan tabel pada perangkat mobile */
+        @media screen and (max-width: 600px) {
+            .table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
             }
         }
     </style>

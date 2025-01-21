@@ -113,23 +113,6 @@ $pageStart = ($page - 1) * $maxRows;
         cursor: pointer;
         }
 
-        .btn-new {
-            padding: 10px 20px;
-            background-color: #fff;
-            color: #3c0036;
-            text-decoration: none;
-            border-radius: 5px;
-            border: none;
-            margin-bottom: 10px;
-            cursor: pointer;
-            float: right;
-        }
-
-        .btn-new:hover {
-            background-color: #3c0036;
-            color: #fff;
-        }
-
         /* Form Modal Styles */
         .frmNew {
         display: none;
@@ -234,46 +217,22 @@ $pageStart = ($page - 1) * $maxRows;
                 padding: 8px;
             }
             
-            .buttons button {
-                padding: 8px 15px;
-            }
-
             .frm-content {
-                width: 90%;
-                margin: 10% auto;
-                padding: 15px;
-                font-size: 14px;
-                box-sizing: border-box;
+                width: 95%;
             }
-
-            .formNew-Group input,
-            .formNew-Group textarea,
-            .formNew-Group select {
-                width: 100%;
-                max-width: 100%;
-                padding: 10px;
-                font-size: 14px;
-                box-sizing: border-box;
-            }
-
-            textarea {
-                resize: none; /* Menghapus resize agar tidak melebihi modal */
-            }
-
+            
             .formNew-Group label {
                 font-size: 14px;
-                margin-bottom: 5px;
+                padding-bottom: 10px;
             }
-
-            .formNew-btnAdd:hover {
-                background-color: #55004d;
+            
+            .formNew-Group input,
+            .formNew-Group textarea {
+                font-size: 14px;
             }
-
-            .close {
-                font-size: 24px;
-                color: #aaa;
-                cursor: pointer;
-                text-align: right;
+            
+            .buttons button {
+                padding: 8px 15px;
             }
         }
 
@@ -296,11 +255,6 @@ $pageStart = ($page - 1) * $maxRows;
                 gap: 5px;
             }
             
-            .btn-new {
-                text-align: center; /* Pusatkan teks */
-                float: right; /* Hilangkan float */
-            }
-
             .frm-content {
                 margin: 2% auto;
                 padding: 15px;
@@ -436,7 +390,7 @@ $pageStart = ($page - 1) * $maxRows;
 
     <div class="container">
         <form method="POST" action="">
-            <a onclick="openFrmNew()" class="btn-new">+ New</a>
+            <a onclick="openFrmNew()" style="margin-bottom: 15px; padding: 10px 20px; background-color: #fff; color: #3c0036; text-decoration: none; border-radius: 5px; border: none; cursor: pointer; float: right;">+ New</a>
 
             <div id="formNew" class="frmNew">
                 <div class="frm-content">

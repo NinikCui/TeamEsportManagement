@@ -32,421 +32,373 @@ $totalPages = $game->ReadPages($maxRows);
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <style>
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: 'Poppins', sans-serif;
-        background-color: #0a0a0a;
-        color: white;
-        background-image: url("resource/img/BG.png");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        min-height: 100vh;
-    }
+     body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #0a0a0a;
+    color: white;
+    background-image: url("resource/img/BG.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+}
 
-    /* Navbar styles */
-    .navbar {
+/* Navbar styles */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+}
+
+.logo img {
+    width: 40px;
+    height: auto;
+}
+
+.nav-section {
+    display: flex;
+    gap: 30px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-section a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-section a:hover {
+    color: #8A2BE2;
+    
+}
+
+.nav-button {
+    display: flex;
+    gap: 15px;
+}
+
+.nav-button button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.sign-up-button {
+    background: transparent;
+    border: 2px solid white !important;
+    color: white;
+}
+.sign-up-button a{
+    color: white;
+    text-decoration: none;
+
+}
+.login-button a {
+    background: #8A2BE2;
+    color: white;
+    text-decoration: none;
+
+}
+.login-button {
+    background: #8A2BE2;
+    color: white;
+}
+
+.sign-up-button:hover {
+    a{
+        color: #8A2BE2;
+    }
+    background: white;
+    color: #8A2BE2;
+}
+
+.login-button:hover {
+    background: #6B1FB3;
+}
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.menu-toggle span {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    margin: 3px 0;
+    transition: 0.4s;
+}
+
+
+/* Container styles */
+.container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.game-card {
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.game-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.game-info h2 {
+    margin: 0 0 10px 0;
+    font-size: 24px;
+    color: #8A2BE2;
+}
+
+.game-description {
+    color: #cecece;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+/* Teams section */
+.teams-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.team-item {
+    background: rgba(138, 43, 226, 0.1);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.team-item:hover {
+    transform: translateY(-5px);
+}
+
+.team-item img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    border: 2px solid #8A2BE2;
+}
+
+.team-item h3 {
+    margin: 10px 0;
+    font-size: 18px;
+    color: white;
+}
+
+/* Events section */
+.events-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.events-table th {
+    background: rgba(138, 43, 226, 0.2);
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    color: white;
+}
+
+.events-table td {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+}
+
+.events-table tr {
+    transition: transform 0.3s ease;
+}
+
+.events-table tr:hover {
+    transform: translateX(5px);
+}
+
+.section-title {
+    font-size: 20px;
+    color: #8A2BE2;
+    margin: 30px 0 20px;
+}
+
+/* Table Styles */
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th, 
+.table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table th {
+    background-color: rgba(138, 43, 226, 0.2);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+.table tr:last-child td {
+    border-bottom: none;
+}
+
+.table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(138, 43, 226, 0.1);
+}
+
+/* Pagination */
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.buttons button {
+    background: #8A2BE2;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.buttons button:hover:not([disabled]) {
+    background: #6B1FB3;
+    transform: translateY(-2px);
+}
+
+.buttons button[disabled] {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.page-info {
+    text-align: center;
+    margin: 20px 0;
+    color: #cecece;
+}
+
+/* No Data Message */
+.no-data {
+    text-align: center;
+    padding: 20px;
+    color: #cecece;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    font-style: italic;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .menu-toggle {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 20px;
-        background: rgba(0, 0, 0, 0.5);
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-    }
-
-    .logo {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-size: 24px;
-        font-weight: bold;
-        color: white;
-        text-decoration: none;
-    }
-
-    .logo img {
-        width: 40px;
-        height: auto;
     }
 
     .nav-section {
-        display: flex;
-        gap: 30px;
-        list-style: none;
-        margin: 0;
-        padding: 0;
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        text-align: center;
+        background-color: rgba(0, 0, 0, 0.95);
+        position: absolute;
+        top: 100%;
+        left: 0;
+        padding: 20px 0;
+        backdrop-filter: blur(10px);
     }
+    .nav-section li a:hover {
+    color: #5d20a7;
+}
 
-    .nav-section a {
-        color: white;
-        text-decoration: none;
-        font-size: 16px;
-        font-weight: 500;
-        transition: color 0.3s ease;
-    }
-
-    .nav-section a:hover {
-        color: #8A2BE2;
-        
-    }
+.nav-section li a.active {
+    background: #5d20a7;
+    color: white;
+}
 
     .nav-button {
         display: flex;
-        gap: 15px;
+        gap: 10px;
     }
 
     .nav-button button {
-        padding: 10px 20px;
-        border-radius: 5px;
-        border: none;
-        cursor: pointer;
-        font-weight: 500;
-        transition: all 0.3s ease;
-    }
-
-    .sign-up-button {
-        background: transparent;
-        border: 2px solid white !important;
-        color: white;
-    }
-    .sign-up-button a{
-        color: white;
-        text-decoration: none;
-
-    }
-    .login-button a {
-        background: #8A2BE2;
-        color: white;
-        text-decoration: none;
-
-    }
-    .login-button {
-        background: #8A2BE2;
-        color: white;
-    }
-
-    .sign-up-button:hover {
-        a{
-            color: #8A2BE2;
-        }
-        background: white;
-        color: #8A2BE2;
-    }
-
-    .login-button:hover {
-        background: #6B1FB3;
-    }
-    .menu-toggle {
-        display: none;
-        flex-direction: column;
-        cursor: pointer;
-        padding: 10px;
-    }
-
-    .menu-toggle span {
-        width: 25px;
-        height: 3px;
-        background-color: white;
-        margin: 3px 0;
-        transition: 0.4s;
-    }
-
-
-    /* Container styles */
-    .container {
-        max-width: 1200px;
-        margin: 40px auto;
-        padding: 0 20px;
-    }
-
-    .game-card {
-        background: rgba(0, 0, 0, 0.8);
-        border-radius: 15px;
-        padding: 30px;
-        margin-bottom: 30px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        padding: 8px 15px;
+        font-size: 14px;
+        margin-left: 0;
     }
 
     .game-header {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        margin-bottom: 30px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        flex-direction: column;
+        text-align: center;
     }
 
-    .game-info h2 {
-        margin: 0 0 10px 0;
-        font-size: 24px;
-        color: #8A2BE2;
-    }
-
-    .game-description {
-        color: #cecece;
-        font-size: 16px;
-        line-height: 1.6;
-        margin-bottom: 30px;
-    }
-
-    /* Teams section */
     .teams-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 20px;
-        margin-bottom: 30px;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     }
 
-    .team-item {
-        background: rgba(138, 43, 226, 0.1);
-        border-radius: 10px;
-        padding: 15px;
-        text-align: center;
-        transition: transform 0.3s ease;
-    }
-
-    .team-item:hover {
-        transform: translateY(-5px);
-    }
-
-    .team-item img {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        margin-bottom: 10px;
-        border: 2px solid #8A2BE2;
-    }
-
-    .team-item span {
-        display: block;
-        margin-top: 10px;
-        color: white;
-        font-size: 16px;
-    }
-
-    .team-item h3 {
-        margin: 10px 0;
-        font-size: 18px;
-        color: white;
-    }
-
-    /* Events section */
-    .events-table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0 10px;
-    }
-
-    .events-table th {
-        background: rgba(138, 43, 226, 0.2);
-        padding: 15px;
-        text-align: left;
-        font-weight: 600;
-        color: white;
-    }
-
-    .events-table td {
-        background: rgba(255, 255, 255, 0.05);
-        padding: 15px;
-    }
-
-    .events-table tr {
-        transition: transform 0.3s ease;
-    }
-
-    .events-table tr:hover {
-        transform: translateX(5px);
-    }
-
-    .section-title {
-        font-size: 20px;
-        color: #8A2BE2;
-        margin: 30px 0 20px;
-    }
-
-    /* Table Styles */
     .table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
-        margin-bottom: 20px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-        overflow: hidden;
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
     }
+}
 
-    .table th, 
-    .table td {
-        padding: 15px;
-        text-align: left;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .table th {
-        background-color: rgba(138, 43, 226, 0.2);
-        color: white;
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 14px;
-        letter-spacing: 0.5px;
-    }
-
-    .table tr:last-child td {
-        border-bottom: none;
-    }
-
-    .table tbody tr {
-        transition: all 0.3s ease;
-    }
-
-    .table tbody tr:hover {
-        background-color: rgba(138, 43, 226, 0.1);
-    }
-
-    /* Pagination */
-    .buttons {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        margin-top: 20px;
-    }
-
-    .buttons button {
-        background: #8A2BE2;
-        color: white;
-        border: none;
-        padding: 12px 30px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-        transition: all 0.3s ease;
-    }
-
-    .buttons button:hover:not([disabled]) {
-        background: #6B1FB3;
-        transform: translateY(-2px);
-    }
-
-    .buttons button[disabled] {
-        background-color: #cccccc;
-        cursor: not-allowed;
-    }
-
-    .page-info {
-        text-align: center;
-        margin: 20px 0;
-        color: #cecece;
-    }
-
-    /* No Data Message */
-    .no-data {
-        text-align: center;
-        padding: 20px;
-        color: #cecece;
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 8px;
-        font-style: italic;
-    }
-
-    /* Responsive Design */
-    @media screen and (max-width: 768px) {
-        .menu-toggle {
-            display: flex;
-        }
-
-        .nav-section {
-            display: none;
-            width: 100%;
-            flex-direction: column;
-            text-align: center;
-            background-color: rgba(0, 0, 0, 0.95);
-            position: absolute;
-            top: 100%;
-            left: 0;
-            padding: 20px 0;
-            backdrop-filter: blur(10px);
-        }
-        .nav-section li a:hover {
-        color: #5d20a7;
-    }
-
-    .nav-section li a.active {
-        background: #5d20a7;
-        color: white;
-    }
-
-        .nav-button {
-            display: flex;
-            gap: 10px;
-        }
-
-        .nav-button button {
-            padding: 8px 15px;
-            font-size: 14px;
-            margin-left: 0;
-        }
-
-        .game-header {
-            flex-direction: column;
-            text-align: center;
-        }
-
-        .teams-grid {
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        }
-
-        .table {
-            display: block;
-            overflow-x: auto;
-            white-space: nowrap;
-        }
-    }
-
-    @media screen and (max-width: 480px) {
-        .navbar {
-            padding: 10px;
-        }
-
-        .nav-button button {
-            padding: 8px 15px;  /* Mengurangi padding */
-            font-size: 14px;    /* Mengurangi ukuran font */
-        }
-
-        .nav-button {
-            display: flex;
-            gap: 8px;          /* Memberikan jarak antar tombol */
-        }
-
-        .logo {
-            font-size: 18px;
-        }
-
-        .logo img {
-            width: 30px;
-        }
-        
-        .teams-grid {
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 15px;
-        }
-        
-        .team-item {
-            padding: 10px;
-        }
-        
-        .team-item img {
-            width: 70px;
-            height: 70px;
-        }
-        
-        .team-item span {
-            font-size: 14px;
-        }
-    }
     </style>
 </head>
 <body>
