@@ -180,6 +180,9 @@ $totalPages = $a->ReadPages($maxRows);
             border-radius: 5px;
             cursor: pointer;
         }
+        .close{
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -314,11 +317,6 @@ $totalPages = $a->ReadPages($maxRows);
 <div class="container-user">
     <!-- Header Actions -->
     <div class="header-actions" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-        <!-- Button New -->
-        <button onclick="openFrmNew()" class="add-button" style="background: #4834d4; color: white; padding: 12px 24px; border: none; border-radius: 5px; cursor: pointer;">
-            + New Achievement
-        </button>
-
         <!-- Search Form -->
         <form method="GET" action="" style="display: flex; gap: 10px;">
             <input type="text" 
@@ -330,7 +328,14 @@ $totalPages = $a->ReadPages($maxRows);
                     style="background: #4834d4; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
                 Search
             </button>
-        </form>
+        </form>    
+    </div>
+
+    <!-- Button New -->
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+        <button onclick="openFrmNew()" class="add-button" style="background: #4834d4; color: white; padding: 12px 24px; border: none; border-radius: 5px; cursor: pointer;">
+            + New Achievement
+        </button>
     </div>
 
     <!-- Table -->

@@ -40,6 +40,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $maxRows = 5;
 $page = (isset($_GET["page"]) && is_numeric($_GET["page"])) ? ($_GET["page"]) :1;
 $pageStart = ($page - 1) * $maxRows;
+$totalPages = $g->ReadPages($maxRows);
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -50,7 +53,7 @@ $pageStart = ($page - 1) * $maxRows;
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <link href="../../css/menu/navMenu.css" rel="stylesheet">
-    <link href="../../css/menu/bodyMenu.css" rel="stylesheet">  
+    <link href="../../css/menu/bodyUser.css" rel="stylesheet">  
     <style>
         .navbar .photo-profile {
             display: flex;
@@ -84,6 +87,99 @@ $pageStart = ($page - 1) * $maxRows;
             border-radius: 5px;
             cursor: pointer;
 
+        }
+
+        
+        .action-buttons button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 5px 10px;
+        }
+
+        .edit-btn {
+            color: #A0D683;
+        }
+
+        .delete-btn {
+            color: #FF474D;
+        }
+
+        .header-actions {
+            margin-bottom: 20px;
+            animation: slideUp 0.5s ease-out;
+
+        }
+        .detail-btn {
+            color: #FFD700;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 5px 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .action-buttons form {
+            margin: 0;
+        }
+
+        /* Form Modal Styling */
+        .frmNew {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .frm-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+        }
+
+        .formNew-Group {
+            margin-bottom: 15px;
+        }
+
+        .formNew-Group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .formNew-Group input,
+        .formNew-Group select,
+        .formNew-Group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .formNew-btnAdd {
+            background: #4834d4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .close{
+            cursor: pointer;
         }
     </style>
 </head>
@@ -193,33 +289,17 @@ $pageStart = ($page - 1) * $maxRows;
         }
     </script>
 
-    <div class="container">
-        <form method="POST" action="">
-            <a onclick="openFrmNew()" style="margin-bottom: 15px; padding: 10px 20px; background-color: #fff; color: #3c0036; text-decoration: none; border-radius: 5px; border: none; cursor: pointer; float: right;">+ New</a>
+<div class="container-user">
+    <!-- Header Actions -->
+    <div class="header-actions" style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+        <button onclick="openFrmNew()" class="add-button" style="background: #4834d4; color: white; padding: 12px 24px; border: none; border-radius: 5px; cursor: pointer;">
+            + New Game
+        </button>
+    </div>
 
-            <div id="formNew" class="frmNew">
-                <div class="frm-content">
-                    <span class="close" onclick="closeFrmNew()">&times;</span>
-                    <form method="POST" action="">
-                        <h2><span id="actionButtonText">Add a new Game</span></h2>
-                        <input type="hidden" id="idgame" name="idgame"> 
-                        <div class="formNew-Group">
-                            <label for="name">Name</label>
-                            <input type="text" id="gameName" name="gameName" placeholder="Enter Game Name" required>
-                        </div>
-                        <div class="formNew-Group">
-                            <label for="description">Description</label>
-                            <textarea id="description" name="desc" placeholder="Enter Game Description" rows="4" required></textarea>
-                        </div>
-                        <div class="formNew-btnAddContainer">
-                            <button type="submit" id="actionButton" name="action" value="add" class="formNew-btnAdd">Add new</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </form>
-
-        <table class="table">
+    <!-- Table -->
+    <div class="table-wrapper">
+        <table class="team-table">
             <thead>
                 <tr>
                     <th>Id Game</th>
@@ -231,47 +311,73 @@ $pageStart = ($page - 1) * $maxRows;
             <tbody>
                 <?php
                 $dataGame = $g->ReadDataGame($pageStart,$maxRows);
-                
                 if (!empty($dataGame)) {
                     foreach($dataGame as $dgame) {
                         echo "<tr>";
                         echo "<td>" . $dgame["idgame"] . "</td>";
-                        echo "<td>" . $dgame["name"] . "</td>";
+                        echo "<td class='game-name'>" . $dgame["name"] . "</td>";
                         echo "<td>" . $dgame["description"] . "</td>";
-                        echo "<td>
-                                <button type='button' onclick='openFrmEdit(\"" . $dgame["idgame"] . "\", \"" . $dgame["name"] . "\", \"" . $dgame["description"] . "\")' style='color: #A0D683; border: none; background: none; cursor: pointer; font-size: 18px;'>✔ Update</button>
+                        echo "<td class='action-buttons'>
+                                <button type='button' 
+                                        onclick='openFrmEdit(\"" . $dgame["idgame"] . "\", \"" . $dgame["name"] . "\", \"" . $dgame["description"] . "\")' 
+                                        class='edit-btn'>
+                                    ✔ Update
+                                </button>
                                 <form method='POST' action='' style='display:inline;'>
                                     <input type='hidden' name='idgame' value='" . $dgame["idgame"] . "'>
-                                    <button type='submit' name='action' value='delete' style='color: #FF474D; border: none; background: none; cursor: pointer; font-size: 18px;'><span>&#x1F5D1;</span> Delete</button>
+                                    <button type='submit' name='action' value='delete' class='delete-btn'>
+                                        &#x1F5D1; Delete
+                                    </button>
                                 </form>
                               </td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tar>";
-                    echo "<td colspan='4' style='text-align: center;'>None</td>";
-                    echo "</tar>";
+                    echo "<tr><td colspan='4' class='no-data'>No games available</td></tr>";
                 }
-                
-                
-                $totalPages = $g->ReadPages($maxRows);
                 ?>
             </tbody>
         </table>
-        
-        <div>
-            <?php 
-                echo("Showing Data " . $pageStart + 1 . " to  " . $pageStart + $maxRows);
-            ?>
-        </div>
-        <div class="buttons">
-            <a href="<?php if($page <= 1){echo " # ";} else {echo "game.php?page=". $page - 1;} ?>"><button>Back</button></a>
-        <!--    <?php //for($i = 1; $i <= $totalPages; $i++) :?>
-                <a href="?page="<?php //echo($i);?>> <?php //  echo($i) ?> </a>
-            <?php   //endfor;  ?> -->
-            <a href="<?php if($page >= $totalPages){echo"#";} else{echo"game.php?page=".$page + 1 ;} ?>"><button>Next</button></a>
+    </div>
 
+    <!-- Pagination -->
+    <div class="pagination" aria-label="Page navigation">
+        <div class="buttons">
+            <a href="<?php echo ($page <= 1) ? '#' : "game.php?page=".($page-1); ?>">
+                <button <?php echo ($page <= 1) ? 'disabled' : ''; ?>>Previous</button>
+            </a>
+            <a href="<?php echo ($page >= $totalPages) ? '#' : "game.php?page=".($page+1); ?>">
+                <button <?php echo ($page >= $totalPages) ? 'disabled' : ''; ?>>Next</button>
+            </a>
+            <div class="page-info">
+                <?php echo "Showing Data " . ($pageStart + 1) . " to " . ($pageStart + $maxRows); ?>
+            </div>
         </div>
     </div>
+
+    <!-- Modal Form -->
+    <div id="formNew" class="frmNew">
+        <div class="frm-content">
+            <span class="close" onclick="closeFrmNew()">&times;</span>
+            <h2><span id="actionButtonText">Add a new Game</span></h2>
+            <form method="POST" action="">
+                <input type="hidden" id="idgame" name="idgame">
+                <div class="formNew-Group">
+                    <label for="name">Name</label>
+                    <input type="text" id="gameName" name="gameName" placeholder="Enter Game Name" required>
+                </div>
+                <div class="formNew-Group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="desc" placeholder="Enter Game Description" rows="4" required></textarea>
+                </div>
+                <div class="formNew-btnAddContainer">
+                    <button type="submit" id="actionButton" name="action" value="add" class="formNew-btnAdd">
+                        Add new
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>

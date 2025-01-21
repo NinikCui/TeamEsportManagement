@@ -30,6 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $jp ->UpdateProposal($action,$id_user,$id_team,$idProposal);
 
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -41,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <link href="../../css/menu/navMenu.css" rel="stylesheet">
-    <link href="../../css/menu/bodyMenu.css" rel="stylesheet">    
+    <link href="../../css/menu/bodyUser.css" rel="stylesheet">    
     <style>
         .navbar .photo-profile {
             display: flex;
@@ -76,6 +77,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             cursor: pointer;
 
         }
+        .action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.approve-btn {
+    color: #A0D683;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.reject-btn {
+    color: #FF474D;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.status-waiting {
+    background: #FFD700;
+    color: #000;
+}
+
+.status-approved {
+    background: #A0D683;
+    color: #fff;
+}
+
+.status-rejected {
+    background: #FF474D;
+    color: #fff;
+}
     </style>
 </head>
 <body>
@@ -157,19 +200,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     </script>
 
-    <div class="container">
-        <!-- Form Filter -->
-        <form method="GET" action="proposal.php">
-            <label for="status">Filter by status: </label>
-            <select name="status" id="status" class="filter">
+<div class="container-user">
+    <!-- Header Actions -->
+    <div class="header-actions" style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+        <form method="GET" action="proposal.php" style="display: flex; gap: 10px; align-items: center;">
+            <label for="status" style="color: #333;">Filter by status:</label>
+            <select name="status" id="status" style="padding: 10px; border: 1px solid #eee; border-radius: 5px;">
                 <option value="waiting" <?php if($status == 'waiting') echo 'selected'; ?>>Waiting</option>
                 <option value="approved" <?php if($status == 'approved') echo 'selected'; ?>>Approved</option>
                 <option value="rejected" <?php if($status == 'rejected') echo 'selected'; ?>>Rejected</option>
             </select>
-            <button type="submit" class="filter">Filter</button><br>
+            <button type="submit" style="background: #4834d4; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+                Filter
+            </button>
         </form>
-        <!-- Table Data -->
-        <table class="table">
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrapper">
+        <table class="team-table">
             <thead>
                 <tr>
                     <th>Id Proposal</th>
@@ -183,33 +232,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </thead>
             <tbody>
                 <?php
-                    $statusFilter = isset($_GET['status']) ? $_GET['status'] : 'waiting';
-                    $proposals = $jp->getProposalsByStatus($statusFilter, $pageStart, $maxRows);
+                $statusFilter = isset($_GET['status']) ? $_GET['status'] : 'waiting';
+                $proposals = $jp->getProposalsByStatus($statusFilter, $pageStart, $maxRows);
 
-                    // Tampilkan data
-                    if (!empty($proposals)) {
-                        foreach ($proposals as $proposal) {
-                            echo $jp->renderProposalRow($proposal, $statusFilter === 'waiting');
-                        }
-                    } else {
-                        echo "<tr><td colspan='5' style='text-align: center;'>None</td></tr>";
+                if (!empty($proposals)) {
+                    foreach ($proposals as $proposal) {
+                        echo $jp->renderProposalRow($proposal, $statusFilter === 'waiting');
                     }
-
-                  
-                    $totalPages = $jp->totPages($status,$maxRows);
+                } else {
+                    echo "<tr><td colspan='5' class='no-data'>No proposals available</td></tr>";
+                }
                 ?>
             </tbody>
         </table>
-
-        <div>
-            <?php 
-                echo("Showing Data " . $pageStart + 1 . " to  " . $pageStart + $maxRows);
-            ?>
-        </div>
+    </div>
+                <?php $totalPages = $jp->totPages($status,$maxRows);?>
+    <!-- Pagination -->
+    <div class="pagination" aria-label="Page navigation">
         <div class="buttons">
-            <a href="<?php if($page <= 1){echo " # ";} else {echo "proposal.php?page=". $page - 1 . "&status=" .$status;} ?>"><button>Back</button></a>
-            <a href="<?php if($page >= $totalPages){echo"#";} else{echo"proposal.php?page=".$page + 1 . "&status=" .$status;} ?>"><button>Next</button></a>
+            <a href="<?php echo ($page <= 1) ? '#' : "proposal.php?page=".($page-1)."&status=".$status; ?>">
+                <button <?php echo ($page <= 1) ? 'disabled' : ''; ?>>Previous</button>
+            </a>
+            <a href="<?php echo ($page >= $totalPages) ? '#' : "proposal.php?page=".($page+1)."&status=".$status; ?>">
+                <button <?php echo ($page >= $totalPages) ? 'disabled' : ''; ?>>Next</button>
+            </a>
+            <div class="page-info">
+                <?php echo "Showing Data " . ($pageStart + 1) . " to " . ($pageStart + $maxRows); ?>
+            </div>
         </div>
     </div>
+</div>
 </body>
 </html>

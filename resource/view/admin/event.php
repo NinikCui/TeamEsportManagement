@@ -174,6 +174,9 @@ $totalPages = $e->ReadPages($maxRows);
             border-radius: 5px;
             cursor: pointer;
         }
+        .close{
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>

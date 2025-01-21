@@ -70,7 +70,7 @@ $pageStart = ($page - 1) * $maxRows;
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <link href="../../css/menu/navMenu.css" rel="stylesheet">
-    <link href="../../css/menu/bodyMenu.css" rel="stylesheet">    
+    <link href="../../css/menu/bodyUser.css" rel="stylesheet">    
     <style>
         .navbar .photo-profile {
             display: flex;
@@ -94,9 +94,8 @@ $pageStart = ($page - 1) * $maxRows;
             font-size: 16px;
             width: 100%;
             border: 2px solid #4834d4;
-
-
         }
+        
         .navbar .btn-logout button:hover {
             background-color: #4834d4;
             color: white;
@@ -104,6 +103,96 @@ $pageStart = ($page - 1) * $maxRows;
             border-radius: 5px;
             cursor: pointer;
 
+        }
+
+        .event-header {
+            font-size: 24px;
+            color: #4834d4;
+            font-weight: 700;
+            padding: 20px !important;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+        }
+
+        .delete-btn {
+            color: #FF474D;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 5px 10px;
+        }
+
+        .delete-btn:hover {
+            opacity: 0.8;
+        }
+
+        .formNew-Team {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+
+        .formNew-btnAddContainer {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        /* Form Modal Styling */
+        .frmNew {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .frm-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+        }
+
+        .formNew-Group {
+            margin-bottom: 15px;
+        }
+
+        .formNew-Group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .formNew-Group input,
+        .formNew-Group select,
+        .formNew-Group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .formNew-btnAdd {
+            background: #4834d4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .close{
+            cursor: pointer;
         }
     </style>
 </head>
@@ -212,74 +301,85 @@ $pageStart = ($page - 1) * $maxRows;
             }
         }
     </script>
-    <div class="container">
-        <form method="POST" action="">
-            <a onclick="openFrmNew()" style="margin-bottom: 15px; padding: 10px 20px; background-color: #fff; color: #3c0036; text-decoration: none; border-radius: 5px; border: none; cursor: pointer; float: right;">+ New</a>
+    <div class="container-user">
+    <!-- Header Actions -->
+    <div class="header-actions" style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+        <button onclick="openFrmNew()" class="add-button" style="background: #4834d4; color: white; padding: 12px 24px; border: none; border-radius: 5px; cursor: pointer;">
+            + Add Team to Event
+        </button>
+    </div>
 
-            <div id="formNew" class="frmNew">
-                <div class="frm-content">
-                    <span class="close" onclick="closeFrmNew()">&times;</span>
-                    <form method="POST" action="">
-                        <h2><span id="actionButtonText">Add a new Event</span></h2>
-                        <input type="hidden" id="idevent" name="idevent"> <!-- Hidden input untuk idevent saat update -->
-                        <div class="formNew-Group">
-                        <label for="team">Team</label>
-                        <select id="cbteam" class="formNew-Team" name="idteam">
-                            <option value="">--- SELECT TEAM ---</option>
-                            <?php
-                                $conn = new mysqli('localhost', 'root', '', 'fullstack');
-                                $stmt = $conn->prepare("SELECT idteam, name FROM team;");
-                                $stmt->execute();
-                                $res = $stmt->get_result();
-                                while($rteam = $res->fetch_array()){
-                                    echo "<option  value='".$rteam["idteam"]."'>".$rteam["name"]."</option>";
-                                }
-                            ?>
-                        </select>
-                    </div>
-                        <div class="formNew-btnAddContainer">
-                            <button type="submit" id="actionButton" name="action" value="add" class="formNew-btnAdd">Add new</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </form>
-        <table class="table">
-            
+    <!-- Table -->
+    <div class="table-wrapper">
+        <table class="team-table">
             <thead>
                 <tr>
-                <th colspan="2"><?php echo  $namaEventDetail; ?></th>
+                    <th colspan="2" class="event-header">
+                        <?php echo $namaEventDetail; ?>
+                    </th>
                 </tr>
                 <tr>
-                    <th>Name</th>
+                    <th>Team Name</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
-                $teams = $et->ReadDataEventTeam($idEventDetail,$pageStart,$maxRows);
+                $teams = $et->ReadDataEventTeam($idEventDetail, $pageStart, $maxRows);
                 if (!empty($teams)) {
                     foreach($teams as $team) {
                         echo "<tr>";
-                        echo "<td>" . $team["name"] . "</td>";
-                        echo "<td>
-                                <form method='POST' action='' style='display:inline;'>
+                        echo "<td class='team-name'>" . $team["name"] . "</td>";
+                        echo "<td class='action-buttons'>
+                                <form method='POST' action=''>
                                     <input type='hidden' name='idevent' value='" . $team["idevent"] . "'>
                                     <input type='hidden' name='idteam' value='" . $team["idteam"] . "'>
-                                    <button type='submit' name='action' value='delete' style='color: #FF474D; border: none; background: none; cursor: pointer; font-size: 18px;'><span>&#x1F5D1;</span> Delete</button>
+                                    <button type='submit' name='action' value='delete' class='delete-btn'>
+                                        &#x1F5D1; Delete
+                                    </button>
                                 </form>
                               </td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr>";
-                    echo "<td colspan='4' style='text-align: center;'>None</td>";
-                    echo "</tr>";
+                    echo "<tr><td colspan='2' class='no-data'>No teams registered for this event</td></tr>";
                 }
                 ?>
             </tbody>
         </table>
-        
     </div>
+
+    <!-- Modal Form -->
+    <div id="formNew" class="frmNew">
+        <div class="frm-content">
+            <span class="close" onclick="closeFrmNew()">&times;</span>
+            <h2><span id="actionButtonText">Add Team to Event</span></h2>
+            <form method="POST" action="">
+                <input type="hidden" id="idevent" name="idevent">
+                
+                <div class="formNew-Group">
+                    <label for="team">Select Team</label>
+                    <select id="cbteam" class="formNew-Team" name="idteam" required>
+                        <option value="">--- SELECT TEAM ---</option>
+                        <?php
+                        $stmt = $conn->prepare("SELECT idteam, name FROM team;");
+                        $stmt->execute();
+                        $res = $stmt->get_result();
+                        while($rteam = $res->fetch_array()) {
+                            echo "<option value='{$rteam["idteam"]}'>{$rteam["name"]}</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+
+                <div class="formNew-btnAddContainer">
+                    <button type="submit" id="actionButton" name="action" value="add" class="formNew-btnAdd">
+                        Add Team
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>

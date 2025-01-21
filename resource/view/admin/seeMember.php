@@ -43,7 +43,7 @@ $pageStart = ($page - 1) * $maxRows;
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <link href="../../css/menu/navMenu.css" rel="stylesheet">
-    <link href="../../css/menu/bodyMenu.css" rel="stylesheet">    
+    <link href="../../css/menu/bodyUser.css" rel="stylesheet">    
     <style>
         .navbar .photo-profile {
             display: flex;
@@ -77,6 +77,109 @@ $pageStart = ($page - 1) * $maxRows;
             border-radius: 5px;
             cursor: pointer;
 
+        }
+
+
+        .team-header {
+            font-size: 24px;
+            color: #4834d4;
+            font-weight: 700;
+            padding: 20px !important;
+            text-align: center;
+        }
+
+        .member-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+        }
+
+        .delete-btn {
+            color: #FF474D;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 5px 10px;
+        }
+
+        .delete-btn:hover {
+            opacity: 0.8;
+        }
+
+        .no-data {
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
+        .formNew-Team {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+
+        .formNew-btnAddContainer {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        /* Form Modal Styling */
+        .frmNew {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .frm-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+        }
+
+        .formNew-Group {
+            margin-bottom: 15px;
+        }
+
+        .formNew-Group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .formNew-Group input,
+        .formNew-Group select,
+        .formNew-Group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .formNew-btnAdd {
+            background: #4834d4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .close{
+            cursor: pointer;
         }
     </style>
 </head>
@@ -158,44 +261,47 @@ $pageStart = ($page - 1) * $maxRows;
             }
         }
     </script>
-    <div class="container">
-    <table class="table">
+    <div class="container-user">
+    <!-- Table -->
+    <div class="table-wrapper">
+        <table class="team-table">
             <thead>
-            <tr>
-                <th colspan="2"><?php echo  $namateam; ?></th>
+                <tr>
+                    <th colspan="2" class="team-header">
+                        <?php echo $namateam; ?> Members
+                    </th>
                 </tr>
                 <tr>
-                    <th>Name</th>
+                    <th>Member Name</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
-                $members = $tm->ReadDataTeamMember($idTeamMember,$pageStart,$maxRows);
+                $members = $tm->ReadDataTeamMember($idTeamMember, $pageStart, $maxRows);
                 if (!empty($members)) {
                     foreach($members as $mem) {
                         echo "<tr>";
-                        echo "<td>" . $mem["username"] . "</td>";
-                        echo "<td>
-                                <form method='POST' action='' style='display:inline;'>
+                        echo "<td class='member-name'>" . $mem["username"] . "</td>";
+                        echo "<td class='action-buttons'>
+                                <form method='POST' action=''>
                                     <input type='hidden' name='idteamDelete' value='" . $mem["idteam"] . "'>
                                     <input type='hidden' name='idmemberDelete' value='" . $mem["idmember"] . "'>
                                     <input type='hidden' name='namateamDelete' value='" . $namateam . "'>
-                                    <button type='submit' name='action' value='delete' style='color: #FF474D; border: none; background: none; cursor: pointer; font-size: 18px;'><span>&#x1F5D1;</span> Delete</button>
+                                    <button type='submit' name='action' value='delete' class='delete-btn'>
+                                        &#x1F5D1; Delete
+                                    </button>
                                 </form>
                               </td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr>";
-                    echo "<td colspan='4' style='text-align: center;'>None</td>";
-                    echo "</tr>";
+                    echo "<tr><td colspan='2' class='no-data'>No members in this team</td></tr>";
                 }
-                
                 ?>
             </tbody>
         </table>
-        
     </div>
+</div> 
 </body>
 </html>
